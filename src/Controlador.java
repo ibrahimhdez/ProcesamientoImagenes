@@ -13,6 +13,8 @@ import javax.swing.filechooser.FileSystemView;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 public class Controlador {
 	private Vista miVista;
@@ -30,7 +32,9 @@ public class Controlador {
 		this.getMiVista().getContrasteTextField().addActionListener(new Oyente());
 		
 		this.getMiVista().getBrilloSlider().addChangeListener(new SliderListener());
-		this.getMiVista().getContrasteSlider().addChangeListener(new SliderListener());		
+		this.getMiVista().getContrasteSlider().addChangeListener(new SliderListener());	
+		
+		this.getMiVista().getBrilloContraste().addWindowListener(new OyenteVentana());
 	}
 	
 	void iniciarComponentes() throws IOException{
@@ -69,7 +73,6 @@ public class Controlador {
 			else if(e.getSource() == getMiVista().getBrilloTextField())
 				getMiVista().actualizarSliderBrillo();
 			
-			
 			else if(e.getSource() == getMiVista().getContrasteTextField())
 				getMiVista().actualizarSliderContraste();
 			
@@ -80,8 +83,10 @@ public class Controlador {
 				else if(e.getSource() == getMiVista().getItemShowInfo())
 					getMiVista().mostrarInformacion();
 			
-				else if(e.getSource() == getMiVista().getItemBrightnessContrast()) 
+				else if(e.getSource() == getMiVista().getItemBrightnessContrast()) {
+					getMiVista().actualizarPanelBrilloContraste();
 					getMiVista().mostrarPanelBrilloContraste();
+				}
 			
 				else if(e.getSource() == getMiVista().getItemHistograma()) 
 					getMiVista().mostrarHistograma();
@@ -159,6 +164,52 @@ public class Controlador {
 			// TODO Auto-generated method stub
 			
 		}
+	}
+	
+	class OyenteVentana implements WindowListener{
+
+		@Override
+		public void windowOpened(WindowEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void windowClosing(WindowEvent e) {
+			if(e.getSource() == getMiVista().getBrilloContraste())
+				getMiVista()	.actualizarIconImage();
+			
+		}
+
+		@Override
+		public void windowClosed(WindowEvent e) {
+			// TODO Auto-generated method stub
+		}
+
+		@Override
+		public void windowIconified(WindowEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void windowDeiconified(WindowEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void windowActivated(WindowEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void windowDeactivated(WindowEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+		
 	}
 		   
 	public Vista getMiVista() {
