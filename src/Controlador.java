@@ -76,8 +76,8 @@ public class Controlador {
 			else if(e.getSource() == getMiVista().getContrasteTextField())
 				getMiVista().actualizarSliderContraste();
 			
-			else if(getMiVista().getMisImagenes().size() > 0) {
-				if(e.getSource() == getMiVista().getBotonBlancoNegro())
+			else if(getMiVista().getImagenes().size() > 0) {
+				if(e.getSource() == getMiVista().getBotonBlancoNegro()) 
 					getMiVista().convertirBlancoNegro();
 				
 				else if(e.getSource() == getMiVista().getItemShowInfo())
@@ -100,7 +100,7 @@ public class Controlador {
 	class EventoRaton implements MouseListener{
 		@Override
 		public void mousePressed(MouseEvent e){
-			getMiVista().setFocoImagenActual((JDialog) e.getSource());
+			getMiVista().setFocoImagenActual(new Imagen((JDialog) e.getSource()));
 		}
 
 		@Override
@@ -177,8 +177,7 @@ public class Controlador {
 		@Override
 		public void windowClosing(WindowEvent e) {
 			if(e.getSource() == getMiVista().getBrilloContraste())
-				getMiVista()	.actualizarIconImage();
-			
+				getMiVista().getFocoImagenActual().setImageIconActual(getMiVista().getImageIconActual());
 		}
 
 		@Override

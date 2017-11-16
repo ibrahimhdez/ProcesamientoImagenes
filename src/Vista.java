@@ -35,6 +35,7 @@ import org.jfree.data.category.DefaultCategoryDataset;
 
 public class Vista extends JFrame{
 	private static final long serialVersionUID = 1L;
+	private Imagen imagen;
 	private VentanaBrilloContraste ventanaBrilloContraste;
 	private JMenuBar barraMenu;
     private JMenu menuFile, itemNew;
@@ -49,7 +50,8 @@ public class Vista extends JFrame{
     private Panel miPanel;
     private Integer numeroImagen;
     private ArrayList<JDialog> misImagenes;
-    private JDialog focoImagenActual;
+    private ArrayList<Imagen> imagenes;
+    private Imagen focoImagenActual;
     private JDialog brilloContraste;
     private JLabel brilloEtiqueta;
     private JSlider brilloSlider;
@@ -79,13 +81,13 @@ public class Vista extends JFrame{
         this.setItemAdjust(new JMenu("Adjust"));
         this.setItemBrightnessContrast(new JMenuItem("Brightness/Contrast"));
         this.setBrilloEtiqueta(new JLabel("Brillo"));
-        this.setBrilloSlider(new JSlider(JSlider.VERTICAL, -255, 255, 100));
+        this.setBrilloSlider(new JSlider(JSlider.VERTICAL, 0, 255, 100));
         this.setBrilloTextField(new JTextField(4));
         this.setDefaultBrillo(new JButton("Default"));
         this.setDefaultContraste(new JButton("Default"));
         this.setContrasteEtiqueta(new JLabel("Contraste"));
         this.setContrasteTextField(new JTextField(4));
-        this.setContrasteSlider(new JSlider(JSlider.VERTICAL, -255, 255, 100));
+        this.setContrasteSlider(new JSlider(JSlider.VERTICAL, 0, 255, 100));
         this.setBotonBlancoNegro(new JButton());
         
         this.setNumeroImagen(1);
@@ -93,6 +95,7 @@ public class Vista extends JFrame{
         this.setMiPanel(new Panel());
         this.setMisImagenes(new ArrayList<>());
         this.setBrilloContraste(new JDialog());
+        this.setImagenes(new ArrayList<>());
     }
     
     void openJDialog() throws IOException{
@@ -145,8 +148,8 @@ public class Vista extends JFrame{
 
 		dialog.add(new JLabel(new ImageIcon(bufferedImage)));
 		dialog.setIconImage(bufferedImage);
-		dialog.setTitle(this.getFocoImagenActual().getTitle() + " blanco y negro");
-		dialog.setLocation((int)this.getFocoImagenActual().getLocation().getX() + this.getFocoImagenActual().getWidth() + 20, (int)this.getFocoImagenActual().getLocation().getY());
+		dialog.setTitle(this.getFocoImagenActual().getContenedor().getTitle() + " blanco y negro");
+		dialog.setLocation((int)this.getFocoImagenActual().getContenedor().getLocation().getX() + this.getFocoImagenActual().getContenedor().getWidth() + 20, (int)this.getFocoImagenActual().getContenedor().getLocation().getY());
 		dialog.pack();
         dialog.setLocationByPlatform(true);
         dialog.setVisible(true);
@@ -154,14 +157,37 @@ public class Vista extends JFrame{
         addImagen(dialog);
 	}
 	
+	void addImagen(JDialog dialog){
+		Imagen aux = new Imagen(dialog);
+		
+		dialog.addWindowListener(new WindowAdapter(){
+    			public void windowClosed(WindowEvent e){
+    				for(Imagen imagen: getImagenes())
+    					if(e.getSource() == imagen.getContenedor())
+    						getImagenes().remove(imagen);
+    			}
+		});
+    
+		this.setFocoImagenActual(aux);
+		this.getImagenes().add(aux);
+	}
+	
+	Image imageActual(){
+		return this.getFocoImagenActual().imageActual();
+	}
+	
+	BufferedImage getBufferedImageActual() {
+		return this.getFocoImagenActual().getImagen();
+	}
+	
 	void mostrarPanelBrilloContraste() {
-		this.getBrilloContraste().setLocation(this.getFocoImagenActual().getWidth() + (int)this.getFocoImagenActual().getLocation().getX() + 100, (int)this.getFocoImagenActual().getLocation().getY());
+		this.getBrilloContraste().setLocation(this.getFocoImagenActual().getContenedor().getWidth() + (int)this.getFocoImagenActual().getContenedor().getLocation().getX() + 100, (int)this.getFocoImagenActual().getContenedor().getLocation().getY());
 		this.getBrilloContraste().setVisible(true);
 	}
 	
 	void actualizarPanelBrilloContraste() {
-		float brilloActual = getBrillo(getBufferedImageActual());
-		float contrasteActual = getContraste(getBufferedImageActual());
+		float brilloActual = this.getFocoImagenActual().getBrillo();
+		float contrasteActual = this.getFocoImagenActual().getContraste();
 		
 		this.getBrilloSlider().setValue((int) brilloActual);
 		this.getContrasteSlider().setValue((int) contrasteActual);
@@ -170,19 +196,10 @@ public class Vista extends JFrame{
 	void mostrarHistograma() {
 		JPanel panel = new JPanel();
 		JDialog dialog = new JDialog();
-		Hashtable<Integer, Integer> pixeles = null; //obtenerArrayPixeles();
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 		
-	    /*for(int i = 0; i < 255; i++)
-	    		if(pixeles.containsKey(i))
-	    			dataset.setValue(pixeles.get(i), 1 + "", i + "");
-	    		else
-	    			dataset.setValue(1, 1 + "", 0 + ""); */
-		
-		int[] histograma = getHistograma(getBufferedImageActual());
-		
-		for(int i = 0; i < histograma.length; i++)
-			dataset.setValue(histograma[i], 1 + "", i + "");
+		for(int i = 0; i < this.getFocoImagenActual().getHistograma().length; i++)
+			dataset.setValue(this.getFocoImagenActual().getHistograma(i), 1 + "", i + "");
 		
 		JFreeChart chart = ChartFactory.createBarChart3D("Histograma Absoluto","Pixel", "Value", dataset, PlotOrientation.VERTICAL, true,true, false);
 		chart.setBackgroundPaint(Color.white);	        
@@ -254,8 +271,8 @@ public class Vista extends JFrame{
 	void modificarBrilloContraste() {
 		BufferedImage imagen = getBufferedImageActual();
 		  
-		float A = (float) ((float) (this.getContrasteSlider().getValue()) / (getContraste(imagen)));
-		float B = this.getBrilloSlider().getValue() - (float) (getBrillo(imagen) * A);
+		float A = (float) ((float) (this.getContrasteSlider().getValue()) / (this.getFocoImagenActual().getContraste()));
+		float B = this.getBrilloSlider().getValue() - (float) (this.getFocoImagenActual().getBrillo() * A);
 		ArrayList<Integer> lut = new ArrayList<Integer>();
 
 		for(int i = 0; i < 256; i++) 
@@ -277,112 +294,12 @@ public class Vista extends JFrame{
 		    	 	newImg.setRGB(i, j, new Color(ncol, ncol, ncol).getRGB());
 		      }
 
-		  this.getFocoImagenActual().getContentPane().removeAll();
-		  this.getFocoImagenActual().getContentPane().add(new JLabel(new ImageIcon(newImg)));
-		  this.getFocoImagenActual().revalidate();
+		  this.getFocoImagenActual().getContenedor().getContentPane().removeAll();
+		  this.getFocoImagenActual().getContenedor().getContentPane().add(new JLabel(new ImageIcon(newImg)));
+		  this.getFocoImagenActual().getContenedor().revalidate();
 		  this.setImageIconActual(new ImageIcon(newImg));
-		  		
-		/*int sumatorio = 0;
-		 float A = (float) ((float) (ncontr) / (this.contraste));
-		 float B = nbrillo - (float) (brillo * A);
-		
-		 ArrayList<Integer> lut = new ArrayList<Integer>();
+	}
 
-		 for (int i = 0; i < 256; i++) {
-			 lut.add(compruebarango(0, 255, (int) (Math.round(A * i + B))));
-		 }
-		
-		Graphics g = imagen.createGraphics();
-		g.drawImage(imageActual(), 0, 0, null);
-		
-		for(int i = 0; i < imagen.getWidth(); i++)
-			for(int j = 0; j < imagen.getHeight(); j++) {
-				sumatorio += imagen.getRGB(i, j);
-				Color color = new Color(imagen.getRGB(i, j));
-				
-			}
-		
-		System.out.println(sumatorio / (imagen.getWidth() * imagen.getHeight())); */
-		
-		
-		
-		//double valorContraste = this.getContrasteSlider().getValue();
-		/*valorContraste /= 100;
-		
-		BufferedImageOp operacion = new RescaleOp((float)valorContraste, this.getBrilloSlider().getValue(), null);
-		imagen = operacion.filter(imagen, null);
-		
-		this.getFocoImagenActual().getContentPane().removeAll();
-		this.getFocoImagenActual().getContentPane().add(new JLabel(new ImageIcon(imagen)));
-		
-		this.getFocoImagenActual().revalidate();   */
-	}
-	
-	void actualizarIconImage() {
-		this.getFocoImagenActual().setIconImage(this.getImageIconActual().getImage());
-	}
-	
-	int[] getHistograma(BufferedImage imagen) {
-		Color red = Color.red;
-	    Color color;
-	    int[] histo = new int[256];
-
-	    for (int i = 0; i < imagen.getWidth(); i++) {
-	      for (int j = 0; j < imagen.getHeight(); j++) {
-	        color = new Color(imagen.getRGB(i, j));
-	        if(color.getRGB() != red.getRGB())
-	          histo[color.getGreen()] += 1;
-	      }
-	    }
-	    return histo;
-	}
-	
-	float getBrillo(BufferedImage imagen) {
-		float temp = 0;
-	    float size = imagen.getHeight() * imagen.getWidth();
-	    int[] histo = getHistograma(imagen);
-	    
-	    for (int i = 0; i < 256; i++) 
-	      temp += (float) (histo[i] * i);
-	    
-	    return (float) (temp / size);
-	}
-	
-	float getContraste(BufferedImage imagen) {
-		float temp1 = 0;
-	    float size1 = imagen.getHeight() * imagen.getWidth();
-	    float u = getBrillo(imagen);
-	    int[] histo = getHistograma(imagen);
-	   
-	    for (int i = 0; i < 256; i++) 
-	      temp1 += Math.pow((i - u), 2) * histo[i];
-	  
-	    return (float) Math.sqrt(temp1 / size1);
-	}
-	
-	void addImagen(JDialog dialog){
-		dialog.addWindowListener(new WindowAdapter(){
-    			public void windowClosed(WindowEvent e){
-    				getMisImagenes().remove(e.getSource());
-    			}
-		});
-    
-		this.setFocoImagenActual(dialog);
-		this.getMisImagenes().add(dialog);
-	}
-	
-	Image imageActual(){
-		return this.getFocoImagenActual().getIconImages().get(0);
-	}
-	
-	BufferedImage getBufferedImageActual() {
-		BufferedImage aux = new BufferedImage(imageActual().getWidth(null), imageActual().getHeight(null), BufferedImage.TYPE_3BYTE_BGR);
-		Graphics g = aux.createGraphics();
-		g.drawImage(imageActual(), 0, 0, null);   
-		
-		return aux;
-	}
-	
     void init() {
     		this.setResizable(false);
     		this.getMiPanel().setLayout(null);    
@@ -479,11 +396,11 @@ public class Vista extends JFrame{
     
     private Integer compruebarango(int min, int max, int value) {
         int value_check = Math.abs(value);
-        if (value < min) {
+        if (value < min) 
           return min;
-        } else if (value_check > max) {
+        else if (value_check > max) 
           return max;
-        }
+        
         return value_check;
       }
     
@@ -500,7 +417,23 @@ public class Vista extends JFrame{
     	
     }
     
-    public JMenuBar getBarraMenu() {
+    public ArrayList<Imagen> getImagenes() {
+		return imagenes;
+	}
+
+	public void setImagenes(ArrayList<Imagen> imagenes) {
+		this.imagenes = imagenes;
+	}
+
+	public Imagen getImagen() {
+		return imagen;
+	}
+
+	public void setImagen(Imagen imagen) {
+		this.imagen = imagen;
+	}
+
+	public JMenuBar getBarraMenu() {
 		return barraMenu;
 	}
 	public void setBarraMenu(JMenuBar barraMenu) {
@@ -563,11 +496,11 @@ public class Vista extends JFrame{
 		this.misImagenes = misImagenes;
 	}
 
-	public JDialog getFocoImagenActual() {
+	public Imagen getFocoImagenActual() {
 		return focoImagenActual;
 	}
 
-	public void setFocoImagenActual(JDialog focoImagenActual) {
+	public void setFocoImagenActual(Imagen focoImagenActual) {
 		this.focoImagenActual = focoImagenActual;
 	}
 
