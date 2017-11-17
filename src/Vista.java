@@ -1,5 +1,3 @@
-import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
@@ -128,34 +126,7 @@ public class Vista extends JFrame{
 		this.getBotonBlancoNegro().setIcon(new ImageIcon(imagenBlancoNegro));
 		this.getBotonBlancoNegro().setBounds(new Rectangle(0, 0, 30, 30));
     }
-	
-	void convertirBlancoNegro(){
-		BufferedImage imagen = this.getFocoImagenActual().getImagen();
-		JDialog dialog = new JDialog();
 		
-		Graphics g = imagen.getGraphics();
-		g.drawImage(this.getFocoImagenActual().imageActual(), 0, 0, null);
-		
-		for(int i = 0; i < imagen.getWidth(); i++)
-			for(int j = 0; j < imagen.getHeight(); j++) {
-				Color color = new Color(imagen.getRGB(i, j));
-				int mediaPixel = (int)((color.getRed() + color.getGreen() + color.getBlue()) / 3);
-				int colorSRGB = (mediaPixel << 16) | (mediaPixel << 8) | mediaPixel;
-		
-				imagen.setRGB(i, j,colorSRGB);
-         }
-
-		dialog.add(new JLabel(new ImageIcon(imagen)));
-		dialog.setIconImage(imagen);
-		dialog.setTitle(this.getFocoImagenActual().getContenedor().getTitle() + " blanco y negro");
-		dialog.setLocation((int)this.getFocoImagenActual().getContenedor().getLocation().getX() + this.getFocoImagenActual().getContenedor().getWidth() + 20, (int)this.getFocoImagenActual().getContenedor().getLocation().getY());
-		dialog.pack();
-        dialog.setLocationByPlatform(true);
-        dialog.setVisible(true);
-        dialog.setResizable(false);
-        addImagen(dialog);
-	}
-	
 	void addImagen(JDialog dialog){
 		Imagen aux = new Imagen(dialog);
 	

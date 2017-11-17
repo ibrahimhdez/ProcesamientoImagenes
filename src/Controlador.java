@@ -18,11 +18,14 @@ import java.awt.event.WindowListener;
 
 public class Controlador {
 	private Vista miVista;
+	private BlancoNegro blancoNegro;
 	private BrilloContraste brilloContraste;
 	private Histograma histograma;
 	
 	public Controlador(){
 		this.setMiVista(new Vista());
+		
+		this.setBlancoNegro(new BlancoNegro());
 		this.setBrilloContraste(new BrilloContraste());
 		this.setHistograma(new Histograma());
 		
@@ -84,8 +87,10 @@ public class Controlador {
 				getBrilloContraste().actualizarSliderContraste();
 			
 			else if(getMiVista().getImagenes().size() > 0) {
-				if(e.getSource() == getMiVista().getBotonBlancoNegro()) 
-					getMiVista().convertirBlancoNegro();
+				if(e.getSource() == getMiVista().getBotonBlancoNegro()) {
+					getBlancoNegro().convertir(getMiVista().getFocoImagenActual());
+					getMiVista().addImagen(getBlancoNegro().getDialog());
+				}
 				
 				else if(e.getSource() == getMiVista().getItemShowInfo())
 					getMiVista().mostrarInformacion();
@@ -230,6 +235,14 @@ public class Controlador {
 		   
 	public Vista getMiVista() {
 		return miVista;
+	}
+
+	public BlancoNegro getBlancoNegro() {
+		return blancoNegro;
+	}
+
+	public void setBlancoNegro(BlancoNegro blancoNegro) {
+		this.blancoNegro = blancoNegro;
 	}
 
 	public void setMiVista(Vista miVista) {
