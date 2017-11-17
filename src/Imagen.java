@@ -11,6 +11,7 @@ public class Imagen {
 	private BufferedImage imagen;
 	private ImageIcon imageIconActual;
 	private ImageIcon imageIconInicial;
+	private Boolean modificada;
 	private int[] histograma;
 	private float brillo;
 	private float contraste;
@@ -21,6 +22,7 @@ public class Imagen {
 		this.setImageIconActual(new ImageIcon());
 		this.setBrillo(0);
 		this.setContraste(0);
+		this.setModificada(false);
 	}
 	
 	public Imagen(JDialog contenedor) {
@@ -30,13 +32,23 @@ public class Imagen {
 		this.setImagen(new BufferedImage(this.getImageIconActual().getImage().getWidth(null), this.getImageIconActual().getImage().getHeight(null), BufferedImage.TYPE_3BYTE_BGR));
 		this.setBrillo(0);
 		this.setContraste(0);
+		this.setModificada(false);
 		
 		Graphics g = this.getImagen().createGraphics();
 		g.drawImage(this.getImageIconActual().getImage(), 0, 0, null);   
 		
-		this.setHistograma(this.getImagen());
-		this.setBrillo(this.getImagen());
-		this.setContraste(this.getImagen());
+		this.setHistograma();
+		this.setBrillo();
+		this.setContraste();
+	}
+	
+	public Imagen(BufferedImage imagen) {
+		this.setContenedor(new JDialog());
+		this.setImageIconInicial(new ImageIcon(imagen));
+		this.setImageIconActual(new ImageIcon(imagen));
+		this.setImagen(imagen);
+		this.setBrillo();
+		this.setContraste();
 	}
 	
 	Image imageActual() {
@@ -49,12 +61,13 @@ public class Imagen {
 		Graphics g = this.getImagen().createGraphics();
 		g.drawImage(this.getImageIconActual().getImage(), 0, 0, null);  
 		
-		this.setHistograma(this.getImagen());
-		this.setBrillo(this.getImagen());
-		this.setContraste(this.getImagen());
+		this.setHistograma();
+		this.setBrillo();
+		this.setContraste();
 	}
 	
-	void setHistograma(BufferedImage imagen) {
+	void setHistograma() {
+		BufferedImage imagen = this.getImagen();
 		Color red = Color.red;
 	    Color color;
 	    int[] histo = new int[256];
@@ -69,7 +82,8 @@ public class Imagen {
 	    this.setHistograma(histo);
 	}
 	
-	void setBrillo(BufferedImage imagen) {
+	void setBrillo() {
+		BufferedImage imagen = this.getImagen();
 		float temp = 0;
 	    float size = imagen.getHeight() * imagen.getWidth();
 	    int[] histo = getHistograma();
@@ -80,7 +94,8 @@ public class Imagen {
 	    this.setBrillo((float) (temp / size));
 	}
 	
-	void setContraste(BufferedImage imagen) {
+	void setContraste() {
+		BufferedImage imagen = this.getImagen();
 		float temp1 = 0;
 	    float size1 = imagen.getHeight() * imagen.getWidth();
 	    float u = getBrillo();
@@ -126,6 +141,14 @@ public class Imagen {
 		this.imageIconInicial = imageIconInicial;
 	}
 	
+	public Boolean getModificada() {
+		return modificada;
+	}
+
+	public void setModificada(Boolean modificada) {
+		this.modificada = modificada;
+	}
+
 	public float getBrillo() {
 		return brillo;
 	}

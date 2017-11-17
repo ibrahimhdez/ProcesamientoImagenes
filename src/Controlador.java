@@ -18,9 +18,13 @@ import java.awt.event.WindowListener;
 
 public class Controlador {
 	private Vista miVista;
+	private BrilloContraste brilloContraste;
+	private Histograma histograma;
 	
 	public Controlador(){
 		this.setMiVista(new Vista());
+		this.setBrilloContraste(new BrilloContraste());
+		this.setHistograma(new Histograma());
 		
 		this.getMiVista().getItemImage().addActionListener(new Oyente());
 		this.getMiVista().getItemHistograma().addActionListener(new Oyente());
@@ -28,18 +32,21 @@ public class Controlador {
 		this.getMiVista().getBotonBlancoNegro().addActionListener(new Oyente());
 		this.getMiVista().getItemShowInfo().addActionListener(new Oyente());
 		this.getMiVista().getItemBrightnessContrast().addActionListener(new Oyente());
-		this.getMiVista().getBrilloTextField().addActionListener(new Oyente());
-		this.getMiVista().getContrasteTextField().addActionListener(new Oyente());
+		this.getBrilloContraste().getBrilloTextField().addActionListener(new Oyente());
+		this.getBrilloContraste().getDefaultBrillo().addActionListener(new Oyente());
+		this.getBrilloContraste().getDefaultContraste().addActionListener(new Oyente());
+		this.getBrilloContraste().getContrasteTextField().addActionListener(new Oyente());
 		
-		this.getMiVista().getBrilloSlider().addChangeListener(new SliderListener());
-		this.getMiVista().getContrasteSlider().addChangeListener(new SliderListener());	
+		this.getBrilloContraste().getBrilloSlider().addChangeListener(new SliderListener());
+		this.getBrilloContraste().getContrasteSlider().addChangeListener(new SliderListener());	
 		
-		this.getMiVista().getBrilloContraste().addWindowListener(new OyenteVentana());
+		getBrilloContraste().getVentana().addWindowListener(new OyenteVentana());
 	}
 	
 	void iniciarComponentes() throws IOException{
 		this.getMiVista().iniciarBotones();
-		this.getMiVista().iniciarBrilloContraste();
+		this.getBrilloContraste().init();
+		
 		this.getMiVista().init();
 	}
 	
@@ -70,11 +77,11 @@ public class Controlador {
 				addEventosRaton();
 			}
 			
-			else if(e.getSource() == getMiVista().getBrilloTextField())
-				getMiVista().actualizarSliderBrillo();
+			else if(e.getSource() == getBrilloContraste().getBrilloTextField())
+				getBrilloContraste().actualizarSliderBrillo();
 			
-			else if(e.getSource() == getMiVista().getContrasteTextField())
-				getMiVista().actualizarSliderContraste();
+			else if(e.getSource() == getBrilloContraste().getContrasteTextField())
+				getBrilloContraste().actualizarSliderContraste();
 			
 			else if(getMiVista().getImagenes().size() > 0) {
 				if(e.getSource() == getMiVista().getBotonBlancoNegro()) 
@@ -84,15 +91,27 @@ public class Controlador {
 					getMiVista().mostrarInformacion();
 			
 				else if(e.getSource() == getMiVista().getItemBrightnessContrast()) {
-					getMiVista().actualizarPanelBrilloContraste();
-					getMiVista().mostrarPanelBrilloContraste();
+					Imagen imagenActual = getMiVista().getFocoImagenActual();
+					
+					getBrilloContraste().setBrilloInicial(getMiVista().getFocoImagenActual().getBrillo());
+					getBrilloContraste().setContrasteInicial(getMiVista().getFocoImagenActual().getContraste());
+					
+					if(!imagenActual.getModificada())
+						getBrilloContraste().actualizarPanel(imagenActual);
+					getBrilloContraste().mostrar(imagenActual.getContenedor());
 				}
+				
+				else if(e.getSource() == getBrilloContraste().getDefaultBrillo()) 
+					getBrilloContraste().getBrilloSlider().setValue((int) getBrilloContraste().getBrilloInicial());
+
+				else if(e.getSource() == getBrilloContraste().getDefaultContraste()) 
+					getBrilloContraste().getContrasteSlider().setValue((int) getBrilloContraste().getContrasteInicial());
 			
 				else if(e.getSource() == getMiVista().getItemHistograma()) 
-					getMiVista().mostrarHistograma();
+					getHistograma().mostrarHistogramaAbsoluto(getMiVista().getFocoImagenActual());
 				
 				else if(e.getSource() == getMiVista().getItemHistogramaAcumulativo())
-					getMiVista().mostrarHistogramaAcumulativo();
+					getHistograma().mostrarHistogramaAcumulativo(getMiVista().getFocoImagenActual());
 			}
 		}
     }
@@ -130,27 +149,26 @@ public class Controlador {
 	
 	class SliderListener implements ChangeListener {
 	    public void stateChanged(ChangeEvent e) {
-	    		if(e.getSource() == getMiVista().getBrilloSlider()) {
-	    			getMiVista().actualizarTextBrillo();
-	    			getMiVista().modificarBrilloContraste();
+	    		if(e.getSource() == getBrilloContraste().getBrilloSlider()) {
+	    			getBrilloContraste().actualizarTextBrillo();
+	    			getMiVista().modificarImagen(getBrilloContraste().modificarBrilloContraste(getMiVista().getFocoImagenActual()));
 	    		}
 	        
-	    		else if(e.getSource() == getMiVista().getContrasteSlider()) {
-	    			getMiVista().actualizarTextContraste();
-	    			getMiVista().modificarBrilloContraste();
+	    		else if(e.getSource() == getBrilloContraste().getContrasteSlider()) {
+	    			getBrilloContraste().actualizarTextContraste();
+	    			getMiVista().modificarImagen(getBrilloContraste().modificarBrilloContraste(getMiVista().getFocoImagenActual()));
 	    		}
 	    }
 	}
 	
-	
 	class TextFieldListener implements DocumentListener{
 		@Override
 		public void insertUpdate(DocumentEvent e) {
-			if(e.getDocument() == getMiVista().getBrilloTextField().getDocument())
-				getMiVista().actualizarSliderBrillo();
+			if(e.getDocument() == getBrilloContraste().getBrilloTextField().getDocument())
+				getBrilloContraste().actualizarSliderBrillo();
 			
-			else if(e.getDocument() == getMiVista().getContrasteTextField().getDocument())
-				getMiVista().actualizarSliderContraste();
+			else if(e.getDocument() == getBrilloContraste().getContrasteTextField().getDocument())
+				getBrilloContraste().actualizarSliderContraste();
 		}
 
 		@Override
@@ -176,7 +194,7 @@ public class Controlador {
 
 		@Override
 		public void windowClosing(WindowEvent e) {
-			if(e.getSource() == getMiVista().getBrilloContraste())
+			if(e.getSource() == getBrilloContraste().getVentana())
 				getMiVista().getFocoImagenActual().setImageIconActual(getMiVista().getImageIconActual());
 		}
 
@@ -208,7 +226,6 @@ public class Controlador {
 			// TODO Auto-generated method stub
 			
 		}
-		
 	}
 		   
 	public Vista getMiVista() {
@@ -217,5 +234,21 @@ public class Controlador {
 
 	public void setMiVista(Vista miVista) {
 		this.miVista = miVista;
+	}
+
+	public BrilloContraste getBrilloContraste() {
+		return brilloContraste;
+	}
+
+	public void setBrilloContraste(BrilloContraste brilloContraste) {
+		this.brilloContraste = brilloContraste;
+	}
+
+	public Histograma getHistograma() {
+		return histograma;
+	}
+
+	public void setHistograma(Histograma histograma) {
+		this.histograma = histograma;
 	}
 }
