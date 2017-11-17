@@ -33,7 +33,7 @@ public class Vista extends JFrame{
     private JMenuItem itemHistograma, itemHistogramaAcumulativo;
     private JButton botonBlancoNegro;
     private JLabel etiquetaImagen;
-    private Panel miPanel;
+    private String rutaImagen;
     private Integer numeroImagen;
     private ArrayList<JDialog> misImagenes;
     private ArrayList<Imagen> imagenes;
@@ -61,17 +61,15 @@ public class Vista extends JFrame{
         
         this.setNumeroImagen(1);
         this.setEtiquetaImagen(new JLabel());
-        this.setMiPanel(new Panel());
         this.setMisImagenes(new ArrayList<>());
         this.setImagenes(new ArrayList<>());
     }
     
     void init() {
 		this.setResizable(false);
-		this.getMiPanel().setLayout(null);    
-		this.getMiPanel().add(this.getEtiquetaImagen());
-		this.getMiPanel().add(this.getBotonBlancoNegro());
-		add(this.getMiPanel());
+		this.setLayout(null);
+		add(this.getEtiquetaImagen());
+		add(this.getBotonBlancoNegro());
     
 		this.getBarraMenu().add(this.getMenuFile());
 		this.getBarraMenu().add(this.getMenuShow());
@@ -97,7 +95,7 @@ public class Vista extends JFrame{
     void openJDialog() throws IOException{
     		JDialog dialog = new JDialog();     
     		JPanel panel = new JPanel();
-    		Image imagen = ImageIO.read(new File(this.getMiPanel().getRutaImagen()));
+    		Image imagen = ImageIO.read(new File(this.getRutaImagen()));
     	
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         dialog.setTitle("Imagen " + this.numeroImagen);
@@ -202,13 +200,6 @@ public class Vista extends JFrame{
 		this.etiquetaImagen = etiquetaImagen;
 	}
 
-	public Panel getMiPanel() {
-		return miPanel;
-	}
-	public void setMiPanel(Panel miPanel) {
-		this.miPanel = miPanel;
-	}
-	
 	public JButton getBotonBlancoNegro(){
 		return botonBlancoNegro;
 	}
@@ -319,5 +310,13 @@ public class Vista extends JFrame{
 
 	public void setImageIconActual(ImageIcon imageIconActual) {
 		this.imageIconActual = imageIconActual;
+	}
+
+	public String getRutaImagen() {
+		return rutaImagen;
+	}
+
+	public void setRutaImagen(String rutaImagen) {
+		this.rutaImagen = rutaImagen;
 	}
 }

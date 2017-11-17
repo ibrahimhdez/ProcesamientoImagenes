@@ -13,6 +13,10 @@ public class BlancoNegro {
 		this.setDialog(new JDialog());
 	}
 	
+	void init() {
+		this.setDialog(new JDialog());
+	}
+	
 	void convertir(Imagen imagenActual){
 		BufferedImage imagen = imagenActual.getImagen();
 		

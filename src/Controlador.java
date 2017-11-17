@@ -70,7 +70,7 @@ public class Controlador {
 				jfc.setFileFilter(new FileNameExtensionFilter("jpg, png, gif", "jpg", "png", "gif"));
 				int sel = jfc.showOpenDialog(null);
 				if (sel == JFileChooser.APPROVE_OPTION) {
-			        getMiVista().getMiPanel().setRutaImagen(jfc.getSelectedFile().getAbsolutePath());
+			        getMiVista().setRutaImagen(jfc.getSelectedFile().getAbsolutePath());
 			        try {
 						getMiVista().openJDialog();
 					} catch (IOException e1) {
@@ -88,6 +88,7 @@ public class Controlador {
 			
 			else if(getMiVista().getImagenes().size() > 0) {
 				if(e.getSource() == getMiVista().getBotonBlancoNegro()) {
+					getBlancoNegro().init();
 					getBlancoNegro().convertir(getMiVista().getFocoImagenActual());
 					getMiVista().addImagen(getBlancoNegro().getDialog());
 				}
