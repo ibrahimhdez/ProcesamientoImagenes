@@ -18,6 +18,7 @@ import java.awt.event.WindowListener;
 
 public class Controlador {
 	private Vista miVista;
+	private Informacion informacion;
 	private BlancoNegro blancoNegro;
 	private BrilloContraste brilloContraste;
 	private Histograma histograma;
@@ -25,6 +26,7 @@ public class Controlador {
 	public Controlador(){
 		this.setMiVista(new Vista());
 		
+		this.setInformacion(new Informacion());
 		this.setBlancoNegro(new BlancoNegro());
 		this.setBrilloContraste(new BrilloContraste());
 		this.setHistograma(new Histograma());
@@ -54,8 +56,8 @@ public class Controlador {
 	}
 	
 	void addEventosRaton(){
-		for(JDialog dialog: this.getMiVista().getMisImagenes())
-			dialog.addMouseListener(new EventoRaton());		
+		for(Imagen imagen: this.getMiVista().getImagenes())
+			imagen.getContenedor().addMouseListener(new EventoRaton());		
 	}
 	
 	class Oyente implements ActionListener{
@@ -93,8 +95,12 @@ public class Controlador {
 					getMiVista().addImagen(getBlancoNegro().getDialog());
 				}
 				
-				else if(e.getSource() == getMiVista().getItemShowInfo())
-					getMiVista().mostrarInformacion();
+				else if(e.getSource() == getMiVista().getItemShowInfo()) {
+					JDialog dialog = getMiVista().getFocoImagenActual().getContenedor();
+					
+					getInformacion().init(getMiVista().getFocoImagenActual());
+					getInformacion().mostrar(dialog.getWidth() + (int)dialog.getLocation().getX() + 100, (int)dialog.getLocation().getY());
+				}
 			
 				else if(e.getSource() == getMiVista().getItemBrightnessContrast()) {
 					Imagen imagenActual = getMiVista().getFocoImagenActual();
@@ -236,6 +242,14 @@ public class Controlador {
 		   
 	public Vista getMiVista() {
 		return miVista;
+	}
+
+	public Informacion getInformacion() {
+		return informacion;
+	}
+
+	public void setInformacion(Informacion informacion) {
+		this.informacion = informacion;
 	}
 
 	public BlancoNegro getBlancoNegro() {

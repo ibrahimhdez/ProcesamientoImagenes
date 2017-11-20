@@ -3,7 +3,6 @@ import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -35,7 +34,6 @@ public class Vista extends JFrame{
     private JLabel etiquetaImagen;
     private String rutaImagen;
     private Integer numeroImagen;
-    private ArrayList<JDialog> misImagenes;
     private ArrayList<Imagen> imagenes;
     private Imagen focoImagenActual;
     private ImageIcon imageIconActual;
@@ -61,7 +59,6 @@ public class Vista extends JFrame{
         
         this.setNumeroImagen(1);
         this.setEtiquetaImagen(new JLabel());
-        this.setMisImagenes(new ArrayList<>());
         this.setImagenes(new ArrayList<>());
     }
     
@@ -131,26 +128,27 @@ public class Vista extends JFrame{
 		dialog.addWindowListener(new WindowAdapter(){
     			public void windowClosed(WindowEvent e){
     				for(Imagen imagen: getImagenes())
-    					if(e.getSource() == imagen.getContenedor())
+    					if(e.getSource() == imagen.getContenedor()) {
     						getImagenes().remove(imagen);
+    						break;
+    					}
     			}
 		});
     
 		this.setFocoImagenActual(aux);
+		this.getFocoImagenActual().setRutaImagen(this.getRutaImagen());
 		this.getImagenes().add(aux);
 	}
 	
-	void modificarImagen(BufferedImage newImg) {
+	void modificarImagen(Imagen newImg) {
 		this.getFocoImagenActual().getContenedor().getContentPane().removeAll();
-		this.getFocoImagenActual().getContenedor().getContentPane().add(new JLabel(new ImageIcon(newImg)));
+		this.getFocoImagenActual().getContenedor().getContentPane().add(new JLabel(new ImageIcon(newImg.getImagen())));
 		this.getFocoImagenActual().getContenedor().revalidate();
-		this.setImageIconActual(new ImageIcon(newImg));
+		this.setImageIconActual(new ImageIcon(newImg.getImagen()));
 		this.getFocoImagenActual().setModificada(true);
+		this.getFocoImagenActual().setBrillo(newImg.getBrillo());
+		this.getFocoImagenActual().setContraste(newImg.getContraste());
 	}	
-	
-    void mostrarInformacion() {
-    	
-    }
     
     public ArrayList<Imagen> getImagenes() {
 		return imagenes;
@@ -214,14 +212,6 @@ public class Vista extends JFrame{
 
 	public void setNumeroImagen(Integer numeroImagen) {
 		this.numeroImagen = numeroImagen;
-	}
-
-	public ArrayList<JDialog> getMisImagenes() {
-		return misImagenes;
-	}
-
-	public void setMisImagenes(ArrayList<JDialog> misImagenes) {
-		this.misImagenes = misImagenes;
 	}
 
 	public Imagen getFocoImagenActual() {

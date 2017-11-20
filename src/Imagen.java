@@ -12,9 +12,11 @@ public class Imagen {
 	private ImageIcon imageIconActual;
 	private ImageIcon imageIconInicial;
 	private Boolean modificada;
+	private String rutaImagen;
 	private int[] histograma;
 	private float brillo;
 	private float contraste;
+	private float entropia;
 	
 	public Imagen() {
 		this.setContenedor(new JDialog());
@@ -22,6 +24,7 @@ public class Imagen {
 		this.setImageIconActual(new ImageIcon());
 		this.setBrillo(0);
 		this.setContraste(0);
+		this.setEntropia(0);
 		this.setModificada(false);
 	}
 	
@@ -32,6 +35,7 @@ public class Imagen {
 		this.setImagen(new BufferedImage(this.getImageIconActual().getImage().getWidth(null), this.getImageIconActual().getImage().getHeight(null), BufferedImage.TYPE_3BYTE_BGR));
 		this.setBrillo(0);
 		this.setContraste(0);
+		this.setEntropia(0);
 		this.setModificada(false);
 		
 		Graphics g = this.getImagen().createGraphics();
@@ -40,6 +44,7 @@ public class Imagen {
 		this.setHistograma();
 		this.setBrillo();
 		this.setContraste();
+		this.setEntropia();
 	}
 	
 	public Imagen(BufferedImage imagen) {
@@ -49,12 +54,9 @@ public class Imagen {
 		this.setImagen(imagen);
 		this.setBrillo();
 		this.setContraste();
+		this.setEntropia();
 	}
-	
-	Image imageActual() {
-		return this.getContenedor().getIconImages().get(0);
-	}
-	
+
 	void actualizarBufferedImage() {
 		this.setImagen(new BufferedImage(this.getImageIconActual().getImage().getWidth(null), this.getImageIconActual().getImage().getHeight(null), BufferedImage.TYPE_3BYTE_BGR));
 		
@@ -105,6 +107,23 @@ public class Imagen {
 	      temp1 += Math.pow((i - u), 2) * histo[i];
 	  
 	    this.setContraste((float) Math.sqrt(temp1 / size1));
+	}
+	
+	void setEntropia() {
+	    float temp = 0;
+	    float size = this.getImagen().getHeight() * this.getImagen().getWidth();
+	    
+	    for (int i = 0; i < 256; i++) {
+	      float p = (float) (getHistograma(i)) / (size);
+	      if (p != 0) 
+	        temp += p * (Math.log(p) / Math.log(2));
+	    }
+	    
+	    this.entropia = -temp;
+	}
+	
+	Image imageActual() {
+		return this.getContenedor().getIconImages().get(0);
 	}
 	
 	public JDialog getContenedor() {
@@ -175,6 +194,22 @@ public class Imagen {
 
 	public void setHistograma(int[] histograma) {
 		this.histograma = histograma;
+	}
+
+	public String getRutaImagen() {
+		return rutaImagen;
+	}
+
+	public void setRutaImagen(String rutaImagen) {
+		this.rutaImagen = rutaImagen;
+	}
+
+	public float getEntropia() {
+		return entropia;
+	}
+
+	public void setEntropia(float entropia) {
+		this.entropia = entropia;
 	}
 
 }
