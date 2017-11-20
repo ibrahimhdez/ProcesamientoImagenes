@@ -41,6 +41,24 @@ public class BlancoNegro {
 		this.getDialog().setVisible(true);
 		this.getDialog().setResizable(false);
 	}
+	
+	Imagen get(Imagen imagenActual) {
+		BufferedImage imagen = imagenActual.getImagen();
+		
+		Graphics g = imagen.getGraphics();
+		g.drawImage(imagenActual.imageActual(), 0, 0, null);
+		
+		for(int i = 0; i < imagen.getWidth(); i++)
+			for(int j = 0; j < imagen.getHeight(); j++) {
+				Color color = new Color(imagen.getRGB(i, j));
+				int mediaPixel = (int)((color.getRed() + color.getGreen() + color.getBlue()) / 3);
+				int colorSRGB = (mediaPixel << 16) | (mediaPixel << 8) | mediaPixel;
+		
+				imagen.setRGB(i, j,colorSRGB);
+         }
+		
+		return new Imagen(imagen);
+	}
 
 	public JDialog getDialog() {
 		return dialog;

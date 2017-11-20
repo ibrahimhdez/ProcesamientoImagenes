@@ -20,7 +20,6 @@ public class Informacion {
 	}
 	
 	void init(Imagen imagen) {
-		System.out.println("InitInformacion " + imagen.getBrillo() + " " + imagen.getContraste());
 		this.setFormatoFichero(conocerFormatoImagen(imagen));
 		this.setSize(conocerSize(imagen));
 		this.setRango(conocerRango(imagen));

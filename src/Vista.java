@@ -30,6 +30,7 @@ public class Vista extends JFrame{
     private JMenuItem itemShowInfo;
     private JMenuItem itemBrightnessContrast;
     private JMenuItem itemHistograma, itemHistogramaAcumulativo;
+    private JMenuItem itemDiference;
     private JButton botonBlancoNegro;
     private JLabel etiquetaImagen;
     private String rutaImagen;
@@ -55,6 +56,7 @@ public class Vista extends JFrame{
         this.setItemShowInfo(new JMenuItem("Show info..."));
         this.setItemAdjust(new JMenu("Adjust"));
         this.setItemBrightnessContrast(new JMenuItem("Brightness/Contrast"));
+        this.setItemDiference(new JMenuItem("Diference"));
         this.setBotonBlancoNegro(new JButton());
         
         this.setNumeroImagen(1);
@@ -81,6 +83,7 @@ public class Vista extends JFrame{
 		this.getMenuImage().add(this.getItemShowInfo());
 		this.getMenuImage().add(this.getItemAdjust());
 		this.getItemAdjust().add(this.getItemBrightnessContrast());
+		this.getMenuImage().add(this.getItemDiference());
      
 		this.setJMenuBar(this.getBarraMenu());
 		this.setSize(500, 74);
@@ -308,5 +311,13 @@ public class Vista extends JFrame{
 
 	public void setRutaImagen(String rutaImagen) {
 		this.rutaImagen = rutaImagen;
+	}
+
+	public JMenuItem getItemDiference() {
+		return itemDiference;
+	}
+
+	public void setItemDiference(JMenuItem itemDiference) {
+		this.itemDiference = itemDiference;
 	}
 }

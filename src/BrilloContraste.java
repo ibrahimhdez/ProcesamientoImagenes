@@ -106,10 +106,8 @@ public class BrilloContraste {
 		      }
 		 
 		 aux = new Imagen(newImg);
-		 System.out.println(this.getBrilloSlider().getValue()+ " " + this.getContrasteSlider().getValue());
 		 aux.setBrillo(this.getBrilloSlider().getValue());
 		 aux.setContraste(this.getContrasteSlider().getValue());
-		 System.out.println(aux.getBrillo() + " " + aux.getContraste());
 		 
 		 return aux;
 	}

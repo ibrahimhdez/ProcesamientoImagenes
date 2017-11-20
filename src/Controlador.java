@@ -22,6 +22,7 @@ public class Controlador {
 	private BlancoNegro blancoNegro;
 	private BrilloContraste brilloContraste;
 	private Histograma histograma;
+	private Diferencia diferencia;
 	
 	public Controlador(){
 		this.setMiVista(new Vista());
@@ -30,6 +31,7 @@ public class Controlador {
 		this.setBlancoNegro(new BlancoNegro());
 		this.setBrilloContraste(new BrilloContraste());
 		this.setHistograma(new Histograma());
+		this.setDiferencia(new Diferencia());
 		
 		this.getMiVista().getItemImage().addActionListener(new Oyente());
 		this.getMiVista().getItemHistograma().addActionListener(new Oyente());
@@ -37,6 +39,7 @@ public class Controlador {
 		this.getMiVista().getBotonBlancoNegro().addActionListener(new Oyente());
 		this.getMiVista().getItemShowInfo().addActionListener(new Oyente());
 		this.getMiVista().getItemBrightnessContrast().addActionListener(new Oyente());
+		this.getMiVista().getItemDiference().addActionListener(new Oyente());
 		this.getBrilloContraste().getBrilloTextField().addActionListener(new Oyente());
 		this.getBrilloContraste().getDefaultBrillo().addActionListener(new Oyente());
 		this.getBrilloContraste().getDefaultContraste().addActionListener(new Oyente());
@@ -111,6 +114,20 @@ public class Controlador {
 					if(!imagenActual.getModificada())
 						getBrilloContraste().actualizarPanel(imagenActual);
 					getBrilloContraste().mostrar(imagenActual.getContenedor());
+				}
+				
+				else if(e.getSource() == getMiVista().getItemDiference()) {
+					getDiferencia().setImagen1(getMiVista().getFocoImagenActual());
+					
+					try {
+						getDiferencia().addImagenDiferencia();
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+					
+					getDiferencia().setImagen2(getBlancoNegro().get(getDiferencia().getImagen2()));
+					getDiferencia().generar();
+					//addEventosRaton();
 				}
 				
 				else if(e.getSource() == getBrilloContraste().getDefaultBrillo()) 
@@ -278,5 +295,13 @@ public class Controlador {
 
 	public void setHistograma(Histograma histograma) {
 		this.histograma = histograma;
+	}
+
+	public Diferencia getDiferencia() {
+		return diferencia;
+	}
+
+	public void setDiferencia(Diferencia diferencia) {
+		this.diferencia = diferencia;
 	}
 }

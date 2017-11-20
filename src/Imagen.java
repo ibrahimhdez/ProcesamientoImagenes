@@ -5,6 +5,7 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
+import javax.swing.JLabel;
 
 public class Imagen {
 	private JDialog contenedor;
@@ -20,8 +21,8 @@ public class Imagen {
 	
 	public Imagen() {
 		this.setContenedor(new JDialog());
-		this.setImageIconInicial(new ImageIcon());
-		this.setImageIconActual(new ImageIcon());
+		//this.setImageIconInicial(new ImageIcon());
+		//this.setImageIconActual(new ImageIcon());
 		this.setBrillo(0);
 		this.setContraste(0);
 		this.setEntropia(0);
@@ -33,9 +34,6 @@ public class Imagen {
 		this.setImageIconInicial(new ImageIcon(contenedor.getIconImages().get(0)));
 		this.setImageIconActual(new ImageIcon(contenedor.getIconImages().get(0)));
 		this.setImagen(new BufferedImage(this.getImageIconActual().getImage().getWidth(null), this.getImageIconActual().getImage().getHeight(null), BufferedImage.TYPE_3BYTE_BGR));
-		this.setBrillo(0);
-		this.setContraste(0);
-		this.setEntropia(0);
 		this.setModificada(false);
 		
 		Graphics g = this.getImagen().createGraphics();
@@ -55,6 +53,14 @@ public class Imagen {
 		this.setBrillo();
 		this.setContraste();
 		this.setEntropia();
+	
+		this.getContenedor().add(new JLabel(new ImageIcon(imagen)));
+		this.getContenedor().pack();
+	}
+	
+	public Imagen(Image image) {
+		this.setContenedor(new JDialog());
+		
 	}
 
 	void actualizarBufferedImage() {
