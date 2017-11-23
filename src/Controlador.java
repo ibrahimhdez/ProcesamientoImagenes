@@ -23,6 +23,7 @@ public class Controlador {
 	private BrilloContraste brilloContraste;
 	private Histograma histograma;
 	private Diferencia diferencia;
+	private Gamma gamma;
 	
 	public Controlador(){
 		this.setMiVista(new Vista());
@@ -32,6 +33,7 @@ public class Controlador {
 		this.setBrilloContraste(new BrilloContraste());
 		this.setHistograma(new Histograma());
 		this.setDiferencia(new Diferencia());
+		this.setGamma(new Gamma());
 		
 		this.getMiVista().getItemImage().addActionListener(new Oyente());
 		this.getMiVista().getItemHistograma().addActionListener(new Oyente());
@@ -40,6 +42,7 @@ public class Controlador {
 		this.getMiVista().getItemShowInfo().addActionListener(new Oyente());
 		this.getMiVista().getItemBrightnessContrast().addActionListener(new Oyente());
 		this.getMiVista().getItemDiference().addActionListener(new Oyente());
+		this.getMiVista().getItemGamma().addActionListener(new Oyente());
 		this.getBrilloContraste().getBrilloTextField().addActionListener(new Oyente());
 		this.getBrilloContraste().getDefaultBrillo().addActionListener(new Oyente());
 		this.getBrilloContraste().getDefaultContraste().addActionListener(new Oyente());
@@ -47,6 +50,7 @@ public class Controlador {
 		
 		this.getBrilloContraste().getBrilloSlider().addChangeListener(new SliderListener());
 		this.getBrilloContraste().getContrasteSlider().addChangeListener(new SliderListener());	
+		this.getGamma().getSlider().addChangeListener(new SliderListener());
 		
 		getBrilloContraste().getVentana().addWindowListener(new OyenteVentana());
 	}
@@ -54,6 +58,7 @@ public class Controlador {
 	void iniciarComponentes() throws IOException{
 		this.getMiVista().iniciarBotones();
 		this.getBrilloContraste().init();
+		this.getGamma().init();
 		
 		this.getMiVista().init();
 	}
@@ -72,7 +77,7 @@ public class Controlador {
 				JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
 				jfc.setDialogTitle("Choose an image:");
 				jfc.setAcceptAllFileFilterUsed(false);
-				jfc.setFileFilter(new FileNameExtensionFilter("jpg, png, gif", "jpg", "png", "gif"));
+				jfc.setFileFilter(new FileNameExtensionFilter("jpg, png, gif, tif", "jpg", "png", "gif", "tif"));
 				int sel = jfc.showOpenDialog(null);
 				if (sel == JFileChooser.APPROVE_OPTION) {
 			        getMiVista().setRutaImagen(jfc.getSelectedFile().getAbsolutePath());
@@ -132,6 +137,10 @@ public class Controlador {
 					addEventosRaton();
 				}
 				
+				else if(e.getSource() == getMiVista().getItemGamma()) {
+					getGamma().mostrar(getMiVista().getFocoImagenActual().getContenedor());
+				}
+				
 				else if(e.getSource() == getBrilloContraste().getDefaultBrillo()) 
 					getBrilloContraste().getBrilloSlider().setValue((int) getBrilloContraste().getBrilloInicial());
 
@@ -188,6 +197,11 @@ public class Controlador {
 	    		else if(e.getSource() == getBrilloContraste().getContrasteSlider()) {
 	    			getBrilloContraste().actualizarTextContraste();
 	    			getMiVista().modificarImagen(getBrilloContraste().modificarBrilloContraste(getMiVista().getFocoImagenActual()));
+	    		}
+	    		
+	    		else if(e.getSource() == getGamma().getSlider()) {
+	    			getGamma().actualizarTextField();
+	    			getMiVista().modificarImagen(getGamma().modificar(getMiVista().getFocoImagenActual()));
 	    		}
 	    }
 	}
@@ -305,5 +319,13 @@ public class Controlador {
 
 	public void setDiferencia(Diferencia diferencia) {
 		this.diferencia = diferencia;
+	}
+
+	public Gamma getGamma() {
+		return gamma;
+	}
+
+	public void setGamma(Gamma gamma) {
+		this.gamma = gamma;
 	}
 }

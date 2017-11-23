@@ -21,8 +21,6 @@ public class Imagen {
 	
 	public Imagen() {
 		this.setContenedor(new JDialog());
-		//this.setImageIconInicial(new ImageIcon());
-		//this.setImageIconActual(new ImageIcon());
 		this.setBrillo(0);
 		this.setContraste(0);
 		this.setEntropia(0);

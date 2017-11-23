@@ -25,11 +25,13 @@ public class Vista extends JFrame{
     private JMenu menuFile, itemNew;
     private JMenu menuImage, itemAdjust;
     private JMenu menuShow;
+    private JMenu menuProcess;
     private JMenuItem itemImage;
     private JMenuItem itemShowInfo;
     private JMenuItem itemBrightnessContrast;
     private JMenuItem itemHistograma, itemHistogramaAcumulativo;
     private JMenuItem itemDiference;
+    private JMenuItem itemGamma;
     private JButton botonBlancoNegro;
     private JLabel etiquetaImagen;
     private String rutaImagen;
@@ -58,6 +60,9 @@ public class Vista extends JFrame{
         this.setItemDiference(new JMenuItem("Diference"));
         this.setBotonBlancoNegro(new JButton());
         
+        this.setMenuProcess(new JMenu("Process"));
+        this.setItemGamma(new JMenuItem("Gamma"));
+        
         this.setNumeroImagen(1);
         this.setEtiquetaImagen(new JLabel());
         this.setImagenes(new ArrayList<>());
@@ -72,6 +77,7 @@ public class Vista extends JFrame{
 		this.getBarraMenu().add(this.getMenuFile());
 		this.getBarraMenu().add(this.getMenuShow());
 		this.getBarraMenu().add(this.getMenuImage());
+		this.getBarraMenu().add(this.getMenuProcess());
      
 		this.getMenuFile().add(this.getItemNew());
 		this.getItemNew().add(this.getItemImage());
@@ -83,6 +89,8 @@ public class Vista extends JFrame{
 		this.getMenuImage().add(this.getItemAdjust());
 		this.getItemAdjust().add(this.getItemBrightnessContrast());
 		this.getMenuImage().add(this.getItemDiference());
+		
+		this.getMenuProcess().add(this.getItemGamma());
      
 		this.setJMenuBar(this.getBarraMenu());
 		this.setSize(500, 74);
@@ -99,16 +107,14 @@ public class Vista extends JFrame{
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         dialog.setTitle("Imagen " + this.numeroImagen);
         this.numeroImagen++;
-               
-        if((imagen.getWidth(dialog) > 900) || (imagen.getHeight(dialog) > 1000))
+                  
+        while((imagen.getWidth(dialog) > 750) || (imagen.getHeight(dialog) > 750))
         		imagen = imagen.getScaledInstance(imagen.getWidth(dialog) / 2, imagen.getHeight(dialog) / 2, 0);
         
         panel.add(new JLabel(new ImageIcon(imagen)));
-
         dialog.add(panel);
         dialog.setIconImage(imagen);
         dialog.pack();
-        dialog.setLocationByPlatform(true);
         dialog.setResizable(false);
        
         addImagen(dialog);
@@ -339,5 +345,21 @@ public class Vista extends JFrame{
 
 	public void setItemDiference(JMenuItem itemDiference) {
 		this.itemDiference = itemDiference;
+	}
+
+	public JMenu getMenuProcess() {
+		return menuProcess;
+	}
+
+	public void setMenuProcess(JMenu menuProcess) {
+		this.menuProcess = menuProcess;
+	}
+
+	public JMenuItem getItemGamma() {
+		return itemGamma;
+	}
+
+	public void setItemGamma(JMenuItem itemGamma) {
+		this.itemGamma = itemGamma;
 	}
 }
