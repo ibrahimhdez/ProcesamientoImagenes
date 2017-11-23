@@ -94,8 +94,10 @@ public class Controlador {
 			else if(getMiVista().getImagenes().size() > 0) {
 				if(e.getSource() == getMiVista().getBotonBlancoNegro()) {
 					getBlancoNegro().init();
+					
 					getBlancoNegro().convertir(getMiVista().getFocoImagenActual());
-					getMiVista().addImagen(getBlancoNegro().getDialog());
+					getMiVista().addImagen(getBlancoNegro().getDialog()); 
+					addEventosRaton();
 				}
 				
 				else if(e.getSource() == getMiVista().getItemShowInfo()) {
@@ -126,8 +128,8 @@ public class Controlador {
 					}
 					
 					getDiferencia().setImagen2(getBlancoNegro().get(getDiferencia().getImagen2()));
-					getDiferencia().generar();
-					//addEventosRaton();
+					getMiVista().addImagen(getDiferencia().generar().getContenedor());
+					addEventosRaton();
 				}
 				
 				else if(e.getSource() == getBrilloContraste().getDefaultBrillo()) 
@@ -138,7 +140,7 @@ public class Controlador {
 			
 				else if(e.getSource() == getMiVista().getItemHistograma()) 
 					getHistograma().mostrarHistogramaAbsoluto(getMiVista().getFocoImagenActual());
-				
+
 				else if(e.getSource() == getMiVista().getItemHistogramaAcumulativo())
 					getHistograma().mostrarHistogramaAcumulativo(getMiVista().getFocoImagenActual());
 			}

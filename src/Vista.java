@@ -21,7 +21,6 @@ import javax.swing.JPanel;
 public class Vista extends JFrame{
 	private static final long serialVersionUID = 1L;
 	private Imagen imagen;
-	private VentanaBrilloContraste ventanaBrilloContraste;
 	private JMenuBar barraMenu;
     private JMenu menuFile, itemNew;
     private JMenu menuImage, itemAdjust;
@@ -110,7 +109,6 @@ public class Vista extends JFrame{
         dialog.setIconImage(imagen);
         dialog.pack();
         dialog.setLocationByPlatform(true);
-        dialog.setVisible(true);
         dialog.setResizable(false);
        
         addImagen(dialog);
@@ -141,6 +139,36 @@ public class Vista extends JFrame{
 		this.setFocoImagenActual(aux);
 		this.getFocoImagenActual().setRutaImagen(this.getRutaImagen());
 		this.getImagenes().add(aux);
+		this.getFocoImagenActual().getContenedor().setVisible(true);
+	}
+	
+	void addImagen(Imagen imagen, String titulo, int xLocation, int yLocation) {
+		JDialog dialog = imagen.getContenedor();
+		
+		dialog.add(new JLabel(new ImageIcon(imagen.getImagen())));
+		dialog.setIconImage(imagen.getImagen());
+		dialog.setTitle(titulo);
+		dialog.setLocation(xLocation, yLocation);
+		dialog.pack();
+		dialog.setLocationByPlatform(true);
+		
+		dialog.setResizable(false);
+		
+		dialog.addWindowListener(new WindowAdapter(){
+			public void windowClosed(WindowEvent e){
+				for(Imagen imagen: getImagenes())
+					if(e.getSource() == imagen.getContenedor()) {
+						getImagenes().remove(imagen);
+						break;
+					}
+			}
+		});
+		
+		imagen.setContenedor(dialog);
+		imagen.getContenedor().setVisible(true);
+		this.setFocoImagenActual(imagen);
+		this.getFocoImagenActual().setRutaImagen(this.getRutaImagen());
+		this.getImagenes().add(imagen);
 	}
 	
 	void modificarImagen(Imagen newImg) {
@@ -289,14 +317,6 @@ public class Vista extends JFrame{
 		this.itemShowInfo = itemShowInfo;
 	}
 
-	public VentanaBrilloContraste getVentanaBrilloContraste() {
-		return ventanaBrilloContraste;
-	}
-
-	public void setVentanaBrilloContraste(VentanaBrilloContraste ventanaBrilloContraste) {
-		this.ventanaBrilloContraste = ventanaBrilloContraste;
-	}
-	
 	public ImageIcon getImageIconActual() {
 		return imageIconActual;
 	}

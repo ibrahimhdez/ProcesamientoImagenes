@@ -14,7 +14,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.filechooser.FileSystemView;
 
 public class Diferencia {
-	final int UMBRAL = 3;
+	final int UMBRAL = 7;
 	private Imagen imagen1;
 	private Imagen imagen2;
 	private JDialog dialog;
@@ -47,7 +47,6 @@ public class Diferencia {
 			imagen = imagen.getScaledInstance(imagen.getWidth(dialog) / 2, imagen.getHeight(dialog) / 2, 0);
 		
 		auxDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        auxDialog.setTitle("Diferencia Imagen");
         panel.add(new JLabel(new ImageIcon(imagen)));
 
         auxDialog.add(panel);
@@ -57,16 +56,16 @@ public class Diferencia {
         auxDialog.setResizable(false);
 		
 		this.setImagen2(new Imagen(auxDialog));
+		this.getImagen2().getContenedor().setTitle("Imagen Diferencia");
 	}
 	 
-	void generar() {
+	Imagen generar() {
+		Imagen resultadoImagen;
 		BufferedImage resultado;
 		BufferedImage imagen1 = this.getImagen1().getImagen();
 		BufferedImage imagen2 = this.getImagen2().getImagen();
-		Imagen imagenResultado;
-		Color red = new Color(255, 0, 0);
 		int height, width;
-			
+				
 		height = (imagen1.getHeight() > imagen2.getHeight()) ? imagen1.getHeight(): imagen2.getHeight();
 		width = (imagen1.getWidth() > imagen2.getWidth()) ? imagen1.getWidth(): imagen2.getWidth();
 		
@@ -79,19 +78,37 @@ public class Diferencia {
 						resultado.setRGB(i, j, Math.abs(imagen1.getRGB(i, j) - imagen2.getRGB(i, j)));
 					else 
 						resultado.setRGB(i, j, imagen1.getRGB(i, j));
-
-		for(int i = 0; i < resultado.getWidth(); i++)
-			for(int j = 0; j < resultado.getHeight(); j++) {
-				Color color = new Color(resultado.getRGB(i, j));
+		
+		resultadoImagen = new Imagen(marcarDiferencias(resultado));
+		resultadoImagen.getContenedor().setTitle("Resultado");
+		resultadoImagen.getContenedor().setLocation(this.getImagen1().getContenedor().getLocation());
+		mostrarImagenDiferencia();
+		
+		return resultadoImagen;
+	}
+	
+	private void mostrarImagenDiferencia() {
+		JDialog dialog1 = this.getImagen1().getContenedor();
+		
+		dialog1.setLocation(20, 20);
+		this.getImagen2().getContenedor().setLocation((int)dialog1.getLocation().getX() + dialog1.getWidth() + 50, (int)dialog1.getLocation().getY());
+		this.getImagen2().getContenedor().setTitle("Diferencia");
+		this.getImagen2().getContenedor().setVisible(true);
+	}
+	
+	private BufferedImage marcarDiferencias(BufferedImage imagen) {
+		Color red = new Color(255, 0, 0);
+		
+		for(int i = 0; i < imagen.getWidth(); i++)
+			for(int j = 0; j < imagen.getHeight(); j++) {
+				Color color = new Color(imagen.getRGB(i, j));
 				int mediaPixel = (int)((color.getRed() + color.getGreen() + color.getBlue()) / 3);
 				if(mediaPixel > UMBRAL)
-					resultado.setRGB(i, j, red.getRGB());
+					imagen.setRGB(i, j, red.getRGB());
 				else
-					resultado.setRGB(i, j, imagen1.getRGB(i, j));
+					imagen.setRGB(i, j, this.getImagen1().getImagen().getRGB(i, j));
 			}
-			
-		imagenResultado = new Imagen(resultado);
-		imagenResultado.getContenedor().setVisible(true);
+		return imagen;
 	}
 
 	public Imagen getImagen1() {

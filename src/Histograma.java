@@ -21,6 +21,7 @@ public class Histograma {
 	
 	void mostrarHistogramaAbsoluto(Imagen imagen) {
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+		iniciarContenedores();
 		
 		for(int i = 0; i < imagen.getHistograma().length; i++)
 			dataset.setValue(imagen.getHistograma(i), 1 + "", i + "");
@@ -32,7 +33,7 @@ public class Histograma {
 		CategoryPlot p = chart.getCategoryPlot(); 
 		p.setRangeGridlinePaint(Color.black);
 			         
-		ChartPanel chartPanel = new ChartPanel(chart);	        
+		ChartPanel chartPanel = new ChartPanel(chart);	 
 		this.getPanel().add(chartPanel);
 		
 		this.getVentana().add(this.getPanel());
@@ -41,10 +42,9 @@ public class Histograma {
 	}
 	
 	void mostrarHistogramaAcumulativo(Imagen imagen) {
-		JPanel panel = new JPanel();
-		JDialog dialog = new JDialog();
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 		int[] histogramaAcumulativo = acumularHistograma(imagen.getHistograma());
+		iniciarContenedores();
 		
 		for(int i = 0; i < histogramaAcumulativo.length; i++)
 			dataset.setValue(histogramaAcumulativo[i], 1 + "", i + "");
@@ -57,12 +57,12 @@ public class Histograma {
 		p.setRangeGridlinePaint(Color.black);
 			         
 		ChartPanel chartPanel = new ChartPanel(chart);	
-		panel.add(chartPanel);
+		this.getPanel().add(chartPanel);
 		
-		dialog.setResizable(false);
-		dialog.add(panel);
-		dialog.setSize(700, 400);
-		dialog.setVisible(true);
+		this.getVentana().setResizable(false);
+		this.getVentana().add(panel);
+		this.getVentana().setSize(700, 400);
+		this.getVentana().setVisible(true);
 	}
 	
 	int[] acumularHistograma(int[] histograma) {
@@ -77,6 +77,11 @@ public class Histograma {
 		}
 		
 		return aux;
+	}
+	
+	private void iniciarContenedores() {
+		this.setPanel(new JPanel());
+		this.setVentana(new JDialog());
 	}
 
 	public JDialog getVentana() {
