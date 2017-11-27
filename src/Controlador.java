@@ -118,7 +118,7 @@ public class Controlador {
 					getBrilloContraste().setBrilloInicial(getMiVista().getFocoImagenActual().getBrillo());
 					getBrilloContraste().setContrasteInicial(getMiVista().getFocoImagenActual().getContraste());
 					
-					if(!imagenActual.getModificada())
+					//if(!imagenActual.getModificada())
 						getBrilloContraste().actualizarPanel(imagenActual);
 					getBrilloContraste().mostrar(imagenActual.getContenedor());
 				}

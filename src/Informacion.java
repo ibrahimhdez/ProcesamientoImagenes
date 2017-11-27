@@ -61,7 +61,7 @@ public class Informacion {
 				encontrado = true;
 			} 
 		
-		return ruta;
+		return ruta.toUpperCase();
 	}
 	
 	private String conocerSize(Imagen imagen) {

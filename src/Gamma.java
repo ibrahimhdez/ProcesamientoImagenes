@@ -18,7 +18,7 @@ public class Gamma {
 		this.setDialog(new JDialog());
 		this.setPanel(new JPanel());
 		this.setTextField(new JTextField());
-		this.setSlider(new JSlider(JSlider.HORIZONTAL, 0, 100, 100));
+		this.setSlider(new JSlider(JSlider.HORIZONTAL, 0, 500, 100));
 	}
 	
 	void init() {
