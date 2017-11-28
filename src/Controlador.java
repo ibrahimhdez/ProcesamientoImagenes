@@ -10,6 +10,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.filechooser.FileSystemView;
+import javax.swing.Timer;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -17,6 +18,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
 public class Controlador {
+	private Timer timer;
 	private Vista miVista;
 	private Informacion informacion;
 	private BlancoNegro blancoNegro;
