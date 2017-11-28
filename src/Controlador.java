@@ -24,6 +24,7 @@ public class Controlador {
 	private Histograma histograma;
 	private Diferencia diferencia;
 	private Gamma gamma;
+	private Sampling sampling;
 	
 	public Controlador(){
 		this.setMiVista(new Vista());
@@ -34,6 +35,7 @@ public class Controlador {
 		this.setHistograma(new Histograma());
 		this.setDiferencia(new Diferencia());
 		this.setGamma(new Gamma());
+		this.setSampling(new Sampling());
 		
 		this.getMiVista().getItemImage().addActionListener(new Oyente());
 		this.getMiVista().getItemHistograma().addActionListener(new Oyente());
@@ -43,6 +45,7 @@ public class Controlador {
 		this.getMiVista().getItemBrightnessContrast().addActionListener(new Oyente());
 		this.getMiVista().getItemDiference().addActionListener(new Oyente());
 		this.getMiVista().getItemGamma().addActionListener(new Oyente());
+		this.getMiVista().getItemSampling().addActionListener(new Oyente());
 		this.getBrilloContraste().getBrilloTextField().addActionListener(new Oyente());
 		this.getBrilloContraste().getDefaultBrillo().addActionListener(new Oyente());
 		this.getBrilloContraste().getDefaultContraste().addActionListener(new Oyente());
@@ -141,6 +144,10 @@ public class Controlador {
 					getGamma().mostrar(getMiVista().getFocoImagenActual().getContenedor());
 				}
 				
+				else if(e.getSource() == getMiVista().getItemSampling()) {
+					getSampling().mostrar(getMiVista().getFocoImagenActual().getContenedor());
+				}
+				
 				else if(e.getSource() == getBrilloContraste().getDefaultBrillo()) 
 					getBrilloContraste().getBrilloSlider().setValue((int) getBrilloContraste().getBrilloInicial());
 
@@ -152,6 +159,12 @@ public class Controlador {
 
 				else if(e.getSource() == getMiVista().getItemHistogramaAcumulativo())
 					getHistograma().mostrarHistogramaAcumulativo(getMiVista().getFocoImagenActual());
+				
+				else if(e.getSource() == getSampling().getButton()){
+					getSampling().buildImage(getMiVista().getFocoImagenActual());
+					getMiVista().addImagen(getSampling().getDialog());
+					addEventosRaton();
+				}
 			}
 		}
     }
@@ -327,5 +340,13 @@ public class Controlador {
 
 	public void setGamma(Gamma gamma) {
 		this.gamma = gamma;
+	}
+
+	public Sampling getSampling() {
+		return sampling;
+	}
+	
+	public void setSampling(Sampling sampling) {
+		this.sampling = sampling;
 	}
 }

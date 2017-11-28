@@ -23,7 +23,7 @@ public class Vista extends JFrame{
 	private Imagen imagen;
 	private JMenuBar barraMenu;
     private JMenu menuFile, itemNew;
-    private JMenu menuImage, itemAdjust;
+    private JMenu menuImage, itemAdjust, itemDigitalize;
     private JMenu menuShow;
     private JMenu menuProcess;
     private JMenuItem itemImage;
@@ -32,6 +32,8 @@ public class Vista extends JFrame{
     private JMenuItem itemHistograma, itemHistogramaAcumulativo;
     private JMenuItem itemDiference;
     private JMenuItem itemGamma;
+    private JMenuItem itemSampling;
+    private JMenuItem itemQuantization;
     private JButton botonBlancoNegro;
     private JLabel etiquetaImagen;
     private String rutaImagen;
@@ -58,6 +60,10 @@ public class Vista extends JFrame{
         this.setItemAdjust(new JMenu("Adjust"));
         this.setItemBrightnessContrast(new JMenuItem("Brightness/Contrast"));
         this.setItemDiference(new JMenuItem("Diference"));
+        this.setItemDigitalize(new JMenu("Digitalize"));
+        this.setItemSampling(new JMenuItem("Sampling"));
+        this.setItemQuantization(new JMenuItem("Quantization"));
+        
         this.setBotonBlancoNegro(new JButton());
         
         this.setMenuProcess(new JMenu("Process"));
@@ -89,6 +95,9 @@ public class Vista extends JFrame{
 		this.getMenuImage().add(this.getItemAdjust());
 		this.getItemAdjust().add(this.getItemBrightnessContrast());
 		this.getMenuImage().add(this.getItemDiference());
+		this.getMenuImage().add(this.getItemDigitalize());
+		this.getItemDigitalize().add(this.getItemSampling());
+		this.getItemDigitalize().add(this.getItemQuantization());
 		
 		this.getMenuProcess().add(this.getItemGamma());
      
@@ -361,5 +370,47 @@ public class Vista extends JFrame{
 
 	public void setItemGamma(JMenuItem itemGamma) {
 		this.itemGamma = itemGamma;
+	}
+
+	/**
+	 * @return the menuDigitalize
+	 */
+	public JMenu getItemDigitalize() {
+		return itemDigitalize;
+	}
+
+	/**
+	 * @param menuDigitalize the menuDigitalize to set
+	 */
+	public void setItemDigitalize(JMenu menuDigitalize) {
+		this.itemDigitalize = menuDigitalize;
+	}
+
+	/**
+	 * @return the itemSampling
+	 */
+	public JMenuItem getItemSampling() {
+		return itemSampling;
+	}
+
+	/**
+	 * @param itemSampling the itemSampling to set
+	 */
+	public void setItemSampling(JMenuItem itemSampling) {
+		this.itemSampling = itemSampling;
+	}
+
+	/**
+	 * @return the itemQuantization
+	 */
+	public JMenuItem getItemQuantization() {
+		return itemQuantization;
+	}
+
+	/**
+	 * @param itemQuantization the itemQuantization to set
+	 */
+	public void setItemQuantization(JMenuItem itemQuantization) {
+		this.itemQuantization = itemQuantization;
 	}
 }
