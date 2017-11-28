@@ -287,6 +287,14 @@ public class Controlador {
 			
 		}
 	}
+	
+	public Timer getTimer() {
+		return timer;
+	}
+	
+	public void setTimer(Timer timer) {
+		this.timer = timer;
+	}
 		   
 	public Vista getMiVista() {
 		return miVista;
