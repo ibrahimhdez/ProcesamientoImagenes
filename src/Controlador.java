@@ -26,18 +26,17 @@ public class Controlador {
 	private Histograma histograma;
 	private Diferencia diferencia;
 	private Gamma gamma;
-	private Sampling sampling;
+	//private Sampling sampling;
 	
 	public Controlador(){
 		this.setMiVista(new Vista());
-		
 		this.setInformacion(new Informacion());
 		this.setBlancoNegro(new BlancoNegro());
 		this.setBrilloContraste(new BrilloContraste());
 		this.setHistograma(new Histograma());
 		this.setDiferencia(new Diferencia());
 		this.setGamma(new Gamma());
-		this.setSampling(new Sampling());
+		//this.setSampling(new Sampling());
 		
 		this.getMiVista().getItemImage().addActionListener(new Oyente());
 		this.getMiVista().getItemHistograma().addActionListener(new Oyente());
@@ -123,6 +122,7 @@ public class Controlador {
 					getBrilloContraste().setBrilloInicial(getMiVista().getFocoImagenActual().getBrillo());
 					getBrilloContraste().setContrasteInicial(getMiVista().getFocoImagenActual().getContraste());
 					
+					//Comentar el siguiente condicional para trabajar con la imagen actual, no la inicial.
 					//if(!imagenActual.getModificada())
 						getBrilloContraste().actualizarPanel(imagenActual);
 					getBrilloContraste().mostrar(imagenActual.getContenedor());
@@ -147,7 +147,7 @@ public class Controlador {
 				}
 				
 				else if(e.getSource() == getMiVista().getItemSampling()) {
-					getSampling().mostrar(getMiVista().getFocoImagenActual().getContenedor());
+					//getSampling().mostrar(getMiVista().getFocoImagenActual().getContenedor());
 				}
 				
 				else if(e.getSource() == getBrilloContraste().getDefaultBrillo()) 
@@ -162,11 +162,11 @@ public class Controlador {
 				else if(e.getSource() == getMiVista().getItemHistogramaAcumulativo())
 					getHistograma().mostrarHistogramaAcumulativo(getMiVista().getFocoImagenActual());
 				
-				else if(e.getSource() == getSampling().getButton()){
+				/*else if(e.getSource() == getSampling().getButton()){
 					getSampling().buildImage(getMiVista().getFocoImagenActual());
 					getMiVista().addImagen(getSampling().getDialog());
 					addEventosRaton();
-				}
+				}*/
 			}
 		}
     }
@@ -352,11 +352,11 @@ public class Controlador {
 		this.gamma = gamma;
 	}
 
-	public Sampling getSampling() {
+	/*public Sampling getSampling() {
 		return sampling;
 	}
 	
 	public void setSampling(Sampling sampling) {
 		this.sampling = sampling;
-	}
+	}*/
 }

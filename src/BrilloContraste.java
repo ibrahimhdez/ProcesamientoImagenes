@@ -80,7 +80,7 @@ public class BrilloContraste {
 	Imagen modificarBrilloContraste(Imagen imagenActual) {
 		imagenActual.setImageIconActual(imagenActual.getImageIconInicial());
 		BufferedImage imagen = imagenActual.getImagen(); 
-		Imagen aux;
+		Imagen imagenResultado;
 		  
 		float A = (float) ((float) (this.getContrasteSlider().getValue()) / (imagenActual.getContraste()));
 		float B = this.getBrilloSlider().getValue() - (float) (imagenActual.getBrillo() * A);
@@ -105,11 +105,12 @@ public class BrilloContraste {
 		    	 	newImg.setRGB(i, j, new Color(ncol, ncol, ncol).getRGB());
 		      }
 		 
-		 aux = new Imagen(newImg);
-		 aux.setBrillo(this.getBrilloSlider().getValue());
-		 aux.setContraste(this.getContrasteSlider().getValue());
+		 imagenResultado = new Imagen(newImg);
+		 //imagenResultado.setBrillo(this.getBrilloSlider().getValue());
+		 //imagenResultado.setContraste(this.getContrasteSlider().getValue());
+		 imagenResultado.setRutaImagen(imagenActual.getRutaImagen());
 		 
-		 return aux;
+		 return imagenResultado;
 	}
 	
 	void mostrar(JDialog dialog) {
