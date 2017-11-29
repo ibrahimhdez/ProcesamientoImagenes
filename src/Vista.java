@@ -35,6 +35,7 @@ public class Vista extends JFrame{
     private JMenuItem itemSampling;
     private JMenuItem itemQuantization;
     private JButton botonBlancoNegro;
+    private JButton botonTijera;
     private JLabel etiquetaImagen;
     private String rutaImagen;
     private Integer numeroImagen;
@@ -65,6 +66,7 @@ public class Vista extends JFrame{
         this.setItemQuantization(new JMenuItem("Quantization"));
         
         this.setBotonBlancoNegro(new JButton());
+        this.setBotonTijera(new JButton());
         
         this.setMenuProcess(new JMenu("Process"));
         this.setItemGamma(new JMenuItem("Gamma"));
@@ -79,6 +81,7 @@ public class Vista extends JFrame{
 		this.setLayout(null);
 		add(this.getEtiquetaImagen());
 		add(this.getBotonBlancoNegro());
+		add(this.getBotonTijera());
     
 		this.getBarraMenu().add(this.getMenuFile());
 		this.getBarraMenu().add(this.getMenuShow());
@@ -131,11 +134,16 @@ public class Vista extends JFrame{
     
 	void iniciarBotones() throws IOException{
 		Image imagenBlancoNegro = ImageIO.read(new File("imagenesBotones/bw.jpg"));
+		Image imagenTijera = ImageIO.read(new File("imagenesBotones/tijera.jpg"));
 		
-		imagenBlancoNegro = imagenBlancoNegro.getScaledInstance(20, 20, java.awt.Image.SCALE_SMOOTH);
+		imagenBlancoNegro = imagenBlancoNegro.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+		imagenTijera = imagenTijera.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
 		
 		this.getBotonBlancoNegro().setIcon(new ImageIcon(imagenBlancoNegro));
 		this.getBotonBlancoNegro().setBounds(new Rectangle(0, 0, 30, 30));
+		
+		this.getBotonTijera().setIcon(new ImageIcon(imagenTijera));
+		this.getBotonTijera().setBounds(new Rectangle(31, 0, 30, 30));
     }
 		
 	void addImagen(JDialog dialog){
@@ -250,6 +258,14 @@ public class Vista extends JFrame{
 	
 	public void setBotonBlancoNegro(JButton botonBlancoNegro){
 		this.botonBlancoNegro = botonBlancoNegro;
+	}
+
+	public JButton getBotonTijera() {
+		return botonTijera;
+	}
+
+	public void setBotonTijera(JButton botonTijera) {
+		this.botonTijera = botonTijera;
 	}
 
 	public Integer getNumeroImagen() {

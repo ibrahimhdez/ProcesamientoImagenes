@@ -45,6 +45,7 @@ public class Controlador {
 		this.getMiVista().getItemHistograma().addActionListener(new Oyente());
 		this.getMiVista().getItemHistogramaAcumulativo().addActionListener(new Oyente());
 		this.getMiVista().getBotonBlancoNegro().addActionListener(new Oyente());
+		this.getMiVista().getBotonTijera().addActionListener(new Oyente());
 		this.getMiVista().getItemShowInfo().addActionListener(new Oyente());
 		this.getMiVista().getItemBrightnessContrast().addActionListener(new Oyente());
 		this.getMiVista().getItemDiference().addActionListener(new Oyente());
@@ -117,6 +118,10 @@ public class Controlador {
 					getBlancoNegro().convertir(getMiVista().getFocoImagenActual());
 					getMiVista().addImagen(getBlancoNegro().getDialog()); 
 					addEventosRaton();
+				}
+				
+				else if(e.getSource() == getMiVista().getBotonTijera()) {
+					System.out.println("W");
 				}
 				
 				else if(e.getSource() == getMiVista().getItemShowInfo()) {
