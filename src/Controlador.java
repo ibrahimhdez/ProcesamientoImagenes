@@ -1,3 +1,4 @@
+import java.awt.MouseInfo;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -18,7 +19,6 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
 public class Controlador {
-	private Timer timer;
 	private Vista miVista;
 	private Informacion informacion;
 	private BlancoNegro blancoNegro;
@@ -26,7 +26,9 @@ public class Controlador {
 	private Histograma histograma;
 	private Diferencia diferencia;
 	private Gamma gamma;
-	//private Sampling sampling;
+	private Sampling sampling;
+	private Timer timer;
+	double x, y;
 	
 	public Controlador(){
 		this.setMiVista(new Vista());
@@ -36,7 +38,8 @@ public class Controlador {
 		this.setHistograma(new Histograma());
 		this.setDiferencia(new Diferencia());
 		this.setGamma(new Gamma());
-		//this.setSampling(new Sampling());
+		this.setSampling(new Sampling());
+		iniciarTimer();
 		
 		this.getMiVista().getItemImage().addActionListener(new Oyente());
 		this.getMiVista().getItemHistograma().addActionListener(new Oyente());
@@ -63,8 +66,15 @@ public class Controlador {
 		this.getMiVista().iniciarBotones();
 		this.getBrilloContraste().init();
 		this.getGamma().init();
-		
 		this.getMiVista().init();
+	}
+	
+	private void iniciarTimer() {
+		this.setTimer(new Timer(100, new ActionListener() {
+		    public void actionPerformed(ActionEvent evt) {
+		    		System.out.println(x + " " + y);
+		    }
+		 }));
 	}
 	
 	void addEventosRaton(){
@@ -143,11 +153,12 @@ public class Controlador {
 				}
 				
 				else if(e.getSource() == getMiVista().getItemGamma()) {
+					getGamma().getSlider().setValue((int)(getMiVista().getFocoImagenActual().getIndiceGamma() * 100));
 					getGamma().mostrar(getMiVista().getFocoImagenActual().getContenedor());
 				}
 				
 				else if(e.getSource() == getMiVista().getItemSampling()) {
-					//getSampling().mostrar(getMiVista().getFocoImagenActual().getContenedor());
+					getSampling().mostrar(getMiVista().getFocoImagenActual().getContenedor());
 				}
 				
 				else if(e.getSource() == getBrilloContraste().getDefaultBrillo()) 
@@ -162,11 +173,11 @@ public class Controlador {
 				else if(e.getSource() == getMiVista().getItemHistogramaAcumulativo())
 					getHistograma().mostrarHistogramaAcumulativo(getMiVista().getFocoImagenActual());
 				
-				/*else if(e.getSource() == getSampling().getButton()){
+				else if(e.getSource() == getSampling().getButton()){
 					getSampling().buildImage(getMiVista().getFocoImagenActual());
 					getMiVista().addImagen(getSampling().getDialog());
 					addEventosRaton();
-				}*/
+				}
 			}
 		}
     }
@@ -174,7 +185,10 @@ public class Controlador {
 	class EventoRaton implements MouseListener{
 		@Override
 		public void mousePressed(MouseEvent e){
-			getMiVista().setFocoImagenActual(new Imagen((JDialog) e.getSource()));
+			for(Imagen imagen: getMiVista().getImagenes())
+				if(e.getSource() == imagen.getContenedor())
+					getMiVista().setFocoImagenActual(imagen);
+			//getMiVista().setFocoImagenActual(new Imagen((JDialog) e.getSource()));
 		}
 
 		@Override
@@ -191,14 +205,16 @@ public class Controlador {
 
 		@Override
 		public void mouseEntered(MouseEvent e) {
-			// TODO Auto-generated method stub
-			
+			/*x = e.getLocationOnScreen().getX();
+			y = e.getLocationOnScreen().getY();
+			x =- getMiVista().getFocoImagenActual().getContenedor().getLocationOnScreen().getX();
+			y =- getMiVista().getFocoImagenActual().getContenedor().getLocationOnScreen().getY();
+			//getTimer().start();*/
 		}
 
 		@Override
 		public void mouseExited(MouseEvent e) {
-			// TODO Auto-generated method stub
-	
+			getTimer().stop();
 		}		
 	}
 	
@@ -217,6 +233,8 @@ public class Controlador {
 	    		else if(e.getSource() == getGamma().getSlider()) {
 	    			getGamma().actualizarTextField();
 	    			getMiVista().modificarImagen(getGamma().modificar(getMiVista().getFocoImagenActual()));
+	    			double indiceGamma = getGamma().getSlider().getValue() / 100.0;
+	    			getMiVista().getFocoImagenActual().setIndiceGamma(indiceGamma);
 	    		}
 	    }
 	}
@@ -352,11 +370,11 @@ public class Controlador {
 		this.gamma = gamma;
 	}
 
-	/*public Sampling getSampling() {
+	public Sampling getSampling() {
 		return sampling;
 	}
 	
 	public void setSampling(Sampling sampling) {
 		this.sampling = sampling;
-	}*/
+	}
 }

@@ -18,6 +18,7 @@ public class Imagen {
 	private float brillo;
 	private float contraste;
 	private float entropia;
+	private double indiceGamma;
 	
 	public Imagen() {
 		this.setContenedor(new JDialog());
@@ -25,6 +26,7 @@ public class Imagen {
 		this.setContraste(0);
 		this.setEntropia(0);
 		this.setModificada(false);
+		this.setIndiceGamma(1.0);
 	}
 	
 	public Imagen(JDialog contenedor) {
@@ -41,6 +43,7 @@ public class Imagen {
 		this.setBrillo();
 		this.setContraste();
 		this.setEntropia();
+		this.setIndiceGamma(1.0);
 	}
 	
 	public Imagen(BufferedImage imagen) {
@@ -51,7 +54,8 @@ public class Imagen {
 		this.setBrillo();
 		this.setContraste();
 		this.setEntropia();
-	
+		this.setIndiceGamma(1.0);
+		
 		this.getContenedor().add(new JLabel(new ImageIcon(imagen)));
 		this.getContenedor().pack();
 	}
@@ -214,6 +218,14 @@ public class Imagen {
 
 	public void setEntropia(float entropia) {
 		this.entropia = entropia;
+	}
+
+	public double getIndiceGamma() {
+		return indiceGamma;
+	}
+
+	public void setIndiceGamma(double indiceGamma) {
+		this.indiceGamma = indiceGamma;
 	}
 
 }
