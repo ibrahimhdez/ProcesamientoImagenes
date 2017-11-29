@@ -1,10 +1,10 @@
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -44,6 +44,8 @@ public class Vista extends JFrame{
     private ArrayList<Imagen> imagenes;
     private Imagen focoImagenActual;
     private ImageIcon imageIconActual;
+    Image imagen1;
+    BufferedImage newImage;
 
     public Vista() {
         super("Procesamiento Imágenes");
@@ -115,20 +117,36 @@ public class Vista extends JFrame{
     
     void openJDialog() throws IOException{
     		JDialog dialog = new JDialog();     
-    		JPanel panel = new JPanel();
-    		Image imagen = ImageIO.read(new File(this.getRutaImagen()));
+    		
+    		BufferedImage imagen1 = ImageIO.read(new File(this.getRutaImagen()));
     	
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         dialog.setTitle("Imagen " + this.numeroImagen);
         this.numeroImagen++;
+        Image toolkitImage = imagen1;
                   
-        while((imagen.getWidth(dialog) > 750) || (imagen.getHeight(dialog) > 750))
-        		imagen = imagen.getScaledInstance(imagen.getWidth(dialog) / 2, imagen.getHeight(dialog) / 2, 0);
-        
-        panel.add(new JLabel(new ImageIcon(imagen)));
+        while((toolkitImage.getWidth(dialog) > 750) || (toolkitImage.getHeight(dialog) > 750)) 
+        		toolkitImage = imagen1.getScaledInstance(toolkitImage.getWidth(dialog) / 2, toolkitImage.getHeight(dialog) / 2, Image.SCALE_SMOOTH);
+
+    		newImage = new BufferedImage(toolkitImage.getWidth(dialog), toolkitImage.getHeight(dialog), 
+    		      BufferedImage.TYPE_INT_ARGB);
+    		
+    		Graphics g = newImage.getGraphics();
+    		g.drawImage(toolkitImage, 0, 0, null);
+    		g.dispose();
+    		
+        @SuppressWarnings("serial")
+		JPanel panel = new JPanel() {
+        		@Override
+        		public void paintComponent(Graphics g) {
+        			super.paintComponent(g); 
+        			g.drawImage(newImage, 0, 0, null);
+        		}
+        };
+
         dialog.add(panel);
-        dialog.setIconImage(imagen);
-        dialog.pack();
+        dialog.setIconImage(toolkitImage);
+        dialog.setSize(toolkitImage.getWidth(null), toolkitImage.getHeight(null) + 45); //Incrementando tamaño para insertar coordenadas y valor del píxel.
         dialog.setResizable(false);
        
         addImagen(dialog);
@@ -149,20 +167,6 @@ public class Vista extends JFrame{
     }
 		
 	void addImagen(JDialog dialog){
-		JPanel panel = new JPanel() { 
-			
-			
-			
-			private static final long serialVersionUID = 1L;
-
-			public void paint (Graphics g) { 
-				super.paint(g); 
-				g.setColor(new Color(255, 0, 0));
-				g.drawLine(0,0, 500, 500);
-			} 
-		};
-		dialog.add(panel);
-		dialog.setSize(500, 500);
 		Imagen aux = new Imagen(dialog);
 	
 		dialog.addWindowListener(new WindowAdapter(){
@@ -212,7 +216,21 @@ public class Vista extends JFrame{
 	
 	void modificarImagen(Imagen newImg) {
 		this.getFocoImagenActual().getContenedor().getContentPane().removeAll();
-		this.getFocoImagenActual().getContenedor().getContentPane().add(new JLabel(new ImageIcon(newImg.getImagen())));
+		Graphics g = newImg.getImagen().getGraphics();
+		g.drawImage(newImg.getImagen(), 0, 0, null);
+		g.dispose();
+		
+		@SuppressWarnings("serial")
+		JPanel panel = new JPanel() {
+    			@Override
+    			public void paintComponent(Graphics g) {
+    				super.paintComponent(g); 
+    				g.drawImage(newImg.getImagen(), 0, 0, null);
+    			}
+		};
+
+    		this.getFocoImagenActual().getContenedor().add(panel);
+    		this.getFocoImagenActual().getContenedor().setIconImage(newImg.getImagen());
 		this.getFocoImagenActual().getContenedor().revalidate();
 		this.setImageIconActual(new ImageIcon(newImg.getImagen()));
 		this.getFocoImagenActual().setModificada(true);

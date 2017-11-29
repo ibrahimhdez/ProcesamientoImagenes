@@ -5,6 +5,7 @@ import java.awt.image.BufferedImage;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 public class BlancoNegro {
 	private JDialog dialog;
@@ -32,11 +33,24 @@ public class BlancoNegro {
 				imagen.setRGB(i, j,colorSRGB);
          }
 
-		this.getDialog().add(new JLabel(new ImageIcon(imagen)));
+		g = imagen.getGraphics();
+		g.drawImage(imagen, 0, 0, null);
+		g.dispose();
+		
+		@SuppressWarnings("serial")
+		JPanel panel = new JPanel() {
+    			@Override
+    			public void paintComponent(Graphics g) {
+    				super.paintComponent(g); 
+    				g.drawImage(imagen, 0, 0, null);
+    			}
+		};
+		
+		this.getDialog().add(panel);
 		this.getDialog().setIconImage(imagen);
 		this.getDialog().setTitle(imagenActual.getContenedor().getTitle() + " blanco y negro");
 		this.getDialog().setLocation((int)imagenActual.getContenedor().getLocation().getX(), (int)imagenActual.getContenedor().getLocation().getY() + imagenActual.getContenedor().getHeight() + 50);
-		this.getDialog().pack();
+		this.getDialog().setSize(imagen.getWidth(), imagen.getHeight() + 45);
 		this.getDialog().setLocationByPlatform(true);
 		this.getDialog().setVisible(true);
 		this.getDialog().setResizable(false);
