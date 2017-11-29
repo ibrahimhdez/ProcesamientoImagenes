@@ -1,8 +1,8 @@
+import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 import javax.swing.ButtonGroup;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -58,7 +58,6 @@ public class Sampling {
 	}
 	
 	public void buildImage(Imagen imagenActual){
-		
 		String text = "";
 		for(int i=0; i<getRadioButtons().size();i++)
 			if(getRadioButtons().get(i).isSelected())
@@ -67,11 +66,24 @@ public class Sampling {
 		if(!text.isEmpty()){
 			getDialog().removeAll();
 			BufferedImage imagen = imagenActual.getImagen();
-			this.getDialog().add(new JLabel(new ImageIcon(imagen)));
+			Graphics g = imagen.getGraphics();
+			g.drawImage(imagen, 0, 0, null);
+			g.dispose();
+			
+			@SuppressWarnings("serial")
+			JPanel panel = new JPanel() {
+	    			@Override
+	    			public void paintComponent(Graphics g) {
+	    				super.paintComponent(g); 
+	    				g.drawImage(imagen, 0, 0, null);
+	    			}
+			};
+			
+			this.getDialog().add(panel);
 			this.getDialog().setIconImage(imagen);
 			this.getDialog().setTitle(imagenActual.getContenedor().getTitle() + " muestreada a " + text);
 			this.getDialog().setLocation((int)imagenActual.getContenedor().getLocation().getX(), (int)imagenActual.getContenedor().getLocation().getY() + imagenActual.getContenedor().getHeight() + 50);
-			this.getDialog().pack();
+			this.getDialog().setSize(imagen.getWidth(), imagen.getHeight() + 45);
 			this.getDialog().setLocationByPlatform(true);
 			this.getDialog().setVisible(true);
 			this.getDialog().setResizable(false);
