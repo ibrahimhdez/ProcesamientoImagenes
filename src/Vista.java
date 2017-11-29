@@ -1,3 +1,5 @@
+import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
@@ -147,6 +149,20 @@ public class Vista extends JFrame{
     }
 		
 	void addImagen(JDialog dialog){
+		JPanel panel = new JPanel() { 
+			
+			
+			
+			private static final long serialVersionUID = 1L;
+
+			public void paint (Graphics g) { 
+				super.paint(g); 
+				g.setColor(new Color(255, 0, 0));
+				g.drawLine(0,0, 500, 500);
+			} 
+		};
+		dialog.add(panel);
+		dialog.setSize(500, 500);
 		Imagen aux = new Imagen(dialog);
 	
 		dialog.addWindowListener(new WindowAdapter(){

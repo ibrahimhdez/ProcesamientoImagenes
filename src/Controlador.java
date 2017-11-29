@@ -1,16 +1,21 @@
+import java.awt.Graphics2D;
 import java.awt.MouseInfo;
+import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
+import javax.swing.JPanel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.filechooser.FileSystemView;
+
 import javax.swing.Timer;
 
 import java.awt.event.MouseEvent;
@@ -22,6 +27,7 @@ public class Controlador {
 	private Vista miVista;
 	private Informacion informacion;
 	private BlancoNegro blancoNegro;
+	private Recortar recortar;
 	private BrilloContraste brilloContraste;
 	private Histograma histograma;
 	private Diferencia diferencia;
@@ -34,6 +40,7 @@ public class Controlador {
 		this.setMiVista(new Vista());
 		this.setInformacion(new Informacion());
 		this.setBlancoNegro(new BlancoNegro());
+		this.setRecortar(new Recortar());
 		this.setBrilloContraste(new BrilloContraste());
 		this.setHistograma(new Histograma());
 		this.setDiferencia(new Diferencia());
@@ -121,7 +128,7 @@ public class Controlador {
 				}
 				
 				else if(e.getSource() == getMiVista().getBotonTijera()) {
-					System.out.println("W");
+					
 				}
 				
 				else if(e.getSource() == getMiVista().getItemShowInfo()) {
@@ -337,6 +344,14 @@ public class Controlador {
 
 	public void setBlancoNegro(BlancoNegro blancoNegro) {
 		this.blancoNegro = blancoNegro;
+	}
+
+	public Recortar getRecortar() {
+		return recortar;
+	}
+
+	public void setRecortar(Recortar recortar) {
+		this.recortar = recortar;
 	}
 
 	public void setMiVista(Vista miVista) {
