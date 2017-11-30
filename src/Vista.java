@@ -231,6 +231,7 @@ public class Vista extends JFrame{
     			public void paintComponent(Graphics g) {
     				super.paintComponent(g); 
     				g.drawImage(newImg.getImagen(), 0, 0, null);
+    				getRecortar().pintarRectangulo(g);
     			}
 		};
 
@@ -242,6 +243,10 @@ public class Vista extends JFrame{
 		this.getFocoImagenActual().setBrillo(newImg.getBrillo());
 		this.getFocoImagenActual().setContraste(newImg.getContraste());
 	}	
+	
+	void pintarRectangulo() {
+		this.getFocoImagenActual().getContenedor().repaint();
+	}
     
     public ArrayList<Imagen> getImagenes() {
 		return imagenes;

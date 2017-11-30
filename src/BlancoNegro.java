@@ -37,6 +37,7 @@ public class BlancoNegro {
     			public void paintComponent(Graphics g) {
     				super.paintComponent(g); 
     				g.drawImage(imagen, 0, 0, null);
+    				imagenActual.getRecortar().pintarRectangulo(g);
     			}
 		};
 		

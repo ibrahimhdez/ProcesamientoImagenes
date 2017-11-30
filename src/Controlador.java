@@ -1,3 +1,4 @@
+import java.awt.MouseInfo;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -10,6 +11,8 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.filechooser.FileSystemView;
+
+import java.awt.Point;
 
 import javax.swing.Timer;
 
@@ -70,11 +73,7 @@ public class Controlador {
 	}
 	
 	private void iniciarTimer() {
-		this.setTimer(new Timer(100, new ActionListener() {
-		    public void actionPerformed(ActionEvent evt) {
-		    		
-		    }
-		 }));
+		
 	}
 	
 	void addEventosRaton(){
@@ -192,7 +191,21 @@ public class Controlador {
 			for(Imagen imagen: getMiVista().getImagenes())
 				if(e.getSource() == imagen.getContenedor())
 					getMiVista().setFocoImagenActual(imagen);
-			//getMiVista().setFocoImagenActual(new Imagen((JDialog) e.getSource()));
+			
+			getMiVista().getFocoImagenActual().getRecortar().setPintar(true);
+			getMiVista().getFocoImagenActual().getRecortar().setPuntoInicio(e.getPoint());
+			
+			setTimer(new Timer(10, new ActionListener() {
+			    public void actionPerformed(ActionEvent evt) {
+			    		Point posRaton = MouseInfo.getPointerInfo().getLocation();
+			    		Point posContenedor = getMiVista().getFocoImagenActual().getContenedor().getLocation();
+			    	
+			    		getMiVista().getFocoImagenActual().getRecortar().setPuntoFinal(new Point((int)(posRaton.getX() - posContenedor.getX()), (int)(posRaton.getY() - posContenedor.getY())));
+			    		getMiVista().getFocoImagenActual().getContenedor().repaint();	
+			    }
+			 }));
+			
+			getTimer().start();
 		}
 
 		@Override
@@ -203,8 +216,9 @@ public class Controlador {
 
 		@Override
 		public void mouseReleased(MouseEvent e) {
-			// TODO Auto-generated method stub
-			
+			getTimer().stop();
+			getMiVista().getFocoImagenActual().getRecortar().setPuntoFinal(e.getPoint());
+			getMiVista().getFocoImagenActual().getContenedor().repaint();
 		}
 
 		@Override
