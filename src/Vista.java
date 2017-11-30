@@ -23,6 +23,7 @@ import javax.swing.JPanel;
 public class Vista extends JFrame{
 	private static final long serialVersionUID = 1L;
 	private Imagen imagen;
+	private Recortar recortar;
 	private JMenuBar barraMenu;
     private JMenu menuFile, itemNew;
     private JMenu menuImage, itemAdjust, itemDigitalize;
@@ -117,6 +118,7 @@ public class Vista extends JFrame{
     
     void openJDialog() throws IOException{
     		JDialog dialog = new JDialog();     
+    		this.setRecortar(new Recortar());
     		
     		BufferedImage imagen1 = ImageIO.read(new File(this.getRutaImagen()));
     	
@@ -141,6 +143,7 @@ public class Vista extends JFrame{
         		public void paintComponent(Graphics g) {
         			super.paintComponent(g); 
         			g.drawImage(newImage, 0, 0, null);
+        			getRecortar().pintarRectangulo(g);
         		}
         };
 
@@ -179,6 +182,8 @@ public class Vista extends JFrame{
     			}
 		});
     
+		aux.setRecortar(this.getRecortar());
+		aux.setPanel((JPanel)dialog.getContentPane());
 		this.setFocoImagenActual(aux);
 		this.getFocoImagenActual().setRutaImagen(this.getRutaImagen());
 		this.getImagenes().add(aux);
@@ -252,6 +257,14 @@ public class Vista extends JFrame{
 
 	public void setImagen(Imagen imagen) {
 		this.imagen = imagen;
+	}
+
+	public Recortar getRecortar() {
+		return recortar;
+	}
+
+	public void setRecortar(Recortar recortar) {
+		this.recortar = recortar;
 	}
 
 	public JMenuBar getBarraMenu() {

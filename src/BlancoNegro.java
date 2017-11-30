@@ -31,10 +31,6 @@ public class BlancoNegro {
 				imagen.setRGB(i, j,colorSRGB);
          }
 
-		g = imagen.getGraphics();
-		g.drawImage(imagen, 0, 0, null);
-		g.dispose();
-		
 		@SuppressWarnings("serial")
 		JPanel panel = new JPanel() {
     			@Override

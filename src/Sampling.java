@@ -66,9 +66,6 @@ public class Sampling {
 		if(!text.isEmpty()){
 			getDialog().removeAll();
 			BufferedImage imagen = imagenActual.getImagen();
-			Graphics g = imagen.getGraphics();
-			g.drawImage(imagen, 0, 0, null);
-			g.dispose();
 			
 			@SuppressWarnings("serial")
 			JPanel panel = new JPanel() {

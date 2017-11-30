@@ -22,20 +22,17 @@ public class Controlador {
 	private Vista miVista;
 	private Informacion informacion;
 	private BlancoNegro blancoNegro;
-	private Recortar recortar;
 	private BrilloContraste brilloContraste;
 	private Histograma histograma;
 	private Diferencia diferencia;
 	private Gamma gamma;
 	private Sampling sampling;
 	private Timer timer;
-	double x, y;
 	
 	public Controlador(){
 		this.setMiVista(new Vista());
 		this.setInformacion(new Informacion());
 		this.setBlancoNegro(new BlancoNegro());
-		this.setRecortar(new Recortar());
 		this.setBrilloContraste(new BrilloContraste());
 		this.setHistograma(new Histograma());
 		this.setDiferencia(new Diferencia());
@@ -75,7 +72,7 @@ public class Controlador {
 	private void iniciarTimer() {
 		this.setTimer(new Timer(100, new ActionListener() {
 		    public void actionPerformed(ActionEvent evt) {
-		    		System.out.println(x + " " + y);
+		    		
 		    }
 		 }));
 	}
@@ -339,14 +336,6 @@ public class Controlador {
 
 	public void setBlancoNegro(BlancoNegro blancoNegro) {
 		this.blancoNegro = blancoNegro;
-	}
-
-	public Recortar getRecortar() {
-		return recortar;
-	}
-
-	public void setRecortar(Recortar recortar) {
-		this.recortar = recortar;
 	}
 
 	public void setMiVista(Vista miVista) {

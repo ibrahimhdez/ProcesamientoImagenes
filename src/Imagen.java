@@ -6,9 +6,12 @@ import java.awt.image.BufferedImage;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 public class Imagen {
 	private JDialog contenedor;
+	private JPanel panel;
+	private Recortar recortar;
 	private BufferedImage imagen;
 	private ImageIcon imageIconActual;
 	private ImageIcon imageIconInicial;
@@ -22,6 +25,8 @@ public class Imagen {
 	
 	public Imagen() {
 		this.setContenedor(new JDialog());
+		this.setPanel(new JPanel());
+		this.setRecortar(new Recortar());
 		this.setBrillo(0);
 		this.setContraste(0);
 		this.setEntropia(0);
@@ -31,6 +36,7 @@ public class Imagen {
 	
 	public Imagen(JDialog contenedor) {
 		this.setContenedor(contenedor);
+		this.setPanel(new JPanel());
 		this.setImageIconInicial(new ImageIcon(contenedor.getIconImages().get(0)));
 		this.setImageIconActual(new ImageIcon(contenedor.getIconImages().get(0)));
 		this.setImagen(new BufferedImage(this.getImageIconActual().getImage().getWidth(null), this.getImageIconActual().getImage().getHeight(null), BufferedImage.TYPE_3BYTE_BGR));
@@ -48,6 +54,7 @@ public class Imagen {
 	
 	public Imagen(BufferedImage imagen) {
 		this.setContenedor(new JDialog());
+		this.setPanel(new JPanel());
 		this.setImageIconInicial(new ImageIcon(imagen));
 		this.setImageIconActual(new ImageIcon(imagen));
 		this.setImagen(imagen);
@@ -140,6 +147,22 @@ public class Imagen {
 
 	public void setContenedor(JDialog contenedor) {
 		this.contenedor = contenedor;
+	}
+
+	public JPanel getPanel() {
+		return panel;
+	}
+
+	public void setPanel(JPanel panel) {
+		this.panel = panel;
+	}
+
+	public Recortar getRecortar() {
+		return recortar;
+	}
+
+	public void setRecortar(Recortar recortar) {
+		this.recortar = recortar;
 	}
 
 	public BufferedImage getImagen() {
