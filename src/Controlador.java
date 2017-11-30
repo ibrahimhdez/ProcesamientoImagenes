@@ -73,9 +73,17 @@ public class Controlador {
 	}
 	
 	private void iniciarTimer() {
-		
+		setTimer(new Timer(10, new ActionListener() {
+		    public void actionPerformed(ActionEvent evt) {
+		    		Point posRaton = MouseInfo.getPointerInfo().getLocation();
+		    		Point posContenedor = getMiVista().getFocoImagenActual().getContenedor().getLocation();
+		    	
+		    		getMiVista().getFocoImagenActual().getRecortar().setPuntoFinal(new Point((int)(posRaton.getX() - posContenedor.getX()), (int)(posRaton.getY() - posContenedor.getY())));
+		    		getMiVista().getFocoImagenActual().getContenedor().repaint();	
+		    }
+		 }));
 	}
-	
+
 	void addEventosRaton(){
 		for(Imagen imagen: this.getMiVista().getImagenes())
 			imagen.getContenedor().addMouseListener(new EventoRaton());		
@@ -119,7 +127,12 @@ public class Controlador {
 				}
 				
 				else if(e.getSource() == getMiVista().getBotonTijera()) {
+					Imagen imagenActual = getMiVista().getFocoImagenActual();
 					
+					imagenActual.getRecortar().setPintar(false);
+				//	imagenActual.getRecortar().init();
+					imagenActual.getRecortar().recortarImagen(imagenActual);
+					getMiVista().addImagen(imagenActual.getRecortar().getDialog());
 				}
 				
 				else if(e.getSource() == getMiVista().getItemShowInfo()) {
@@ -192,20 +205,13 @@ public class Controlador {
 				if(e.getSource() == imagen.getContenedor())
 					getMiVista().setFocoImagenActual(imagen);
 			
-			getMiVista().getFocoImagenActual().getRecortar().setPintar(true);
+			if(!getMiVista().getFocoImagenActual().getRecortar().getPintar())
+				getMiVista().getFocoImagenActual().getRecortar().setPintar(true);
 			getMiVista().getFocoImagenActual().getRecortar().setPuntoInicio(e.getPoint());
 			
-			setTimer(new Timer(10, new ActionListener() {
-			    public void actionPerformed(ActionEvent evt) {
-			    		Point posRaton = MouseInfo.getPointerInfo().getLocation();
-			    		Point posContenedor = getMiVista().getFocoImagenActual().getContenedor().getLocation();
-			    	
-			    		getMiVista().getFocoImagenActual().getRecortar().setPuntoFinal(new Point((int)(posRaton.getX() - posContenedor.getX()), (int)(posRaton.getY() - posContenedor.getY())));
-			    		getMiVista().getFocoImagenActual().getContenedor().repaint();	
-			    }
-			 }));
+			if(!getTimer().isRunning())
+				getTimer().start();
 			
-			getTimer().start();
 		}
 
 		@Override
@@ -216,7 +222,9 @@ public class Controlador {
 
 		@Override
 		public void mouseReleased(MouseEvent e) {
-			getTimer().stop();
+			if(getTimer().isRunning()) 
+				getTimer().stop();
+
 			getMiVista().getFocoImagenActual().getRecortar().setPuntoFinal(e.getPoint());
 			getMiVista().getFocoImagenActual().getContenedor().repaint();
 		}
@@ -232,7 +240,7 @@ public class Controlador {
 
 		@Override
 		public void mouseExited(MouseEvent e) {
-			getTimer().stop();
+
 		}		
 	}
 	
