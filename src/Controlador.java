@@ -128,9 +128,9 @@ public class Controlador {
 				
 				else if(e.getSource() == getMiVista().getBotonTijera()) {
 					Imagen imagenActual = getMiVista().getFocoImagenActual();
-					
-					imagenActual.getRecortar().setPintar(false);
-				//	imagenActual.getRecortar().init();
+				
+					getMiVista().getFocoImagenActual().getRecortar().setPintar(false);	
+					imagenActual.getRecortar().init();		
 					imagenActual.getRecortar().recortarImagen(imagenActual);
 					getMiVista().addImagen(imagenActual.getRecortar().getDialog());
 				}

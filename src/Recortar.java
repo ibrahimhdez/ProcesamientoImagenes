@@ -1,9 +1,9 @@
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.GraphicsEnvironment;
 import java.awt.Point;
-import java.awt.Transparency;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
 import javax.swing.JDialog;
@@ -18,6 +18,7 @@ public class Recortar {
 	private Point puntoInicio;
 	private Point puntoIntermedio;
 	private Point puntoFinal;
+	private Rectangle rectangle;
 	
 	public Recortar() {
 		this.setDialog(new JDialog());
@@ -93,33 +94,11 @@ public class Recortar {
 		this.setPuntoFinal(new Point(finalX, finalY - BORDE_JDIALOG));
 	}
 	
-	void recortarImagen(Imagen imagenActual) {
+	void recortarImagen(Imagen imagenActual){
 		BufferedImage imagen = imagenActual.getImagen();
 		
-		Graphics g = imagen.getGraphics();
-		g.drawImage(imagenActual.imageActual(), 0, 0, null);
-		
-		int x = 0, y = 0;
-		BufferedImage newImg = GraphicsEnvironment
-				 .getLocalGraphicsEnvironment()
-				 .getDefaultScreenDevice()
-				 .getDefaultConfiguration()
-				 .createCompatibleImage((int)this.getPuntoFinal().getX() - (int)this.getPuntoInicio().getX(), (int)this.getPuntoFinal().getY() - (int)this.getPuntoInicio().getY(),
-				 Transparency.OPAQUE);
-		
-		for(int i = 0; i < imagen.getWidth(); i++)
-			for(int j = 0; j < imagen.getHeight(); j++) {
-				if((i >= (int)this.getPuntoInicio().getX()) && (i < (this.getPuntoFinal().getX())) 
-						&& (j >= this.getPuntoInicio().getY()) && (j < this.getPuntoFinal().getY())){
-					newImg.setRGB(x, y, imagen.getRGB(i, j));
-					if(x < newImg.getWidth() - 1)
-						x++;
-					else {
-						x = 0;
-						y++;
-					}	
-				}	
-			}
+		BufferedImage newImg = cropMyImage(imagen, (int)this.getPuntoFinal().getX() - (int)this.getPuntoInicio().getX(),
+				(int)this.getPuntoFinal().getY() - (int)this.getPuntoInicio().getY(), (int)this.getPuntoInicio().getX(), (int)this.getPuntoInicio().getY());
 		
 		@SuppressWarnings("serial")
 		JPanel panel = new JPanel() {
@@ -137,9 +116,44 @@ public class Recortar {
 		this.getDialog().setLocation((int)imagenActual.getContenedor().getLocation().getX() + imagenActual.getContenedor().getWidth() + 50, (int)imagenActual.getContenedor().getLocation().getY());
 		this.getDialog().setSize(newImg.getWidth(), newImg.getHeight() + 45);
 		this.getDialog().setVisible(true);
-		this.getDialog().setResizable(false);
+		this.getDialog().setResizable(false); 
+	}
+	
+	public BufferedImage cropMyImage(BufferedImage img, int cropWidth, int cropHeight, int cropStartX, int cropStartY) {
+		    BufferedImage clipped = null;
+		    Dimension size = new Dimension(cropWidth, cropHeight);
+
+		    createClip(img, size, cropStartX, cropStartY);
+		    clipped = img.getSubimage((int)this.getRectangle().getLocation().getX(), (int)this.getRectangle().getLocation().getY(), (int)this.getRectangle().getWidth(), (int)this.getRectangle().getHeight());
+
+		    return clipped;
+		  }
+	
+	private void createClip(BufferedImage img, Dimension size, int clipX, int clipY){
+		if (clipX < 0)
+			clipX = 0;
+
+		if (clipY < 0) 
+			clipY = 0;
+	    
+		 if ((size.width + clipX) <= img.getWidth() && (size.height + clipY) <= img.getHeight()) {
+			 this.setRectangle(new Rectangle(size));
+		     this.getRectangle().setLocation(clipX, clipY);
+		 } 
+		    
+		 else {
+			 if ((size.width + clipX) > img.getWidth())
+				size.width = img.getWidth() - clipX;
+
+		     if ((size.height + clipY) > img.getHeight())
+		    	 	size.height = img.getHeight() - clipY;
+
+		     this.setRectangle(new Rectangle(size));
+		     this.getRectangle().setLocation(clipX, clipY);
+		}
 	}
 
+	
 	public JDialog getDialog() {
 		return dialog;
 	}
@@ -178,5 +192,13 @@ public class Recortar {
 
 	public void setPuntoFinal(Point puntoFinal) {
 		this.puntoFinal = puntoFinal;
+	}
+
+	public Rectangle getRectangle() {
+		return rectangle;
+	}
+
+	public void setRectangle(Rectangle rectangle) {
+		this.rectangle = rectangle;
 	}
 }
