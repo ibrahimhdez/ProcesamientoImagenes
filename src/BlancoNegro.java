@@ -6,6 +6,7 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 
 public class BlancoNegro {
+	private static final int JDIALOG_BORDE = 22;
 	private JDialog dialog;
 	
 	public BlancoNegro() {
@@ -45,7 +46,7 @@ public class BlancoNegro {
 		this.getDialog().setIconImage(imagen);
 		this.getDialog().setTitle(imagenActual.getContenedor().getTitle() + " blanco y negro");
 		this.getDialog().setLocation((int)imagenActual.getContenedor().getLocation().getX(), (int)imagenActual.getContenedor().getLocation().getY() + imagenActual.getContenedor().getHeight() + 50);
-		this.getDialog().setSize(imagen.getWidth(), imagen.getHeight() + 45);
+		this.getDialog().setSize(imagen.getWidth(), imagen.getHeight() + JDIALOG_BORDE);
 		this.getDialog().setLocationByPlatform(true);
 		this.getDialog().setVisible(true);
 		this.getDialog().setResizable(false);

@@ -31,6 +31,7 @@ public class Controlador {
 	private Gamma gamma;
 	private Sampling sampling;
 	private Timer timer;
+	private Boolean mostrarCoordenadas;
 	
 	public Controlador(){
 		this.setMiVista(new Vista());
@@ -231,6 +232,8 @@ public class Controlador {
 
 		@Override
 		public void mouseEntered(MouseEvent e) {
+			setMostrarCoordenadas(true);
+			
 			/*x = e.getLocationOnScreen().getX();
 			y = e.getLocationOnScreen().getY();
 			x =- getMiVista().getFocoImagenActual().getContenedor().getLocationOnScreen().getX();
@@ -240,7 +243,7 @@ public class Controlador {
 
 		@Override
 		public void mouseExited(MouseEvent e) {
-
+			setMostrarCoordenadas(false);
 		}		
 	}
 	
@@ -402,5 +405,13 @@ public class Controlador {
 	
 	public void setSampling(Sampling sampling) {
 		this.sampling = sampling;
+	}
+
+	public Boolean getMostrarCoordenadas() {
+		return mostrarCoordenadas;
+	}
+
+	public void setMostrarCoordenadas(Boolean mostrarCoordenadas) {
+		this.mostrarCoordenadas = mostrarCoordenadas;
 	}
 }

@@ -114,7 +114,7 @@ public class Recortar {
 		this.getDialog().setIconImage(newImg);
 		this.getDialog().setTitle(imagenActual.getContenedor().getTitle() + " recortada");
 		this.getDialog().setLocation((int)imagenActual.getContenedor().getLocation().getX() + imagenActual.getContenedor().getWidth() + 50, (int)imagenActual.getContenedor().getLocation().getY());
-		this.getDialog().setSize(newImg.getWidth(), newImg.getHeight() + 45);
+		this.getDialog().setSize(newImg.getWidth(), newImg.getHeight() + BORDE_JDIALOG);
 		this.getDialog().setVisible(true);
 		this.getDialog().setResizable(false); 
 	}

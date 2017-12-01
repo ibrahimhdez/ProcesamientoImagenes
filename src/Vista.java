@@ -20,8 +20,9 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 
-public class Vista extends JFrame{
+public class Vista extends JFrame {
 	private static final long serialVersionUID = 1L;
+	private static final int JDIALOG_BORDE = 22;
 	private Imagen imagen;
 	private Recortar recortar;
 	private JMenuBar barraMenu;
@@ -149,7 +150,7 @@ public class Vista extends JFrame{
 
         dialog.add(panel);
         dialog.setIconImage(toolkitImage);
-        dialog.setSize(toolkitImage.getWidth(null), toolkitImage.getHeight(null) + 45); //Incrementando tamaño para insertar coordenadas y valor del píxel.
+        dialog.setSize(toolkitImage.getWidth(null), toolkitImage.getHeight(null) + JDIALOG_BORDE); //Incrementando tamaño para insertar coordenadas y valor del píxel.
         dialog.setResizable(false);
        
         addImagen(dialog);
@@ -193,7 +194,17 @@ public class Vista extends JFrame{
 	void addImagen(Imagen imagen, String titulo, int xLocation, int yLocation) {
 		JDialog dialog = imagen.getContenedor();
 		
-		dialog.add(new JLabel(new ImageIcon(imagen.getImagen())));
+		 @SuppressWarnings("serial")
+			JPanel panel = new JPanel() {
+	        		@Override
+	        		public void paintComponent(Graphics g) {
+	        			super.paintComponent(g); 
+	        			g.drawImage(imagen.getImagen(), 0, 0, null);
+	        			getRecortar().pintarRectangulo(g);
+	        		}
+	        };
+
+	    dialog.add(panel);
 		dialog.setIconImage(imagen.getImagen());
 		dialog.setTitle(titulo);
 		dialog.setLocation(xLocation, yLocation);
