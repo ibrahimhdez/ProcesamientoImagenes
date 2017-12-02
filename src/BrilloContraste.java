@@ -106,8 +106,6 @@ public class BrilloContraste {
 		      }
 		 
 		 imagenResultado = new Imagen(newImg);
-		 //imagenResultado.setBrillo(this.getBrilloSlider().getValue());
-		 //imagenResultado.setContraste(this.getContrasteSlider().getValue());
 		 imagenResultado.setRutaImagen(imagenActual.getRutaImagen());
 		 
 		 return imagenResultado;

@@ -137,6 +137,24 @@ public class Imagen {
 	    this.entropia = -temp;
 	}
 	
+	int getValorPixel(int x, int y) {
+		//Controlando velocidad raton
+		if(y < 0)
+			y = 0;
+		
+		else if(y >= this.getImagen().getHeight())
+			y = this.getImagen().getHeight() - 1;
+		
+		if(x < 0)
+			x = 0;
+		
+		else if(x >= this.getImagen().getWidth())
+			x = this.getImagen().getWidth() - 1; 
+		
+		Color color = new Color(this.getImagen().getRGB(x, y));
+		return (int)((color.getRed() + color.getGreen() + color.getBlue()) / 3);
+	}
+	
 	Image imageActual() {
 		return this.getContenedor().getIconImages().get(0);
 	}

@@ -24,6 +24,7 @@ public class Vista extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private static final int JDIALOG_BORDE = 22;
 	private Imagen imagen;
+	private JPanel panel;
 	private Recortar recortar;
 	private JMenuBar barraMenu;
     private JMenu menuFile, itemNew;
@@ -40,14 +41,12 @@ public class Vista extends JFrame {
     private JMenuItem itemQuantization;
     private JButton botonBlancoNegro;
     private JButton botonTijera;
-    private JLabel etiquetaImagen;
     private String rutaImagen;
     private Integer numeroImagen;
     private ArrayList<Imagen> imagenes;
     private Imagen focoImagenActual;
     private ImageIcon imageIconActual;
-    Image imagen1;
-    BufferedImage newImage;
+    private JLabel etiquetaCoordenadas;
 
     public Vista() {
         super("Procesamiento Imágenes");
@@ -76,18 +75,41 @@ public class Vista extends JFrame {
         
         this.setMenuProcess(new JMenu("Process"));
         this.setItemGamma(new JMenuItem("Gamma"));
-        
+            
+        this.setPanel(new JPanel() {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+        		public void paintComponent(Graphics g) {
+        			super.paintComponent(g);         				
+        			addLabel();
+        		}
+        });
         this.setNumeroImagen(1);
-        this.setEtiquetaImagen(new JLabel());
         this.setImagenes(new ArrayList<>());
+       	this.setEtiquetaCoordenadas(new JLabel());
+    }
+    
+    private void clearEtiquetaPanel() {
+    		this.getPanel().remove(this.getEtiquetaCoordenadas());
+    }
+    
+    private void addLabel() {
+		this.getPanel().add(this.getEtiquetaCoordenadas());
+    }
+    
+    void actualizarEtiqueta(String cadena) {
+		clearEtiquetaPanel();
+		this.getEtiquetaCoordenadas().setText(cadena);
+		this.getEtiquetaCoordenadas().setBounds(75, -85, 200, 200);
     }
     
     void init() {
-		this.setResizable(false);
-		this.setLayout(null);
-		add(this.getEtiquetaImagen());
-		add(this.getBotonBlancoNegro());
-		add(this.getBotonTijera());
+		//this.setResizable(false);
+		this.getPanel().setLayout(null);
+		this.getPanel().add(this.getBotonBlancoNegro());
+		this.getPanel().add(this.getBotonTijera());
+		this.add(this.getPanel());
     
 		this.getBarraMenu().add(this.getMenuFile());
 		this.getBarraMenu().add(this.getMenuShow());
@@ -117,6 +139,20 @@ public class Vista extends JFrame {
 		this.setVisible(true);
     }   
     
+    void iniciarBotones() throws IOException{
+		Image imagenBlancoNegro = ImageIO.read(new File("imagenesBotones/bw.jpg"));
+		Image imagenTijera = ImageIO.read(new File("imagenesBotones/tijera.jpg"));
+		
+		imagenBlancoNegro = imagenBlancoNegro.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+		imagenTijera = imagenTijera.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+		
+		this.getBotonBlancoNegro().setIcon(new ImageIcon(imagenBlancoNegro));
+		this.getBotonBlancoNegro().setBounds(new Rectangle(0, 0, 30, 30));
+		
+		this.getBotonTijera().setIcon(new ImageIcon(imagenTijera));
+		this.getBotonTijera().setBounds(new Rectangle(31, 0, 30, 30));
+    }
+    
     void openJDialog() throws IOException{
     		JDialog dialog = new JDialog();     
     		this.setRecortar(new Recortar());
@@ -131,7 +167,7 @@ public class Vista extends JFrame {
         while((toolkitImage.getWidth(dialog) > 750) || (toolkitImage.getHeight(dialog) > 750)) 
         		toolkitImage = imagen1.getScaledInstance(toolkitImage.getWidth(dialog) / 2, toolkitImage.getHeight(dialog) / 2, Image.SCALE_SMOOTH);
 
-    		newImage = new BufferedImage(toolkitImage.getWidth(dialog), toolkitImage.getHeight(dialog), 
+    		BufferedImage newImage = new BufferedImage(toolkitImage.getWidth(dialog), toolkitImage.getHeight(dialog), 
     		      BufferedImage.TYPE_INT_ARGB);
     		
     		Graphics g = newImage.getGraphics();
@@ -155,21 +191,7 @@ public class Vista extends JFrame {
        
         addImagen(dialog);
     }
-    
-	void iniciarBotones() throws IOException{
-		Image imagenBlancoNegro = ImageIO.read(new File("imagenesBotones/bw.jpg"));
-		Image imagenTijera = ImageIO.read(new File("imagenesBotones/tijera.jpg"));
-		
-		imagenBlancoNegro = imagenBlancoNegro.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
-		imagenTijera = imagenTijera.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
-		
-		this.getBotonBlancoNegro().setIcon(new ImageIcon(imagenBlancoNegro));
-		this.getBotonBlancoNegro().setBounds(new Rectangle(0, 0, 30, 30));
-		
-		this.getBotonTijera().setIcon(new ImageIcon(imagenTijera));
-		this.getBotonTijera().setBounds(new Rectangle(31, 0, 30, 30));
-    }
-		
+    	
 	void addImagen(JDialog dialog){
 		Imagen aux = new Imagen(dialog);
 	
@@ -255,10 +277,6 @@ public class Vista extends JFrame {
 		this.getFocoImagenActual().setContraste(newImg.getContraste());
 	}	
 	
-	void pintarRectangulo() {
-		this.getFocoImagenActual().getContenedor().repaint();
-	}
-    
     public ArrayList<Imagen> getImagenes() {
 		return imagenes;
 	}
@@ -273,6 +291,14 @@ public class Vista extends JFrame {
 
 	public void setImagen(Imagen imagen) {
 		this.imagen = imagen;
+	}
+
+	public JPanel getPanel() {
+		return panel;
+	}
+
+	public void setPanel(JPanel panel) {
+		this.panel = panel;
 	}
 
 	public Recortar getRecortar() {
@@ -306,13 +332,6 @@ public class Vista extends JFrame {
 	}
 	public void setItemImage(JMenuItem itemImage) {
 		this.itemImage = itemImage;
-	}
-
-	public JLabel getEtiquetaImagen() {
-		return etiquetaImagen;
-	}
-	public void setEtiquetaImagen(JLabel etiquetaImagen) {
-		this.etiquetaImagen = etiquetaImagen;
 	}
 
 	public JButton getBotonBlancoNegro(){
@@ -450,7 +469,7 @@ public class Vista extends JFrame {
 	public void setItemGamma(JMenuItem itemGamma) {
 		this.itemGamma = itemGamma;
 	}
-
+	
 	/**
 	 * @return the menuDigitalize
 	 */
@@ -491,5 +510,13 @@ public class Vista extends JFrame {
 	 */
 	public void setItemQuantization(JMenuItem itemQuantization) {
 		this.itemQuantization = itemQuantization;
+	}
+	
+	public JLabel getEtiquetaCoordenadas() {
+		return etiquetaCoordenadas;
+	}
+
+	public void setEtiquetaCoordenadas(JLabel etiquetaCoordenadas) {
+		this.etiquetaCoordenadas = etiquetaCoordenadas;
 	}
 }

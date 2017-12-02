@@ -22,6 +22,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
 public class Controlador {
+	private static final int BORDE_JDIALOG = 22;
 	private Vista miVista;
 	private Informacion informacion;
 	private BlancoNegro blancoNegro;
@@ -31,6 +32,7 @@ public class Controlador {
 	private Gamma gamma;
 	private Sampling sampling;
 	private Timer timer;
+	private Timer timerCoordenadas;
 	private Boolean mostrarCoordenadas;
 	
 	public Controlador(){
@@ -42,7 +44,9 @@ public class Controlador {
 		this.setDiferencia(new Diferencia());
 		this.setGamma(new Gamma());
 		this.setSampling(new Sampling());
+		this.setMostrarCoordenadas(new Boolean(false));
 		iniciarTimer();
+		iniciarTimerCoordenadas();
 		
 		this.getMiVista().getItemImage().addActionListener(new Oyente());
 		this.getMiVista().getItemHistograma().addActionListener(new Oyente());
@@ -81,6 +85,21 @@ public class Controlador {
 		    	
 		    		getMiVista().getFocoImagenActual().getRecortar().setPuntoFinal(new Point((int)(posRaton.getX() - posContenedor.getX()), (int)(posRaton.getY() - posContenedor.getY())));
 		    		getMiVista().getFocoImagenActual().getContenedor().repaint();	
+		    }
+		 }));
+	}
+	
+	private void iniciarTimerCoordenadas() {
+		setTimerCoordenadas(new Timer(10, new ActionListener() {
+		    public void actionPerformed(ActionEvent evt) {
+		    		//Point posRaton = MouseInfo.getPointerInfo().getLocation();
+		    		//Point posContenedor = getMiVista().getFocoImagenActual().getContenedor().getLocation();
+		    		int posXRaton =  (int) (MouseInfo.getPointerInfo().getLocation().getX() - getMiVista().getFocoImagenActual().getContenedor().getLocation().getX());
+				int posYRaton =  (int) (MouseInfo.getPointerInfo().getLocation().getY() - getMiVista().getFocoImagenActual().getContenedor().getLocation().getY()) - BORDE_JDIALOG;
+					
+		    		getMiVista().actualizarEtiqueta("X: " + posXRaton + " Y: " + posYRaton + "  Value: " + getMiVista().getFocoImagenActual().getValorPixel(posXRaton, posYRaton));
+		    		//(new Point((int)(posRaton.getX() - posContenedor.getX()), (int)(posRaton.getY() - posContenedor.getY())));
+		    		getMiVista().getContentPane().repaint();	
 		    }
 		 }));
 	}
@@ -134,6 +153,7 @@ public class Controlador {
 					imagenActual.getRecortar().init();		
 					imagenActual.getRecortar().recortarImagen(imagenActual);
 					getMiVista().addImagen(imagenActual.getRecortar().getDialog());
+					addEventosRaton();
 				}
 				
 				else if(e.getSource() == getMiVista().getItemShowInfo()) {
@@ -212,7 +232,6 @@ public class Controlador {
 			
 			if(!getTimer().isRunning())
 				getTimer().start();
-			
 		}
 
 		@Override
@@ -231,19 +250,17 @@ public class Controlador {
 		}
 
 		@Override
-		public void mouseEntered(MouseEvent e) {
-			setMostrarCoordenadas(true);
-			
-			/*x = e.getLocationOnScreen().getX();
-			y = e.getLocationOnScreen().getY();
-			x =- getMiVista().getFocoImagenActual().getContenedor().getLocationOnScreen().getX();
-			y =- getMiVista().getFocoImagenActual().getContenedor().getLocationOnScreen().getY();
-			//getTimer().start();*/
+		public void mouseEntered(MouseEvent e) {		
+			if((!getTimerCoordenadas().isRunning()) && (e.getSource() == getMiVista().getFocoImagenActual().getContenedor()))
+				getTimerCoordenadas().start();
 		}
 
 		@Override
 		public void mouseExited(MouseEvent e) {
-			setMostrarCoordenadas(false);
+			if(getTimerCoordenadas().isRunning()) 
+				getTimerCoordenadas().stop();
+			getMiVista().actualizarEtiqueta("");
+			getMiVista().getContentPane().repaint();
 		}		
 	}
 	
@@ -343,6 +360,14 @@ public class Controlador {
 		this.timer = timer;
 	}
 		   
+	public Timer getTimerCoordenadas() {
+		return timerCoordenadas;
+	}
+
+	public void setTimerCoordenadas(Timer timerCoordenadas) {
+		this.timerCoordenadas = timerCoordenadas;
+	}
+
 	public Vista getMiVista() {
 		return miVista;
 	}

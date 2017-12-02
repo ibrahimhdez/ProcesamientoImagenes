@@ -25,9 +25,8 @@ public class BlancoNegro {
 		
 		for(int i = 0; i < imagen.getWidth(); i++)
 			for(int j = 0; j < imagen.getHeight(); j++) {
-				Color color = new Color(imagen.getRGB(i, j));
-				int mediaPixel = (int)((color.getRed() + color.getGreen() + color.getBlue()) / 3);
-				int colorSRGB = (mediaPixel << 16) | (mediaPixel << 8) | mediaPixel;
+				int valorPixel = imagenActual.getValorPixel(i, j);
+				int colorSRGB = (valorPixel << 16) | (valorPixel << 8) | valorPixel;
 		
 				imagen.setRGB(i, j,colorSRGB);
          }
