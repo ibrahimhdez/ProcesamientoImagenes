@@ -138,21 +138,32 @@ public class Imagen {
 	}
 	
 	int getValorPixel(int x, int y) {
-		//Controlando velocidad raton
-		if(y < 0)
-			y = 0;
-		
-		else if(y >= this.getImagen().getHeight())
-			y = this.getImagen().getHeight() - 1;
-		
-		if(x < 0)
-			x = 0;
-		
-		else if(x >= this.getImagen().getWidth())
-			x = this.getImagen().getWidth() - 1; 
-		
-		Color color = new Color(this.getImagen().getRGB(x, y));
+		Color color = new Color(this.getImagen().getRGB(arreglarCoordenadasX(x), arreglarCoordenadasY(y)));
 		return (int)((color.getRed() + color.getGreen() + color.getBlue()) / 3);
+	}
+	
+	int getValorPixelRGB(int x, int y) {
+		return this.getImagen().getRGB(arreglarCoordenadasX(x), arreglarCoordenadasY(y));
+	}
+	
+	private int arreglarCoordenadasX(int coordenada) {
+		if(coordenada < 0)
+			coordenada = 0;
+		
+		else if(coordenada >= this.getImagen().getWidth())
+			coordenada = this.getImagen().getWidth() - 1; 
+		
+		return coordenada;
+	}
+	
+	private int arreglarCoordenadasY(int coordenada) {
+		if(coordenada < 0)
+			coordenada = 0;
+		
+		else if(coordenada >= this.getImagen().getHeight())
+			coordenada = this.getImagen().getHeight() - 1; 
+		
+		return coordenada;
 	}
 	
 	Image imageActual() {

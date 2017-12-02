@@ -1,10 +1,13 @@
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -19,6 +22,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+
 
 public class Vista extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -47,6 +51,7 @@ public class Vista extends JFrame {
     private Imagen focoImagenActual;
     private ImageIcon imageIconActual;
     private JLabel etiquetaCoordenadas;
+    private JLabel etiquetaColorCoordenadas;
 
     public Vista() {
         super("Procesamiento Imágenes");
@@ -82,26 +87,54 @@ public class Vista extends JFrame {
 			@Override
         		public void paintComponent(Graphics g) {
         			super.paintComponent(g);         				
-        			addLabel();
+        			addLabel(g);
+        			addColorRect(g);
         		}
         });
         this.setNumeroImagen(1);
         this.setImagenes(new ArrayList<>());
        	this.setEtiquetaCoordenadas(new JLabel());
+       	this.setEtiquetaColorCoordenadas(new JLabel());
     }
     
     private void clearEtiquetaPanel() {
     		this.getPanel().remove(this.getEtiquetaCoordenadas());
+    		this.getPanel().remove(this.getEtiquetaColorCoordenadas());
     }
     
-    private void addLabel() {
+    private void addLabel(Graphics g) {
+		this.getPanel().add(this.getEtiquetaCoordenadas());
 		this.getPanel().add(this.getEtiquetaCoordenadas());
     }
     
-    void actualizarEtiqueta(String cadena) {
+    private void addColorRect(Graphics g) {
+    		String cadena = this.getEtiquetaCoordenadas().getText();
+    		
+    		if(cadena.length() > 0) {
+    			Graphics2D g2d = (Graphics2D) g;
+    			String x = cadena.substring(3, 6);
+    			String y = "";
+
+    			x = x.replace("Y", "");
+    			x = x.replace(" ", "");
+    			
+    			if(x.length() < 3)
+    				y = cadena.substring(8, 12);
+    			else
+    				y = cadena.substring(10, 13);
+    			
+    			y = y.replace("V", "");
+    			y = y.replace(" ", "");
+    			 
+    			g2d.setColor(new Color(this.getFocoImagenActual().getValorPixelRGB(new Integer(x), new Integer(y))));
+    			g2d.fill(new Rectangle2D.Double(this.getEtiquetaCoordenadas().getWidth() + 42, 5, 30, 19));
+    		}		
+    }
+    
+    void actualizarEtiqueta(String cadena, int valor) {
 		clearEtiquetaPanel();
 		this.getEtiquetaCoordenadas().setText(cadena);
-		this.getEtiquetaCoordenadas().setBounds(75, -85, 200, 200);
+		this.getEtiquetaCoordenadas().setBounds(75, -85, 200, 200);		
     }
     
     void init() {
@@ -518,5 +551,13 @@ public class Vista extends JFrame {
 
 	public void setEtiquetaCoordenadas(JLabel etiquetaCoordenadas) {
 		this.etiquetaCoordenadas = etiquetaCoordenadas;
+	}
+
+	public JLabel getEtiquetaColorCoordenadas() {
+		return etiquetaColorCoordenadas;
+	}
+
+	public void setEtiquetaColorCoordenadas(JLabel etiquetaColorCoordenadas) {
+		this.etiquetaColorCoordenadas = etiquetaColorCoordenadas;
 	}
 }

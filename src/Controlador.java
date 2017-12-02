@@ -97,7 +97,7 @@ public class Controlador {
 		    		int posXRaton =  (int) (MouseInfo.getPointerInfo().getLocation().getX() - getMiVista().getFocoImagenActual().getContenedor().getLocation().getX());
 				int posYRaton =  (int) (MouseInfo.getPointerInfo().getLocation().getY() - getMiVista().getFocoImagenActual().getContenedor().getLocation().getY()) - BORDE_JDIALOG;
 					
-		    		getMiVista().actualizarEtiqueta("X: " + posXRaton + " Y: " + posYRaton + "  Value: " + getMiVista().getFocoImagenActual().getValorPixel(posXRaton, posYRaton));
+		    		getMiVista().actualizarEtiqueta("X: " + posXRaton + " Y: " + posYRaton + "  Value: " + getMiVista().getFocoImagenActual().getValorPixel(posXRaton, posYRaton), getMiVista().getFocoImagenActual().getValorPixel(posXRaton, posYRaton));
 		    		//(new Point((int)(posRaton.getX() - posContenedor.getX()), (int)(posRaton.getY() - posContenedor.getY())));
 		    		getMiVista().getContentPane().repaint();	
 		    }
@@ -259,7 +259,8 @@ public class Controlador {
 		public void mouseExited(MouseEvent e) {
 			if(getTimerCoordenadas().isRunning()) 
 				getTimerCoordenadas().stop();
-			getMiVista().actualizarEtiqueta("");
+			
+			getMiVista().actualizarEtiqueta("", 0);
 			getMiVista().getContentPane().repaint();
 		}		
 	}
