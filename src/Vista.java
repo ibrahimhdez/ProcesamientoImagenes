@@ -138,7 +138,7 @@ public class Vista extends JFrame {
     }
     
     void init() {
-		//this.setResizable(false);
+		this.setResizable(false);
 		this.getPanel().setLayout(null);
 		this.getPanel().add(this.getBotonBlancoNegro());
 		this.getPanel().add(this.getBotonTijera());
@@ -287,9 +287,6 @@ public class Vista extends JFrame {
 	
 	void modificarImagen(Imagen newImg) {
 		this.getFocoImagenActual().getContenedor().getContentPane().removeAll();
-		Graphics g = newImg.getImagen().getGraphics();
-		g.drawImage(newImg.getImagen(), 0, 0, null);
-		g.dispose();
 		
 		@SuppressWarnings("serial")
 		JPanel panel = new JPanel() {
@@ -302,12 +299,13 @@ public class Vista extends JFrame {
 		};
 
     		this.getFocoImagenActual().getContenedor().add(panel);
+    		this.getFocoImagenActual().getContenedor().revalidate();
     		this.getFocoImagenActual().getContenedor().setIconImage(newImg.getImagen());
-		this.getFocoImagenActual().getContenedor().revalidate();
 		this.setImageIconActual(new ImageIcon(newImg.getImagen()));
 		this.getFocoImagenActual().setModificada(true);
 		this.getFocoImagenActual().setBrillo(newImg.getBrillo());
 		this.getFocoImagenActual().setContraste(newImg.getContraste());
+		this.getFocoImagenActual().setHistograma();
 	}	
 	
     public ArrayList<Imagen> getImagenes() {

@@ -65,6 +65,7 @@ public class Imagen {
 		
 		this.getContenedor().add(new JLabel(new ImageIcon(imagen)));
 		this.getContenedor().pack();
+		this.setHistograma();
 	}
 	
 	public Imagen(Image image) {

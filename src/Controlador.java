@@ -1,6 +1,8 @@
 import java.awt.MouseInfo;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.Graphics;
+import java.awt.Point;
 import java.io.IOException;
 
 import javax.swing.JDialog;
@@ -12,14 +14,13 @@ import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.filechooser.FileSystemView;
 
-import java.awt.Point;
-
 import javax.swing.Timer;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.awt.image.BufferedImage;
 
 public class Controlador {
 	private static final int BORDE_JDIALOG = 22;
@@ -68,6 +69,7 @@ public class Controlador {
 		this.getGamma().getSlider().addChangeListener(new SliderListener());
 		
 		getBrilloContraste().getVentana().addWindowListener(new OyenteVentana());
+		getGamma().getDialog().addWindowListener(new OyenteVentana());
 	}
 	
 	void iniciarComponentes() throws IOException{
@@ -92,13 +94,10 @@ public class Controlador {
 	private void iniciarTimerCoordenadas() {
 		setTimerCoordenadas(new Timer(10, new ActionListener() {
 		    public void actionPerformed(ActionEvent evt) {
-		    		//Point posRaton = MouseInfo.getPointerInfo().getLocation();
-		    		//Point posContenedor = getMiVista().getFocoImagenActual().getContenedor().getLocation();
 		    		int posXRaton =  (int) (MouseInfo.getPointerInfo().getLocation().getX() - getMiVista().getFocoImagenActual().getContenedor().getLocation().getX());
 				int posYRaton =  (int) (MouseInfo.getPointerInfo().getLocation().getY() - getMiVista().getFocoImagenActual().getContenedor().getLocation().getY()) - BORDE_JDIALOG;
 					
 		    		getMiVista().actualizarEtiqueta("X: " + posXRaton + " Y: " + posYRaton + "  Value: " + getMiVista().getFocoImagenActual().getValorPixel(posXRaton, posYRaton), getMiVista().getFocoImagenActual().getValorPixel(posXRaton, posYRaton));
-		    		//(new Point((int)(posRaton.getX() - posContenedor.getX()), (int)(posRaton.getY() - posContenedor.getY())));
 		    		getMiVista().getContentPane().repaint();	
 		    }
 		 }));
@@ -321,6 +320,18 @@ public class Controlador {
 		public void windowClosing(WindowEvent e) {
 			if(e.getSource() == getBrilloContraste().getVentana())
 				getMiVista().getFocoImagenActual().setImageIconActual(getMiVista().getImageIconActual());
+			
+			else if(e.getSource() == getGamma().getDialog()) {
+				BufferedImage bi = new BufferedImage(getMiVista().getImageIconActual().getIconWidth(), getMiVista().getImageIconActual().getIconHeight(), BufferedImage.TYPE_INT_RGB);
+				
+				Graphics g = (Graphics) bi.createGraphics();
+				g.drawImage(getMiVista().getImageIconActual().getImage(), 0, 0, null);  
+				getMiVista().getImageIconActual().paintIcon(null, g, 0,0);
+				g.dispose();
+				
+				getMiVista().getFocoImagenActual().setImagen(bi);
+				getMiVista().getFocoImagenActual().setHistograma();  
+			} 		
 		}
 
 		@Override
