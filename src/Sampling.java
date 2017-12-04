@@ -10,7 +10,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
-
 public class Sampling {
 	private final int BORDE_JDIALOG = 22;
 	private JDialog ventana;
@@ -38,13 +37,13 @@ public class Sampling {
 	
 		for(int i = 2; i < 5; i++){
 			JRadioButton radioButton = new JRadioButton(i + "x" + i);
+			
 			getRadioButtons().add(radioButton);
 			getButtonGroup().add(radioButton);
-			
 		}
 	
 		this.getPanel().add(this.getLabel());
-		for(int i=0; i<getRadioButtons().size();i++)
+		for(int i = 0; i < getRadioButtons().size(); i++)
 			this.getPanel().add(this.getRadioButtons().get(i));
 		
 		this.getButton().setText("Sample");

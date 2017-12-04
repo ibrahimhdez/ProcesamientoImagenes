@@ -18,11 +18,13 @@ public class Diferencia {
 	private Imagen imagen1;
 	private Imagen imagen2;
 	private JDialog dialog;
+	private Boolean ejecutar;
 	
 	public Diferencia() {
 		this.setImagen1(new Imagen());
 		this.setImagen2(new Imagen());
 		this.setDialog(new JDialog());
+		this.setEjecutar(false);
 	}
 	
 	public Diferencia(Imagen imagen1) {
@@ -31,6 +33,7 @@ public class Diferencia {
 	}
 	
 	 void addImagenDiferencia() throws IOException {
+		this.setDialog(new JDialog());
 		JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
 		JDialog auxDialog = new JDialog();
 		JPanel panel = new JPanel();
@@ -43,20 +46,24 @@ public class Diferencia {
 		if (sel == JFileChooser.APPROVE_OPTION) 
 			imagen = ImageIO.read(new File(jfc.getSelectedFile().getAbsolutePath()));
 		
-		if((imagen.getWidth(dialog) > 900) || (imagen.getHeight(dialog) > 1000))
-			imagen = imagen.getScaledInstance(imagen.getWidth(dialog) / 2, imagen.getHeight(dialog) / 2, 0);
+		if(imagen != null) {
+			this.setEjecutar(true);
+			
+			if((imagen.getWidth(dialog) > 900) || (imagen.getHeight(dialog) > 1000))
+				imagen = imagen.getScaledInstance(imagen.getWidth(dialog) / 2, imagen.getHeight(dialog) / 2, 0);
 		
-		auxDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        panel.add(new JLabel(new ImageIcon(imagen)));
+			auxDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+			panel.add(new JLabel(new ImageIcon(imagen)));
 
-        auxDialog.add(panel);
-        auxDialog.setIconImage(imagen);
-        auxDialog.pack();
-        auxDialog.setLocationByPlatform(true);
-        auxDialog.setResizable(false);
-		
-		this.setImagen2(new Imagen(auxDialog));
-		this.getImagen2().getContenedor().setTitle("Imagen Diferencia");
+			auxDialog.add(panel);
+        		auxDialog.setIconImage(imagen);
+        		auxDialog.pack();
+        		auxDialog.setLocationByPlatform(true);
+        		auxDialog.setResizable(false);
+			
+        		this.setImagen2(new Imagen(auxDialog));
+        		this.getImagen2().getContenedor().setTitle("Imagen Diferencia");
+		}
 	}
 	 
 	Imagen generar() {
@@ -133,5 +140,13 @@ public class Diferencia {
 
 	public void setDialog(JDialog dialog) {
 		this.dialog = dialog;
+	}
+
+	public Boolean getEjecutar() {
+		return ejecutar;
+	}
+
+	public void setEjecutar(Boolean ejecutar) {
+		this.ejecutar = ejecutar;
 	}
 }

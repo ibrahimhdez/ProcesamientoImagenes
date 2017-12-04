@@ -185,9 +185,12 @@ public class Controlador {
 						e1.printStackTrace();
 					}
 					
-					getDiferencia().setImagen2(getBlancoNegro().get(getDiferencia().getImagen2()));
-					getMiVista().addImagen(getDiferencia().generar().getContenedor());
-					addEventosRaton();
+					if(getDiferencia().getEjecutar()) {
+						getDiferencia().setImagen2(getBlancoNegro().get(getDiferencia().getImagen2()));
+						getMiVista().addImagen(getDiferencia().generar().getContenedor());
+						addEventosRaton();
+						getDiferencia().setEjecutar(false);
+					}
 				}
 				
 				else if(e.getSource() == getMiVista().getItemGamma()) {
