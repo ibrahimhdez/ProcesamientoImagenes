@@ -63,6 +63,7 @@ public class Controlador {
 		this.getBrilloContraste().getDefaultBrillo().addActionListener(new Oyente());
 		this.getBrilloContraste().getDefaultContraste().addActionListener(new Oyente());
 		this.getBrilloContraste().getContrasteTextField().addActionListener(new Oyente());
+		this.getSampling().getButton().addActionListener(new Oyente());
 		
 		this.getBrilloContraste().getBrilloSlider().addChangeListener(new SliderListener());
 		this.getBrilloContraste().getContrasteSlider().addChangeListener(new SliderListener());	
@@ -76,6 +77,7 @@ public class Controlador {
 		this.getMiVista().iniciarBotones();
 		this.getBrilloContraste().init();
 		this.getGamma().init();
+		this.getSampling().init();
 		this.getMiVista().init();
 	}
 	
@@ -170,7 +172,7 @@ public class Controlador {
 					
 					//Comentar el siguiente condicional para trabajar con la imagen actual, no la inicial.
 					//if(!imagenActual.getModificada())
-						getBrilloContraste().actualizarPanel(imagenActual);
+					getBrilloContraste().actualizarPanel(imagenActual);
 					getBrilloContraste().mostrar(imagenActual.getContenedor());
 				}
 				

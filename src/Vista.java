@@ -265,7 +265,6 @@ public class Vista extends JFrame {
 		dialog.setLocation(xLocation, yLocation);
 		dialog.pack();
 		dialog.setLocationByPlatform(true);
-		
 		dialog.setResizable(false);
 		
 		dialog.addWindowListener(new WindowAdapter(){
