@@ -140,6 +140,7 @@ public class Imagen {
 	
 	int getValorPixel(int x, int y) {
 		Color color = new Color(this.getImagen().getRGB(arreglarCoordenadasX(x), arreglarCoordenadasY(y)));
+		
 		return (int)((color.getRed() + color.getGreen() + color.getBlue()) / 3);
 	}
 	

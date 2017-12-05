@@ -32,6 +32,7 @@ public class Controlador {
 	private Diferencia diferencia;
 	private Gamma gamma;
 	private Sampling sampling;
+	private Cuantizacion cuantizacion;
 	private Timer timer;
 	private Timer timerCoordenadas;
 	private Boolean mostrarCoordenadas;
@@ -45,6 +46,7 @@ public class Controlador {
 		this.setDiferencia(new Diferencia());
 		this.setGamma(new Gamma());
 		this.setSampling(new Sampling());
+		this.setCuantizacion(new Cuantizacion());
 		this.setMostrarCoordenadas(new Boolean(false));
 		iniciarTimer();
 		iniciarTimerCoordenadas();
@@ -59,11 +61,13 @@ public class Controlador {
 		this.getMiVista().getItemDiference().addActionListener(new Oyente());
 		this.getMiVista().getItemGamma().addActionListener(new Oyente());
 		this.getMiVista().getItemSampling().addActionListener(new Oyente());
+		this.getMiVista().getItemQuantization().addActionListener(new Oyente());
 		this.getBrilloContraste().getBrilloTextField().addActionListener(new Oyente());
 		this.getBrilloContraste().getDefaultBrillo().addActionListener(new Oyente());
 		this.getBrilloContraste().getDefaultContraste().addActionListener(new Oyente());
 		this.getBrilloContraste().getContrasteTextField().addActionListener(new Oyente());
 		this.getSampling().getButton().addActionListener(new Oyente());
+		this.getCuantizacion().getBoton().addActionListener(new Oyente());
 		
 		this.getBrilloContraste().getBrilloSlider().addChangeListener(new SliderListener());
 		this.getBrilloContraste().getContrasteSlider().addChangeListener(new SliderListener());	
@@ -78,6 +82,7 @@ public class Controlador {
 		this.getBrilloContraste().init();
 		this.getGamma().init();
 		this.getSampling().init();
+		this.getCuantizacion().init();
 		this.getMiVista().init();
 	}
 	
@@ -198,8 +203,14 @@ public class Controlador {
 					getGamma().mostrar(getMiVista().getFocoImagenActual().getContenedor());
 				}
 				
-				else if(e.getSource() == getMiVista().getItemSampling()) {
+				else if(e.getSource() == getMiVista().getItemSampling()) 
 					getSampling().mostrar(getMiVista().getFocoImagenActual().getContenedor());
+				
+				
+				else if(e.getSource() == getMiVista().getItemQuantization()) {
+					JDialog dialogActual = getMiVista().getFocoImagenActual().getContenedor();
+					
+					getCuantizacion().mostrar(dialogActual.getLocation(), dialogActual.getBounds());
 				}
 				
 				else if(e.getSource() == getBrilloContraste().getDefaultBrillo()) 
@@ -217,6 +228,12 @@ public class Controlador {
 				else if(e.getSource() == getSampling().getButton()){
 					getSampling().buildImage(getMiVista().getFocoImagenActual());
 					getMiVista().addImagen(getSampling().getDialog());
+					addEventosRaton();
+				}
+				
+				else if(e.getSource() == getCuantizacion().getBoton()) {
+					getCuantizacion().generar(getMiVista().getFocoImagenActual());
+					getMiVista().addImagen(getCuantizacion().getDialog()); 
 					addEventosRaton();
 				}
 			}
@@ -447,6 +464,14 @@ public class Controlador {
 	
 	public void setSampling(Sampling sampling) {
 		this.sampling = sampling;
+	}
+
+	public Cuantizacion getCuantizacion() {
+		return cuantizacion;
+	}
+
+	public void setCuantizacion(Cuantizacion cuantizacion) {
+		this.cuantizacion = cuantizacion;
 	}
 
 	public Boolean getMostrarCoordenadas() {

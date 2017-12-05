@@ -1,4 +1,3 @@
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -71,8 +70,7 @@ public class Sampling {
 			
 			for(int i = 0; i < imagen.getWidth(); i++)
 				for(int j = 0; j < imagen.getHeight(); j++) {
-					Color color = new Color(imagen.getRGB(i, j));
-					int valorPixel = (color.getRed() + color.getGreen() + color.getBlue()) / 3;
+					int valorPixel = imagenActual.getValorPixel(i, j);
 					
 					pixeles.add(valorPixel);
 					
