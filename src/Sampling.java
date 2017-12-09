@@ -51,10 +51,11 @@ public class Sampling {
 		this.getVentana().add(this.getPanel());	
 	}
 	
-	void mostrar(JDialog dialog) {
+	public void mostrar(JDialog dialog) {
 		this.getVentana().setLocation(dialog.getWidth() + (int)dialog.getLocation().getX() + 100, (int)dialog.getLocation().getY() + (int)dialog.getLocation().getY() / 4);
 		this.getVentana().setVisible(true);	
 	}
+	
 	
 	public void buildImage(Imagen imagenActual){
 		this.setDialog(new JDialog());

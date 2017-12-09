@@ -7,6 +7,7 @@ import java.io.IOException;
 
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
@@ -31,6 +32,7 @@ public class Controlador {
 	private Histograma histograma;
 	private Diferencia diferencia;
 	private Gamma gamma;
+	private Section section;
 	private Sampling sampling;
 	private Cuantizacion cuantizacion;
 	private Timer timer;
@@ -45,6 +47,7 @@ public class Controlador {
 		this.setHistograma(new Histograma());
 		this.setDiferencia(new Diferencia());
 		this.setGamma(new Gamma());
+		this.setSection(new Section());
 		this.setSampling(new Sampling());
 		this.setCuantizacion(new Cuantizacion());
 		this.setMostrarCoordenadas(new Boolean(false));
@@ -60,6 +63,7 @@ public class Controlador {
 		this.getMiVista().getItemBrightnessContrast().addActionListener(new Oyente());
 		this.getMiVista().getItemDiference().addActionListener(new Oyente());
 		this.getMiVista().getItemGamma().addActionListener(new Oyente());
+		this.getMiVista().getItemSection().addActionListener(new Oyente());
 		this.getMiVista().getItemSampling().addActionListener(new Oyente());
 		this.getMiVista().getItemQuantization().addActionListener(new Oyente());
 		this.getBrilloContraste().getBrilloTextField().addActionListener(new Oyente());
@@ -68,6 +72,7 @@ public class Controlador {
 		this.getBrilloContraste().getContrasteTextField().addActionListener(new Oyente());
 		this.getSampling().getButton().addActionListener(new Oyente());
 		this.getCuantizacion().getBoton().addActionListener(new Oyente());
+		this.getSection().getBotonEjecutar().addActionListener(new Oyente());
 		
 		this.getBrilloContraste().getBrilloSlider().addChangeListener(new SliderListener());
 		this.getBrilloContraste().getContrasteSlider().addChangeListener(new SliderListener());	
@@ -203,6 +208,18 @@ public class Controlador {
 					getGamma().mostrar(getMiVista().getFocoImagenActual().getContenedor());
 				}
 				
+				else if(e.getSource() == getMiVista().getItemSection()) {
+					int valor = 2;
+					try {
+						valor = new Integer(JOptionPane.showInputDialog("Enter the number of sections (min 2): "));
+						if(valor < 2)
+							valor = 2;
+					} catch(Exception a) {}
+					
+					getSection().init(valor);
+					getSection().mostrar(getMiVista().getFocoImagenActual().getContenedor());
+				}
+				
 				else if(e.getSource() == getMiVista().getItemSampling()) 
 					getSampling().mostrar(getMiVista().getFocoImagenActual().getContenedor());
 				
@@ -234,6 +251,12 @@ public class Controlador {
 				else if(e.getSource() == getCuantizacion().getBoton()) {
 					getCuantizacion().generar(getMiVista().getFocoImagenActual());
 					getMiVista().addImagen(getCuantizacion().getDialog()); 
+					addEventosRaton();
+				}
+				
+				else if(e.getSource() == getSection().getBotonEjecutar()) {
+					getSection().buildImage(getMiVista().getFocoImagenActual());
+					getMiVista().addImagen(getSection().getDialog()); 
 					addEventosRaton();
 				}
 			}
@@ -480,5 +503,13 @@ public class Controlador {
 
 	public void setMostrarCoordenadas(Boolean mostrarCoordenadas) {
 		this.mostrarCoordenadas = mostrarCoordenadas;
+	}
+
+	public Section getSection() {
+		return section;
+	}
+
+	public void setSection(Section section) {
+		this.section = section;
 	}
 }

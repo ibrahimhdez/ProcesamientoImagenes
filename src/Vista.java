@@ -41,6 +41,7 @@ public class Vista extends JFrame {
     private JMenuItem itemHistograma, itemHistogramaAcumulativo;
     private JMenuItem itemDiference;
     private JMenuItem itemGamma;
+    private JMenuItem itemSection;
     private JMenuItem itemSampling;
     private JMenuItem itemQuantization;
     private JButton botonBlancoNegro;
@@ -80,6 +81,7 @@ public class Vista extends JFrame {
         
         this.setMenuProcess(new JMenu("Process"));
         this.setItemGamma(new JMenuItem("Gamma"));
+        this.setItemSection(new JMenuItem("Section"));
             
         this.setPanel(new JPanel() {
 			private static final long serialVersionUID = 1L;
@@ -164,6 +166,7 @@ public class Vista extends JFrame {
 		this.getItemDigitalize().add(this.getItemQuantization());
 		
 		this.getMenuProcess().add(this.getItemGamma());
+		this.getMenuProcess().add(this.getItemSection());
      
 		this.setJMenuBar(this.getBarraMenu());
 		this.setSize(500, 74);
@@ -500,6 +503,14 @@ public class Vista extends JFrame {
 		this.itemGamma = itemGamma;
 	}
 	
+	public JMenuItem getItemSection() {
+		return itemSection;
+	}
+
+	public void setItemSection(JMenuItem itemSection) {
+		this.itemSection = itemSection;
+	}
+
 	/**
 	 * @return the menuDigitalize
 	 */
