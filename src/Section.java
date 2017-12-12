@@ -141,9 +141,6 @@ public class Section {
 				// B = y - A*x
 				B.add(valores.get(k) - A.get(k-1)*puntos.get(k));
 				
-				System.out.println(A.get(0) + " " + B.get(0));
-				System.out.println((valores.get(k) + "-" + valores.get(k-1)) +"/"+ (puntos.get(k)+"-"+puntos.get(k-1)));
-				System.out.println((double) (valores.get(k)-valores.get(k-1)) / (puntos.get(k)-puntos.get(k-1)));
 			}
 			
 			for(int i = 0; i < imagen.getWidth(); i++) 
