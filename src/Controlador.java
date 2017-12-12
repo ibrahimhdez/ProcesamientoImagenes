@@ -209,11 +209,11 @@ public class Controlador {
 				}
 				
 				else if(e.getSource() == getMiVista().getItemSection()) {
-					int valor = 2;
+					int valor = 1;
 					try {
-						valor = new Integer(JOptionPane.showInputDialog("Enter the number of sections (min 2): "));
-						if(valor < 2)
-							valor = 2;
+						valor = new Integer(JOptionPane.showInputDialog("Enter the number of sections (min 1): "));
+						if(valor < 1)
+							valor = 1;
 					} catch(Exception a) {}
 					
 					getSection().init(valor);

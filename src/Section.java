@@ -38,7 +38,7 @@ public class Section {
 		this.setValores(new ArrayList<JTextField>());
 		this.setBotonEjecutar(new JButton());
 		this.setBotonMostrar(new JButton());
-		this.setnTramos(2);
+		this.setnTramos(1);
 	}
 	
 	public void init(int nTramos) {
@@ -52,7 +52,7 @@ public class Section {
 		JPanel panelBotones = new JPanel();
 		JPanel panelInterfaz = new JPanel();
 		
-		for(int i=0; i<getnTramos();i++) {
+		for(int i=0; i<=getnTramos();i++) {
 			JTextField auxValor = new JTextField("0");
 			JTextField auxPunto = new JTextField("0");
 			
@@ -67,7 +67,7 @@ public class Section {
 			    public void focusLost(FocusEvent e) {}
 			});
 
-			if(i == getnTramos()-1)
+			if(i == getnTramos())
 				auxPunto.setText("255");
 			
 			getValores().add(auxValor);
@@ -78,7 +78,7 @@ public class Section {
 		mainPanel.setLayout(new GridLayout(1, 2));
 		
 		panel.setLayout(new BorderLayout());
-		panelInterfaz.setLayout(new GridLayout(getnTramos(), 4, 5, 5));
+		panelInterfaz.setLayout(new GridLayout(getnTramos()+1, 4, 5, 5));
 		panelBotones.setLayout(new FlowLayout());
 		panelGrafica.setLayout(new FlowLayout());
 		this.getGrafica().setPreferredSize(new Dimension(255, 255));
@@ -98,7 +98,7 @@ public class Section {
 		
 		this.getGrafica().setBackground(Color.WHITE);
 		
-		for(int i=0; i<getnTramos();i++) {
+		for(int i=0; i<=getnTramos();i++) {
 			panelInterfaz.add(new JLabel("Punto:"));
 			panelInterfaz.add(getPuntos().get(i));
 			panelInterfaz.add(new JLabel("Valor:"));
@@ -135,11 +135,15 @@ public class Section {
 			ArrayList<Double> B = new ArrayList<Double>();
 			
 			
-			for(int k=1;k<getnTramos();k++) {
+			for(int k=1;k<=getnTramos();k++) {
 				// A = (y2-y1) / (x2-x1)
-				A.add((double) ((valores.get(k)-valores.get(k-1)) / (puntos.get(k)-puntos.get(k-1))));
+				A.add((double) (valores.get(k)-valores.get(k-1)) / (puntos.get(k)-puntos.get(k-1)));
 				// B = y - A*x
 				B.add(valores.get(k) - A.get(k-1)*puntos.get(k));
+				
+				System.out.println(A.get(0) + " " + B.get(0));
+				System.out.println((valores.get(k) + "-" + valores.get(k-1)) +"/"+ (puntos.get(k)+"-"+puntos.get(k-1)));
+				System.out.println((double) (valores.get(k)-valores.get(k-1)) / (puntos.get(k)-puntos.get(k-1)));
 			}
 			
 			for(int i = 0; i < imagen.getWidth(); i++) 
@@ -148,7 +152,7 @@ public class Section {
 					int nuevoColor = 0;
 					
 					int tramo = 0;
-					for(int k=1;k<getnTramos();k++) 
+					for(int k=1;k<=getnTramos();k++) 
 						if(valorPixel <= puntos.get(k)) {
 							tramo = k;
 							break;
@@ -187,7 +191,7 @@ public class Section {
 	public ArrayList<Integer> convertirArray(ArrayList<JTextField> array) {
 		ArrayList<Integer> nuevoArray = new ArrayList<Integer>();
 		
-		for(int i=0;i<getnTramos();i++) 
+		for(int i=0;i<=getnTramos();i++) 
 			nuevoArray.add(new Integer(array.get(i).getText()));
 		
 		return nuevoArray;
@@ -205,7 +209,7 @@ public class Section {
 		boolean aux = true;
 		int valor = 9999;
 		
-		for(int i=0; i<getnTramos() && aux;i++) {
+		for(int i=0; i<=getnTramos() && aux;i++) {
 			valor = 9999;
 			
 			try {
@@ -225,12 +229,12 @@ public class Section {
 			
 			valor = 9999;
 			try {
-				valor = new Integer(this.getPuntos().get(getnTramos()-1).getText());
+				valor = new Integer(this.getPuntos().get(getnTramos()).getText());
 			} catch(Exception e) {}
 			
 			aux &= (valor == 255);
 			
-			for(int i=1; i<getnTramos() && aux;i++) {
+			for(int i=1; i<=getnTramos() && aux;i++) {
 				int valorAnterior = 9999;
 				
 				try {
@@ -257,7 +261,7 @@ public class Section {
 		x0 = new Integer(this.getPuntos().get(0).getText());
 		y0 = 255 - new Integer(this.getValores().get(0).getText());
 		
-		for(int i=1; i<getnTramos();i++) {
+		for(int i=1; i<=getnTramos();i++) {
 			x1 = new Integer(this.getPuntos().get(i).getText());
 			y1 = 255 - new Integer(this.getValores().get(i).getText());
 			g.drawLine(x0, y0, x1, y1);
