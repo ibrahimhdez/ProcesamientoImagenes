@@ -69,6 +69,7 @@ public class Scale {
 	
 	void mostrar(JDialog dialog) {
 		this.getVentana().setLocation(dialog.getWidth() + (int)dialog.getLocation().getX() + 100, (int)dialog.getLocation().getY() + (int)dialog.getLocation().getY() / 4);
+		this.getRadioButtons().get(0).setSelected(true);
 		this.getVentana().setVisible(true);	
 	}
 	

@@ -53,15 +53,17 @@ public class Sampling {
 	
 	public void mostrar(JDialog dialog) {
 		this.getVentana().setLocation(dialog.getWidth() + (int)dialog.getLocation().getX() + 100, (int)dialog.getLocation().getY() + (int)dialog.getLocation().getY() / 4);
+		getRadioButtons().get(0).setSelected(true);
 		this.getVentana().setVisible(true);	
 	}
 	
 	
 	public void buildImage(Imagen imagenActual){
+		this.getVentana().dispose();
 		this.setDialog(new JDialog());
 		String text = "";
 		for(int i=0; i<getRadioButtons().size();i++)
-			if(getRadioButtons().get(i).isSelected())
+			if(getRadioButtons().get(i).isSelected()) 
 				text = getRadioButtons().get(i).getText();
 		
 		if(!text.isEmpty()){

@@ -39,12 +39,30 @@ public class Section {
 		this.setBotonEjecutar(new JButton());
 		this.setBotonMostrar(new JButton());
 		this.setnTramos(1);
+		
+		this.getVentana().setTitle("Section Transform");
+		this.getGrafica().setPreferredSize(new Dimension(255, 255));
+		
+		this.getBotonEjecutar().setText("Accept");
+		this.getBotonMostrar().setText("Show Graphic");
+		
+		this.getBotonMostrar().addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(comprobarValores())
+					pintarGrafica();
+				else {
+					mostrarMensaje();
+				}
+			}
+		});
+		
+		this.getGrafica().setBackground(Color.WHITE);
 	}
 	
 	public void init(int nTramos) {
 		this.setnTramos(nTramos);
-		
-		this.getVentana().setTitle("Section Transform");
+
+		this.getVentana().getContentPane().removeAll();
 		
 		JPanel mainPanel = new JPanel();
 		JPanel panel = new JPanel();
@@ -52,17 +70,20 @@ public class Section {
 		JPanel panelBotones = new JPanel();
 		JPanel panelInterfaz = new JPanel();
 		
+		getValores().clear();
+		getPuntos().clear();
+		
 		for(int i=0; i<=getnTramos();i++) {
 			JTextField auxValor = new JTextField("0");
 			JTextField auxPunto = new JTextField("0");
 			
 			auxValor.addFocusListener(new FocusListener() {
-			    public void focusGained(FocusEvent e) {	auxValor.setText("");	}
+			    public void focusGained(FocusEvent e) {	auxValor.selectAll();	}
 
 			    public void focusLost(FocusEvent e) {}
 			});
 			auxPunto.addFocusListener(new FocusListener() {
-			    public void focusGained(FocusEvent e) {	auxPunto.setText("");	}
+			    public void focusGained(FocusEvent e) {	auxPunto.selectAll();	}
 
 			    public void focusLost(FocusEvent e) {}
 			});
@@ -81,22 +102,7 @@ public class Section {
 		panelInterfaz.setLayout(new GridLayout(getnTramos()+1, 4, 5, 5));
 		panelBotones.setLayout(new FlowLayout());
 		panelGrafica.setLayout(new FlowLayout());
-		this.getGrafica().setPreferredSize(new Dimension(255, 255));
-		
-		this.getBotonEjecutar().setText("Accept");
-		this.getBotonMostrar().setText("Show Graphic");
-		
-		this.getBotonMostrar().addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if(comprobarValores())
-					pintarGrafica();
-				else {
-					mostrarMensaje();
-				}
-			}
-		});
-		
-		this.getGrafica().setBackground(Color.WHITE);
+
 		
 		for(int i=0; i<=getnTramos();i++) {
 			panelInterfaz.add(new JLabel("Punto:"));
@@ -113,7 +119,7 @@ public class Section {
 		panel.add(panelBotones, BorderLayout.SOUTH);
 		panelGrafica.add(getGrafica(), BorderLayout.CENTER);
 		
-		this.getVentana().add(mainPanel);
+		this.getVentana().getContentPane().add(mainPanel);
 		this.getVentana().pack();
 	}
 	
@@ -124,6 +130,7 @@ public class Section {
 	
 	public void buildImage(Imagen imagenActual){
 		if(comprobarValores()) {
+			this.getVentana().dispose();
 			this.setDialog(new JDialog());
 			BufferedImage imagen = imagenActual.getImagen();
 			BufferedImage newImg = new BufferedImage(imagen.getWidth(), imagen.getHeight(), imagen.getType());
