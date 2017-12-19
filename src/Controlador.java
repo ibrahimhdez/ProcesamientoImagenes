@@ -35,6 +35,7 @@ public class Controlador {
 	private Section section;
 	private Sampling sampling;
 	private Cuantizacion cuantizacion;
+	private Scale scale;
 	private Timer timer;
 	private Timer timerCoordenadas;
 	private Boolean mostrarCoordenadas;
@@ -50,6 +51,7 @@ public class Controlador {
 		this.setSection(new Section());
 		this.setSampling(new Sampling());
 		this.setCuantizacion(new Cuantizacion());
+		this.setScale(new Scale());
 		this.setMostrarCoordenadas(new Boolean(false));
 		iniciarTimer();
 		iniciarTimerCoordenadas();
@@ -66,6 +68,7 @@ public class Controlador {
 		this.getMiVista().getItemSection().addActionListener(new Oyente());
 		this.getMiVista().getItemSampling().addActionListener(new Oyente());
 		this.getMiVista().getItemQuantization().addActionListener(new Oyente());
+		this.getMiVista().getItemScale().addActionListener(new Oyente());
 		this.getBrilloContraste().getBrilloTextField().addActionListener(new Oyente());
 		this.getBrilloContraste().getDefaultBrillo().addActionListener(new Oyente());
 		this.getBrilloContraste().getDefaultContraste().addActionListener(new Oyente());
@@ -73,6 +76,7 @@ public class Controlador {
 		this.getSampling().getButton().addActionListener(new Oyente());
 		this.getCuantizacion().getBoton().addActionListener(new Oyente());
 		this.getSection().getBotonEjecutar().addActionListener(new Oyente());
+		this.getScale().getBoton().addActionListener(new Oyente());
 		
 		this.getBrilloContraste().getBrilloSlider().addChangeListener(new SliderListener());
 		this.getBrilloContraste().getContrasteSlider().addChangeListener(new SliderListener());	
@@ -89,6 +93,7 @@ public class Controlador {
 		this.getSampling().init();
 		this.getCuantizacion().init();
 		this.getMiVista().init();
+		this.getScale().init();
 	}
 	
 	private void iniciarTimer() {
@@ -230,6 +235,10 @@ public class Controlador {
 					getCuantizacion().mostrar(dialogActual.getLocation(), dialogActual.getBounds());
 				}
 				
+				else if(e.getSource() == getMiVista().getItemScale()) {
+					getScale().mostrar(getMiVista().getFocoImagenActual().getContenedor());
+				}
+				
 				else if(e.getSource() == getBrilloContraste().getDefaultBrillo()) 
 					getBrilloContraste().getBrilloSlider().setValue((int) getBrilloContraste().getBrilloInicial());
 
@@ -257,6 +266,12 @@ public class Controlador {
 				else if(e.getSource() == getSection().getBotonEjecutar()) {
 					getSection().buildImage(getMiVista().getFocoImagenActual());
 					getMiVista().addImagen(getSection().getDialog()); 
+					addEventosRaton();
+				}
+				
+				else if(e.getSource() == getScale().getBoton()) {
+					getScale().buildImage(getMiVista().getFocoImagenActual());
+					getMiVista().addImagen(getScale().getDialog()); 
 					addEventosRaton();
 				}
 			}
@@ -511,5 +526,13 @@ public class Controlador {
 
 	public void setSection(Section section) {
 		this.section = section;
+	}
+
+	public Scale getScale() {
+		return scale;
+	}
+
+	public void setScale(Scale scale) {
+		this.scale = scale;
 	}
 }

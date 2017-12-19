@@ -42,6 +42,7 @@ public class Vista extends JFrame {
     private JMenuItem itemDiference;
     private JMenuItem itemGamma;
     private JMenuItem itemSection;
+    private JMenuItem itemScale;
     private JMenuItem itemSampling;
     private JMenuItem itemQuantization;
     private JButton botonBlancoNegro;
@@ -75,6 +76,7 @@ public class Vista extends JFrame {
         this.setItemDigitalize(new JMenu("Digitalize"));
         this.setItemSampling(new JMenuItem("Sampling"));
         this.setItemQuantization(new JMenuItem("Quantization"));
+        this.setItemScale(new JMenuItem("Scale"));
         
         this.setBotonBlancoNegro(new JButton());
         this.setBotonTijera(new JButton());
@@ -164,6 +166,7 @@ public class Vista extends JFrame {
 		this.getMenuImage().add(this.getItemDigitalize());
 		this.getItemDigitalize().add(this.getItemSampling());
 		this.getItemDigitalize().add(this.getItemQuantization());
+		this.getMenuImage().add(this.getItemScale());
 		
 		this.getMenuProcess().add(this.getItemGamma());
 		this.getMenuProcess().add(this.getItemSection());
@@ -567,5 +570,13 @@ public class Vista extends JFrame {
 
 	public void setEtiquetaColorCoordenadas(JLabel etiquetaColorCoordenadas) {
 		this.etiquetaColorCoordenadas = etiquetaColorCoordenadas;
+	}
+
+	public JMenuItem getItemScale() {
+		return itemScale;
+	}
+
+	public void setItemScale(JMenuItem itemScale) {
+		this.itemScale = itemScale;
 	}
 }

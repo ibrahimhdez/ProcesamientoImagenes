@@ -39,14 +39,15 @@ public class Scale {
 		JPanel panel = new JPanel();
 		JPanel panelRB = new JPanel();
 		
+		mainPanel.setLayout(new GridLayout(2, 1, 5, 5));
 		panel.setLayout(new GridLayout(2, 3, 5, 5));
 		panelRB.setLayout(new BoxLayout(panelRB, BoxLayout.Y_AXIS));
 		
-		panel.add(new JLabel("New width related to origianl:"));
+		panel.add(new JLabel("New width related to original:"));
 		panel.add(getAncho());
 		panel.add(new JLabel("%"));
 		
-		panel.add(new JLabel("New height related to origianl:"));
+		panel.add(new JLabel("New height related to original:"));
 		panel.add(getAlto());
 		panel.add(new JLabel("%"));
 
@@ -60,8 +61,15 @@ public class Scale {
 		panelRB.add(getRadioButtons().get(0));
 		panelRB.add(getRadioButtons().get(1));
 		
-		mainPanel.add(panel);
-		mainPanel.add(panelRB);
+		JPanel auxPanel = new JPanel();
+		JPanel auxBoton = new JPanel();
+		
+		auxPanel.add(panel);
+		auxPanel.add(panelRB);
+		auxBoton.add(getBoton());
+		
+		mainPanel.add(auxPanel);
+		mainPanel.add(auxBoton);
 		
 		this.getVentana().add(mainPanel);
 		this.getVentana().pack();
@@ -70,10 +78,13 @@ public class Scale {
 	void mostrar(JDialog dialog) {
 		this.getVentana().setLocation(dialog.getWidth() + (int)dialog.getLocation().getX() + 100, (int)dialog.getLocation().getY() + (int)dialog.getLocation().getY() / 4);
 		this.getRadioButtons().get(0).setSelected(true);
+		this.getAlto().setText("");
+		this.getAncho().setText("");
 		this.getVentana().setVisible(true);	
 	}
 	
 	public void buildImage(Imagen imagenActual){
+		this.getVentana().dispose();
 		this.setDialog(new JDialog());
 		BufferedImage imagen = imagenActual.getImagen();
 		int width = imagen.getWidth();
@@ -83,8 +94,8 @@ public class Scale {
 		double heightFactor = 1.0;
 		
 		try {
-			widthFactor = new Integer(this.getAncho().getText()) / 100;
-			heightFactor = new Integer(this.getAlto().getText()) / 100;
+			widthFactor = new Double(this.getAncho().getText()) / 100;
+			heightFactor = new Double(this.getAlto().getText()) / 100;
 		} catch(Exception e) {}
 		
 		width = (int) (imagen.getWidth() * widthFactor);
@@ -98,8 +109,29 @@ public class Scale {
 				for(int j = 0; j < height; j++) {
 					int nuevoColor = 0;
 					
-					double x = i * widthFactor;
-					double y = j * heightFactor;
+					double x = i / widthFactor;
+					double y = j / heightFactor;
+					
+					if(x > width-1)
+						x = width-1;
+					if(y > height-1)
+						y = height-1;
+					
+					int A, B, C, D;
+					A = imagenActual.getValorPixel((int) Math.floor(x),(int) Math.ceil(y));
+					B = imagenActual.getValorPixel((int) Math.ceil(x),(int) Math.ceil(y));
+					C = imagenActual.getValorPixel((int) Math.floor(x),(int) Math.floor(y));
+					D = imagenActual.getValorPixel((int) Math.ceil(x),(int) Math.floor(y));
+					
+					double p,q;
+					
+					p = x - Math.floor(x);
+					q = y -  Math.floor(y);
+					
+					nuevoColor = (int) (C + (D-C)*p + (A-C)*q + (B+C-A-D)*p*q);
+					nuevoColor = (nuevoColor << 16) | (nuevoColor << 8) | nuevoColor;
+					
+					newImg.setRGB(i, j,nuevoColor); 
 				}
 		}
 		//interpolación vecino más próximo
