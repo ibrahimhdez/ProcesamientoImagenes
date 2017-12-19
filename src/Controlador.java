@@ -36,6 +36,7 @@ public class Controlador {
 	private Sampling sampling;
 	private Cuantizacion cuantizacion;
 	private Scale scale;
+	private Rotate rotate;
 	private Timer timer;
 	private Timer timerCoordenadas;
 	private Boolean mostrarCoordenadas;
@@ -52,6 +53,7 @@ public class Controlador {
 		this.setSampling(new Sampling());
 		this.setCuantizacion(new Cuantizacion());
 		this.setScale(new Scale());
+		this.setRotate(new Rotate());
 		this.setMostrarCoordenadas(new Boolean(false));
 		iniciarTimer();
 		iniciarTimerCoordenadas();
@@ -69,6 +71,10 @@ public class Controlador {
 		this.getMiVista().getItemSampling().addActionListener(new Oyente());
 		this.getMiVista().getItemQuantization().addActionListener(new Oyente());
 		this.getMiVista().getItemScale().addActionListener(new Oyente());
+		this.getMiVista().getItemFlipH().addActionListener(new Oyente());
+		this.getMiVista().getItemFlipV().addActionListener(new Oyente());
+		this.getMiVista().getItemFlipZ().addActionListener(new Oyente());
+//		this.getMiVista().getItemRotate().addActionListener(new Oyente());
 		this.getBrilloContraste().getBrilloTextField().addActionListener(new Oyente());
 		this.getBrilloContraste().getDefaultBrillo().addActionListener(new Oyente());
 		this.getBrilloContraste().getDefaultContraste().addActionListener(new Oyente());
@@ -94,6 +100,7 @@ public class Controlador {
 		this.getCuantizacion().init();
 		this.getMiVista().init();
 		this.getScale().init();
+//		this.getRotate().init();
 	}
 	
 	private void iniciarTimer() {
@@ -237,6 +244,24 @@ public class Controlador {
 				
 				else if(e.getSource() == getMiVista().getItemScale()) {
 					getScale().mostrar(getMiVista().getFocoImagenActual().getContenedor());
+				}
+				
+				else if(e.getSource() == getMiVista().getItemFlipH()) {
+					getRotate().flip(getMiVista().getFocoImagenActual(), 0);
+					getMiVista().addImagen(getRotate().getDialog()); 
+					addEventosRaton();
+				}
+				
+				else if(e.getSource() == getMiVista().getItemFlipV()) {
+					getRotate().flip(getMiVista().getFocoImagenActual(), 1);
+					getMiVista().addImagen(getRotate().getDialog()); 
+					addEventosRaton();
+				}
+				
+				else if(e.getSource() == getMiVista().getItemFlipZ()) {
+					getRotate().flip(getMiVista().getFocoImagenActual(), 2);
+					getMiVista().addImagen(getRotate().getDialog()); 
+					addEventosRaton();
 				}
 				
 				else if(e.getSource() == getBrilloContraste().getDefaultBrillo()) 
@@ -534,5 +559,13 @@ public class Controlador {
 
 	public void setScale(Scale scale) {
 		this.scale = scale;
+	}
+
+	public Rotate getRotate() {
+		return rotate;
+	}
+
+	public void setRotate(Rotate rotate) {
+		this.rotate = rotate;
 	}
 }

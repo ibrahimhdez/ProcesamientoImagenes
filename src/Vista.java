@@ -32,7 +32,7 @@ public class Vista extends JFrame {
 	private Recortar recortar;
 	private JMenuBar barraMenu;
     private JMenu menuFile, itemNew;
-    private JMenu menuImage, itemAdjust, itemDigitalize;
+    private JMenu menuImage, itemAdjust, itemDigitalize, itemMenuRotate;
     private JMenu menuShow;
     private JMenu menuProcess;
     private JMenuItem itemImage;
@@ -45,6 +45,10 @@ public class Vista extends JFrame {
     private JMenuItem itemScale;
     private JMenuItem itemSampling;
     private JMenuItem itemQuantization;
+    private JMenuItem itemFlipH;
+    private JMenuItem itemFlipV;
+    private JMenuItem itemFlipZ;
+    private JMenuItem itemRotate;
     private JButton botonBlancoNegro;
     private JButton botonTijera;
     private String rutaImagen;
@@ -77,6 +81,11 @@ public class Vista extends JFrame {
         this.setItemSampling(new JMenuItem("Sampling"));
         this.setItemQuantization(new JMenuItem("Quantization"));
         this.setItemScale(new JMenuItem("Scale"));
+        this.setItemMenuRotate(new JMenu("Rotate"));
+        this.setItemFlipH(new JMenuItem("FLip Horizontally"));
+        this.setItemFlipV(new JMenuItem("FLip Vertically"));
+        this.setItemFlipZ(new JMenuItem("FLip Z"));
+        this.setItemRotate(new JMenuItem("Rotate degrees"));
         
         this.setBotonBlancoNegro(new JButton());
         this.setBotonTijera(new JButton());
@@ -163,10 +172,17 @@ public class Vista extends JFrame {
 		this.getMenuImage().add(this.getItemAdjust());
 		this.getItemAdjust().add(this.getItemBrightnessContrast());
 		this.getMenuImage().add(this.getItemDiference());
+		this.getMenuImage().addSeparator();
 		this.getMenuImage().add(this.getItemDigitalize());
 		this.getItemDigitalize().add(this.getItemSampling());
 		this.getItemDigitalize().add(this.getItemQuantization());
+		this.getMenuImage().addSeparator();
 		this.getMenuImage().add(this.getItemScale());
+		this.getMenuImage().add(this.getItemMenuRotate());
+		this.getItemMenuRotate().add(this.getItemFlipH());
+		this.getItemMenuRotate().add(this.getItemFlipV());
+		this.getItemMenuRotate().add(this.getItemFlipZ());
+		this.getItemMenuRotate().add(this.getItemRotate());
 		
 		this.getMenuProcess().add(this.getItemGamma());
 		this.getMenuProcess().add(this.getItemSection());
@@ -578,5 +594,45 @@ public class Vista extends JFrame {
 
 	public void setItemScale(JMenuItem itemScale) {
 		this.itemScale = itemScale;
+	}
+
+	public JMenu getItemMenuRotate() {
+		return itemMenuRotate;
+	}
+
+	public void setItemMenuRotate(JMenu itemMenuRotate) {
+		this.itemMenuRotate = itemMenuRotate;
+	}
+
+	public JMenuItem getItemFlipH() {
+		return itemFlipH;
+	}
+
+	public void setItemFlipH(JMenuItem itemFlipH) {
+		this.itemFlipH = itemFlipH;
+	}
+
+	public JMenuItem getItemFlipV() {
+		return itemFlipV;
+	}
+
+	public void setItemFlipV(JMenuItem itemFlipV) {
+		this.itemFlipV = itemFlipV;
+	}
+
+	public JMenuItem getItemFlipZ() {
+		return itemFlipZ;
+	}
+
+	public void setItemFlipZ(JMenuItem itemFlipZ) {
+		this.itemFlipZ = itemFlipZ;
+	}
+
+	public JMenuItem getItemRotate() {
+		return itemRotate;
+	}
+
+	public void setItemRotate(JMenuItem itemRotate) {
+		this.itemRotate = itemRotate;
 	}
 }
