@@ -23,7 +23,6 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 
-
 public class Vista extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private static final int JDIALOG_BORDE = 22;

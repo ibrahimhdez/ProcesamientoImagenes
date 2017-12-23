@@ -8,6 +8,7 @@ import java.io.IOException;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
@@ -74,7 +75,7 @@ public class Controlador {
 		this.getMiVista().getItemFlipH().addActionListener(new Oyente());
 		this.getMiVista().getItemFlipV().addActionListener(new Oyente());
 		this.getMiVista().getItemFlipZ().addActionListener(new Oyente());
-//		this.getMiVista().getItemRotate().addActionListener(new Oyente());
+		this.getMiVista().getItemRotate().addActionListener(new Oyente());
 		this.getBrilloContraste().getBrilloTextField().addActionListener(new Oyente());
 		this.getBrilloContraste().getDefaultBrillo().addActionListener(new Oyente());
 		this.getBrilloContraste().getDefaultContraste().addActionListener(new Oyente());
@@ -83,6 +84,7 @@ public class Controlador {
 		this.getCuantizacion().getBoton().addActionListener(new Oyente());
 		this.getSection().getBotonEjecutar().addActionListener(new Oyente());
 		this.getScale().getBoton().addActionListener(new Oyente());
+		this.getRotate().getBoton().addActionListener(new Oyente());
 		
 		this.getBrilloContraste().getBrilloSlider().addChangeListener(new SliderListener());
 		this.getBrilloContraste().getContrasteSlider().addChangeListener(new SliderListener());	
@@ -100,7 +102,7 @@ public class Controlador {
 		this.getCuantizacion().init();
 		this.getMiVista().init();
 		this.getScale().init();
-//		this.getRotate().init();
+		this.getRotate().init();
 	}
 	
 	private void iniciarTimer() {
@@ -264,6 +266,10 @@ public class Controlador {
 					addEventosRaton();
 				}
 				
+				else if(e.getSource() == getMiVista().getItemRotate()) {
+					getRotate().mostrar(getMiVista().getFocoImagenActual().getContenedor());
+				}
+				
 				else if(e.getSource() == getBrilloContraste().getDefaultBrillo()) 
 					getBrilloContraste().getBrilloSlider().setValue((int) getBrilloContraste().getBrilloInicial());
 
@@ -297,6 +303,27 @@ public class Controlador {
 				else if(e.getSource() == getScale().getBoton()) {
 					getScale().buildImage(getMiVista().getFocoImagenActual());
 					getMiVista().addImagen(getScale().getDialog()); 
+					addEventosRaton();
+				}
+				
+				else if(e.getSource() == getRotate().getBoton()) {
+					//getRotate().flipAngle(getMiVista().getFocoImagenActual());
+					JDialog dialog = new JDialog();
+					BufferedImage imagen = getRotate().turn_direct(getMiVista().getFocoImagenActual());
+					JPanel panel = new JPanel() {
+		    			@Override
+		    			public void paintComponent(Graphics g) {
+		    				super.paintComponent(g); 
+		    				g.drawImage(imagen, 0, 0, null);
+		    			}
+				};
+			
+					dialog.add(panel);
+					dialog.setSize(imagen.getWidth(), imagen.getHeight());
+					dialog.setVisible(true);
+					
+					
+					//getMiVista().addImagen(getRotate().getDialog());
 					addEventosRaton();
 				}
 			}
