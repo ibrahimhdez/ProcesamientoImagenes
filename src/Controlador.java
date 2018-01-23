@@ -38,6 +38,7 @@ public class Controlador {
 	private Cuantizacion cuantizacion;
 	private Scale scale;
 	private Rotate rotate;
+	private Filter filter;
 	private Timer timer;
 	private Timer timerCoordenadas;
 	private Boolean mostrarCoordenadas;
@@ -55,6 +56,7 @@ public class Controlador {
 		this.setCuantizacion(new Cuantizacion());
 		this.setScale(new Scale());
 		this.setRotate(new Rotate());
+		this.setFilter(new Filter());
 		this.setMostrarCoordenadas(new Boolean(false));
 		iniciarTimer();
 		iniciarTimerCoordenadas();
@@ -76,6 +78,7 @@ public class Controlador {
 		this.getMiVista().getItemFlipV().addActionListener(new Oyente());
 		this.getMiVista().getItemFlipZ().addActionListener(new Oyente());
 		this.getMiVista().getItemRotate().addActionListener(new Oyente());
+		this.getMiVista().getItemConvolve().addActionListener(new Oyente());
 		this.getBrilloContraste().getBrilloTextField().addActionListener(new Oyente());
 		this.getBrilloContraste().getDefaultBrillo().addActionListener(new Oyente());
 		this.getBrilloContraste().getDefaultContraste().addActionListener(new Oyente());
@@ -86,6 +89,7 @@ public class Controlador {
 		this.getScale().getBoton().addActionListener(new Oyente());
 		this.getRotate().getBoton().addActionListener(new Oyente());
 		this.getRotate().getBotonOk().addActionListener(new Oyente());
+		this.getFilter().getBoton().addActionListener(new Oyente());
 		
 		this.getBrilloContraste().getBrilloSlider().addChangeListener(new SliderListener());
 		this.getBrilloContraste().getContrasteSlider().addChangeListener(new SliderListener());	
@@ -104,6 +108,7 @@ public class Controlador {
 		this.getMiVista().init();
 		this.getScale().init();
 		this.getRotate().init();
+		this.getFilter().init();
 	}
 	
 	private void iniciarTimer() {
@@ -271,6 +276,10 @@ public class Controlador {
 					getRotate().mostrar(getMiVista().getFocoImagenActual().getContenedor());
 				}
 				
+				else if(e.getSource() == getMiVista().getItemConvolve()) {
+					getFilter().mostrar(getMiVista().getFocoImagenActual().getContenedor());
+				}
+				
 				else if(e.getSource() == getBrilloContraste().getDefaultBrillo()) 
 					getBrilloContraste().getBrilloSlider().setValue((int) getBrilloContraste().getBrilloInicial());
 
@@ -296,9 +305,10 @@ public class Controlador {
 				}
 				
 				else if(e.getSource() == getSection().getBotonEjecutar()) {
-					getSection().buildImage(getMiVista().getFocoImagenActual());
-					getMiVista().addImagen(getSection().getDialog()); 
-					addEventosRaton();
+					if(getSection().buildImage(getMiVista().getFocoImagenActual())){
+						getMiVista().addImagen(getSection().getDialog()); 
+						addEventosRaton();
+					}
 				}
 				
 				else if(e.getSource() == getScale().getBoton()) {
@@ -318,6 +328,13 @@ public class Controlador {
 					getRotate().turnDirect(getMiVista().getFocoImagenActual(), true);
 					getMiVista().addImagen(getRotate().getDialog()); 
 					addEventosRaton();
+				}
+				
+				else if(e.getSource() == getFilter().getBoton()) {
+					if(getFilter().convolve(getMiVista().getFocoImagenActual())) {
+						getMiVista().addImagen(getFilter().getDialog()); 
+						addEventosRaton();
+					}
 				}
 			}
 		}
@@ -587,5 +604,13 @@ public class Controlador {
 
 	public void setRotate(Rotate rotate) {
 		this.rotate = rotate;
+	}
+
+	public Filter getFilter() {
+		return filter;
+	}
+
+	public void setFilter(Filter filter) {
+		this.filter = filter;
 	}
 }

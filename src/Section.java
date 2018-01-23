@@ -128,7 +128,7 @@ public class Section {
 		this.getVentana().setVisible(true);	
 	}
 	
-	public void buildImage(Imagen imagenActual){
+	public boolean buildImage(Imagen imagenActual){
 		if(comprobarValores()) {
 			this.getVentana().dispose();
 			this.setDialog(new JDialog());
@@ -186,9 +186,12 @@ public class Section {
 			this.getDialog().setLocationByPlatform(true);
 			this.getDialog().setVisible(true);
 			this.getDialog().setResizable(false);
+			
+			return true;
 		}
 		else {
 			mostrarMensaje();
+			return false;
 		}
 	}
 	
