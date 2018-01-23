@@ -85,6 +85,7 @@ public class Controlador {
 		this.getSection().getBotonEjecutar().addActionListener(new Oyente());
 		this.getScale().getBoton().addActionListener(new Oyente());
 		this.getRotate().getBoton().addActionListener(new Oyente());
+		this.getRotate().getBotonOk().addActionListener(new Oyente());
 		
 		this.getBrilloContraste().getBrilloSlider().addChangeListener(new SliderListener());
 		this.getBrilloContraste().getContrasteSlider().addChangeListener(new SliderListener());	
@@ -308,22 +309,14 @@ public class Controlador {
 				
 				else if(e.getSource() == getRotate().getBoton()) {
 					//getRotate().flipAngle(getMiVista().getFocoImagenActual());
-					JDialog dialog = new JDialog();
-					BufferedImage imagen = getRotate().turn_direct(getMiVista().getFocoImagenActual());
-					JPanel panel = new JPanel() {
-		    			@Override
-		    			public void paintComponent(Graphics g) {
-		    				super.paintComponent(g); 
-		    				g.drawImage(imagen, 0, 0, null);
-		    			}
-				};
-			
-					dialog.add(panel);
-					dialog.setSize(imagen.getWidth(), imagen.getHeight());
-					dialog.setVisible(true);
-					
-					
-					//getMiVista().addImagen(getRotate().getDialog());
+					getRotate().turnDirect(getMiVista().getFocoImagenActual(), false);
+					getMiVista().addImagen(getRotate().getDialog()); 
+					addEventosRaton();
+				}
+				
+				else if(e.getSource() == getRotate().getBotonOk()) {
+					getRotate().turnDirect(getMiVista().getFocoImagenActual(), true);
+					getMiVista().addImagen(getRotate().getDialog()); 
 					addEventosRaton();
 				}
 			}

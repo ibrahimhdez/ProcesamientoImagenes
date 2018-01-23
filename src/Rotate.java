@@ -4,7 +4,9 @@ import java.awt.GraphicsEnvironment;
 import java.awt.Transparency;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Enumeration;
 
+import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -19,9 +21,10 @@ public class Rotate {
 	private JDialog ventana;
 	private JDialog dialog;
 	private JButton boton;
+	private JButton botonOk;
 	private JLabel etiqueta;
 	private ArrayList<JRadioButton> radioButtons;
-	private final ButtonGroup buttonGroup = new ButtonGroup();
+	private ButtonGroup buttonGroup;
 	private JTextField rotacion;
 	private JCheckBox rotarPintar;
 	public  double[][] MatrizTransformacionD = new double[3][3];
@@ -30,9 +33,11 @@ public class Rotate {
 		this.setVentana(new JDialog());
 		this.setDialog(new JDialog());
 		this.setBoton(new JButton("Rotate"));
+		this.setBotonOk(new JButton("Ok (manual)"));
 		this.setEtiqueta(new JLabel("Choose the angle of rotation:"));
 		this.setRadioButtons(new ArrayList<JRadioButton>());
-		this.setRotacion(new JTextField());
+		this.setButtonGroup(new ButtonGroup());
+		this.setRotacion(new JTextField(3));
 		this.setRotarPintar(new JCheckBox("Rotate y Paint"));
 		this.setRadioButtons(new ArrayList<JRadioButton>());
 	}
@@ -40,7 +45,7 @@ public class Rotate {
 	public void init() {
 		JPanel panel = new JPanel();
 		
-		this.getVentana().setSize(220, 110);
+		this.getVentana().setSize(230, 145);
 		this.getVentana().setTitle("Rotate Transform");
 		
 		panel.add(this.getEtiqueta());
@@ -50,9 +55,17 @@ public class Rotate {
 			getRadioButtons().add(radioButton);
 		}
 			
-		for(int i = 0; i < getRadioButtons().size(); i++) 
-			panel.add(this.getRadioButtons().get(i));
+		for(int i = 0; i < getRadioButtons().size(); i++)
+			this.getButtonGroup().add(this.getRadioButtons().get(i));
 		
+		Enumeration<AbstractButton> enumeration = this.getButtonGroup().getElements();     
+        while (enumeration.hasMoreElements()){
+            JRadioButton radioButton = (JRadioButton) enumeration.nextElement();
+            panel.add(radioButton);
+        }
+		
+		panel.add(this.getRotacion());
+		panel.add(this.getBotonOk());
 		panel.add(this.getBoton());
 		this.getVentana().add(panel);
 	}
@@ -206,24 +219,29 @@ public class Rotate {
 		this.getDialog().setResizable(false);
 	}
 	
-	public BufferedImage turn_direct(Imagen imagenActual) {
+	public void turnDirect(Imagen imagenActual, Boolean anguloManual) {
+		this.setDialog(new JDialog());
 	    Color white = Color.WHITE;
 	    BufferedImage imagen = imagenActual.getImagen();
 	    String textAngle = "";
+	    Integer grados;
 	    
-	    for(int i=0; i<getRadioButtons().size();i++)
-			if(getRadioButtons().get(i).isSelected()) 
-				textAngle = getRadioButtons().get(i).getText();
-		textAngle = textAngle.substring(0, textAngle.length() - 1);
-		Integer grados = new Integer(textAngle);
+	    	if(!anguloManual) {
+	    		for(int i=0; i<getRadioButtons().size();i++)
+				if(getRadioButtons().get(i).isSelected()) 
+					textAngle = getRadioButtons().get(i).getText();
+			textAngle = textAngle.substring(0, textAngle.length() - 1);
+			grados = new Integer(textAngle);
 		
-		if(grados == 90)
-			grados = 270;
-		else if(grados == 270)
-			grados = 90;
+			if(grados == 90)
+				grados = 270;
+			else if(grados == 270)
+				grados = 90;
+	    }
+	    	
+	    	else 
+	    		grados = new Integer(this.getRotacion().getText());
 		
-		grados = 200;
-	    
 	    int[][] A, B, C, D;
 	    int x, y;
 	    int[][] pto = new int[2][1];
@@ -272,14 +290,35 @@ public class Rotate {
 	        x = pto[0][0] + ori[0][0];
 	        y = pto[1][0] + ori[1][0];
 
-	
 	        newImg.setRGB(x, y, imagen.getRGB(i, j));
-	
 	      }
 	    }
 
-	    return newImg;
-
+	    @SuppressWarnings("serial")
+		JPanel panel = new JPanel() {
+    			@Override
+    			public void paintComponent(Graphics g) {
+    				super.paintComponent(g);
+    				g.drawImage(newImg, 0, 0, null);
+    				imagenActual.getRecortar().pintarRectangulo(g);
+    			}
+		};
+		
+		this.getDialog().add(panel);
+		this.getDialog().setIconImage(newImg);
+		String textGrados = "";
+		if(grados == 90)
+			textGrados = "270";
+		else if(grados == 270)
+			textGrados = "90";
+		else
+			textGrados = grados + "";
+		this.getDialog().setTitle(imagenActual.getContenedor().getTitle() + " turn " + textGrados + "º");
+		this.getDialog().setLocation((int)imagenActual.getContenedor().getLocation().getX(), (int)imagenActual.getContenedor().getLocation().getY() + imagenActual.getContenedor().getHeight() + 50);
+		this.getDialog().setSize(newImg.getWidth(), newImg.getHeight() + JDIALOG_BORDE);
+		this.getDialog().setLocationByPlatform(true);
+		this.getDialog().setVisible(true);
+		this.getDialog().setResizable(false);
 	  }
 	
 	private int[][] mapeo_directo(int[][] pto, int grados) {
@@ -457,12 +496,24 @@ public class Rotate {
 		this.boton = boton;
 	}
 
+	public JButton getBotonOk() {
+		return botonOk;
+	}
+
+	public void setBotonOk(JButton botonOk) {
+		this.botonOk = botonOk;
+	}
+
 	public JLabel getEtiqueta() {
 		return etiqueta;
 	}
 
 	public void setEtiqueta(JLabel etiqueta) {
 		this.etiqueta = etiqueta;
+	}
+
+	public void setButtonGroup(ButtonGroup buttonGroup) {
+		this.buttonGroup = buttonGroup;
 	}
 
 	public ArrayList<JRadioButton> getRadioButtons() {
