@@ -16,12 +16,15 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.filechooser.FileSystemView;
 
 public class Vista extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -37,7 +40,7 @@ public class Vista extends JFrame {
     private JMenuItem itemImage;
     private JMenuItem itemShowInfo;
     private JMenuItem itemBrightnessContrast;
-    private JMenuItem itemHistograma, itemHistogramaAcumulativo;
+    private JMenuItem itemHistograma, itemHistogramaAcumulativo, itemEspecificacionHistograma;
     private JMenuItem itemDiference;
     private JMenuItem itemGamma;
     private JMenuItem itemSection;
@@ -70,6 +73,7 @@ public class Vista extends JFrame {
         this.setMenuShow(new JMenu("Show"));
         this.setItemHistograma(new JMenuItem("Absolute Histogram"));
         this.setItemHistogramaAcumulativo(new JMenuItem("Accumulative Histogram"));
+        this.setItemEspecificacionHistograma(new JMenuItem("Histogram Specification"));
         
         this.setMenuImage(new JMenu("Image"));
         this.setItemShowInfo(new JMenuItem("Show info..."));
@@ -166,6 +170,7 @@ public class Vista extends JFrame {
     
 		this.getMenuShow().add(this.getItemHistograma());
 		this.getMenuShow().add(this.getItemHistogramaAcumulativo());
+		this.getMenuShow().add(this.getItemEspecificacionHistograma());
     
 		this.getMenuImage().add(this.getItemShowInfo());
 		this.getMenuImage().add(this.getItemAdjust());
@@ -209,6 +214,7 @@ public class Vista extends JFrame {
     
     void openJDialog() throws IOException{
     		JDialog dialog = new JDialog();     
+    		JPanel panel;
     		this.setRecortar(new Recortar());
     		
     		BufferedImage imagen1 = ImageIO.read(new File(this.getRutaImagen()));
@@ -228,15 +234,7 @@ public class Vista extends JFrame {
     		g.drawImage(toolkitImage, 0, 0, null);
     		g.dispose();
     		
-        @SuppressWarnings("serial")
-		JPanel panel = new JPanel() {
-        		@Override
-        		public void paintComponent(Graphics g) {
-        			super.paintComponent(g); 
-        			g.drawImage(newImage, 0, 0, null);
-        			getRecortar().pintarRectangulo(g);
-        		}
-        };
+    		panel = addPanel(newImage);
 
         dialog.add(panel);
         dialog.setIconImage(toolkitImage);
@@ -244,6 +242,45 @@ public class Vista extends JFrame {
         dialog.setResizable(false);
        
         addImagen(dialog);
+    }
+    
+    JDialog openImage() throws IOException {
+    		JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+		JDialog auxDialog = new JDialog();
+		BufferedImage imagen = null;
+		JPanel panel;
+		
+		jfc.setDialogTitle("Choose an image:");
+		jfc.setAcceptAllFileFilterUsed(false);
+		jfc.setFileFilter(new FileNameExtensionFilter("jpg, png, gif", "jpg", "png", "gif"));
+		auxDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		int sel = jfc.showOpenDialog(null);
+		if (sel == JFileChooser.APPROVE_OPTION) 
+			imagen = ImageIO.read(new File(jfc.getSelectedFile().getAbsolutePath()));
+			auxDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+			auxDialog.setTitle("Imagen " + this.numeroImagen);
+			this.numeroImagen++;
+			Image toolkitImage = imagen;
+			
+			 while((toolkitImage.getWidth(null) > 750) || (toolkitImage.getHeight(null) > 750)) 
+	        		toolkitImage = imagen.getScaledInstance(toolkitImage.getWidth(null) / 2, toolkitImage.getHeight(null) / 2, Image.SCALE_SMOOTH);
+
+			BufferedImage newImage = new BufferedImage(toolkitImage.getWidth(auxDialog), toolkitImage.getHeight(auxDialog), 
+					BufferedImage.TYPE_INT_ARGB);
+	          		
+	        Graphics g = newImage.getGraphics();
+	   		g.drawImage(toolkitImage, 0, 0, null);
+	        g.dispose();
+	        
+	        panel = addPanel(newImage);
+        	
+            auxDialog.add(panel);
+            auxDialog.setIconImage(toolkitImage);
+            auxDialog.setSize(toolkitImage.getWidth(null), toolkitImage.getHeight(null) + JDIALOG_BORDE);
+            auxDialog.setLocation(auxDialog.getX() + auxDialog.getWidth() + 50, auxDialog.getY());
+            auxDialog.setResizable(false);
+            
+            return auxDialog;
     }
     	
 	void addImagen(JDialog dialog){
@@ -269,17 +306,8 @@ public class Vista extends JFrame {
 	
 	void addImagen(Imagen imagen, String titulo, int xLocation, int yLocation) {
 		JDialog dialog = imagen.getContenedor();
-		
-		 @SuppressWarnings("serial")
-			JPanel panel = new JPanel() {
-	        		@Override
-	        		public void paintComponent(Graphics g) {
-	        			super.paintComponent(g); 
-	        			g.drawImage(imagen.getImagen(), 0, 0, null);
-	        			getRecortar().pintarRectangulo(g);
-	        		}
-	        };
-
+		JPanel panel = addPanel(imagen);
+	
 	    dialog.add(panel);
 		dialog.setIconImage(imagen.getImagen());
 		dialog.setTitle(titulo);
@@ -307,16 +335,7 @@ public class Vista extends JFrame {
 	
 	void modificarImagen(Imagen newImg) {
 		this.getFocoImagenActual().getContenedor().getContentPane().removeAll();
-		
-		@SuppressWarnings("serial")
-		JPanel panel = new JPanel() {
-    			@Override
-    			public void paintComponent(Graphics g) {
-    				super.paintComponent(g); 
-    				g.drawImage(newImg.getImagen(), 0, 0, null);
-    				getRecortar().pintarRectangulo(g);
-    			}
-		};
+		JPanel panel = addPanel(newImg);
 
     		this.getFocoImagenActual().getContenedor().add(panel);
     		this.getFocoImagenActual().getContenedor().revalidate();
@@ -327,6 +346,34 @@ public class Vista extends JFrame {
 		this.getFocoImagenActual().setContraste(newImg.getContraste());
 		this.getFocoImagenActual().setHistograma();
 	}	
+	
+	@SuppressWarnings("serial")
+	JPanel addPanel(Imagen imagen) {
+		JPanel panel = new JPanel() {
+			@Override
+			public void paintComponent(Graphics g) {
+				super.paintComponent(g); 
+				g.drawImage(imagen.getImagen(), 0, 0, null);
+				getRecortar().pintarRectangulo(g);
+			}
+		};
+		
+		return panel;
+	}
+	
+	@SuppressWarnings("serial")
+	JPanel addPanel(BufferedImage bufferedImage) {
+		JPanel panel = new JPanel() {
+			@Override
+			public void paintComponent(Graphics g) {
+				super.paintComponent(g); 
+				g.drawImage(bufferedImage, 0, 0, null);
+				getRecortar().pintarRectangulo(g);
+			}
+		};
+		
+		return panel;
+	}
 	
     public ArrayList<Imagen> getImagenes() {
 		return imagenes;
@@ -471,6 +518,14 @@ public class Vista extends JFrame {
 
 	public void setItemHistogramaAcumulativo(JMenuItem itemHistogramaAcumulativo) {
 		this.itemHistogramaAcumulativo = itemHistogramaAcumulativo;
+	}
+
+	public JMenuItem getItemEspecificacionHistograma() {
+		return itemEspecificacionHistograma;
+	}
+
+	public void setItemEspecificacionHistograma(JMenuItem itemEspecificacionHistograma) {
+		this.itemEspecificacionHistograma = itemEspecificacionHistograma;
 	}
 
 	public JMenuItem getItemShowInfo() {

@@ -87,7 +87,7 @@ public class Diferencia {
 						resultado.setRGB(i, j, imagen1.getRGB(i, j));
 		
 		resultadoImagen = new Imagen(marcarDiferencias(resultado));
-		resultadoImagen.getContenedor().setTitle("Resultado");
+		resultadoImagen.getContenedor().setTitle("Imagen resultado");
 		resultadoImagen.getContenedor().setLocation(this.getImagen1().getContenedor().getLocation());
 		mostrarImagenDiferencia();
 		

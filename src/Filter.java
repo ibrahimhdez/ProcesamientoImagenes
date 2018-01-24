@@ -73,7 +73,6 @@ public class Filter {
 	}
 	
 	public void save() {
-		
 		JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
 		jfc.setDialogTitle("Save the filter:");
 		jfc.setAcceptAllFileFilterUsed(false);

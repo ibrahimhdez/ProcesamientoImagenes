@@ -50,6 +50,7 @@ public class Imagen {
 		this.setContraste();
 		this.setEntropia();
 		this.setIndiceGamma(1.0);
+		this.setRecortar(new Recortar());
 	}
 	
 	public Imagen(BufferedImage imagen) {
@@ -62,7 +63,7 @@ public class Imagen {
 		this.setContraste();
 		this.setEntropia();
 		this.setIndiceGamma(1.0);
-		
+		this.setRecortar(new Recortar());
 		this.getContenedor().add(new JLabel(new ImageIcon(imagen)));
 		this.getContenedor().pack();
 		this.setHistograma();
@@ -70,7 +71,6 @@ public class Imagen {
 	
 	public Imagen(Image image) {
 		this.setContenedor(new JDialog());
-		
 	}
 
 	void actualizarBufferedImage() {
@@ -136,6 +136,52 @@ public class Imagen {
 	    }
 	    
 	    this.entropia = -temp;
+	}
+	
+	JDialog construirImagen(Imagen imagenActual, int[] pixeles) {
+		BufferedImage imagen = imagenActual.getImagen();
+		JDialog dialog = new JDialog();
+		final int ANCHO = imagen.getWidth();
+	    final int ALTO = imagen.getHeight();
+	    
+	    for (int i = 0; i < ANCHO; i++) {
+	      for (int j = 0; j < ALTO; j++) {
+	        int pixelActual = new Color(imagen.getRGB(i, j)).getRed();
+	        int nuevoPixel = pixeles[pixelActual];
+	        int result = nuevoPixel << 16;
+	        result += nuevoPixel << 8;
+	        result += nuevoPixel;
+	        imagen.setRGB(i, j, result);
+	      }
+	    }
+	    
+	    Image toolkitImage = imagen;
+	    
+	    Graphics g = imagen.getGraphics();
+		g.drawImage(toolkitImage, 0, 0, null);
+		g.dispose();
+		
+		@SuppressWarnings("serial")
+		JPanel panel = new JPanel() {
+			@Override
+			public void paintComponent(Graphics g) {
+				super.paintComponent(g); 
+				g.drawImage(imagen, 0, 0, null);
+				getRecortar().pintarRectangulo(g);
+			}
+		};
+		dialog.add(panel);
+		dialog.setIconImage(imagen);
+		dialog.setTitle(imagenActual.getContenedor().getTitle() + " nuevo");
+		dialog.setLocation((int)imagenActual.getContenedor().getLocation().getX(), (int)imagenActual.getContenedor().getLocation().getY() + imagenActual.getContenedor().getHeight() + 50);
+		dialog.setSize(imagen.getWidth(), imagen.getHeight() + 23);
+	//	dialog.setVisible(true);
+		JPanel aux = (JPanel)dialog.getContentPane();
+		aux.repaint();
+		dialog.setVisible(true);
+		dialog.setResizable(false);
+		
+		return dialog;
 	}
 	
 	int getValorPixel(int x, int y) {

@@ -65,6 +65,33 @@ public class Histograma {
 		this.getVentana().setVisible(true);
 	}
 	
+	int[] especificacion(Imagen imagenA, Imagen imagenB) {
+		final int MAX_PIXELS = 256;
+	    int[] Vout = new int[MAX_PIXELS];
+	    double[] pA = getHistogramaNormalizado(imagenA);
+	    double[] pB = getHistogramaNormalizado(imagenB);
+	    
+	    for (int i = 0; i < MAX_PIXELS; i++) {
+	      int j = MAX_PIXELS - 1;
+	      do {
+	        Vout[i] = j;
+	        j--;
+	      } while ((j >= 0) && (pA[i] <= pB[j]));
+	    }    
+	    
+	    return Vout;
+	}
+	
+	double[] getHistogramaNormalizado(Imagen imagen) {		
+		int numPixeles = imagen.getImagen().getHeight() * imagen.getImagen().getWidth();
+		double[] histogramaNormalizado = new double[numPixeles];
+		
+		for(int i = 0; i < imagen.getHistograma().length; i++) 
+			histogramaNormalizado[i] = (double)imagen.getHistograma(i) / numPixeles;
+	
+		return histogramaNormalizado;
+	}
+	
 	int[] acumularHistograma(int[] histograma) {
 		int[] aux = new int[256];
 		int num = 0;

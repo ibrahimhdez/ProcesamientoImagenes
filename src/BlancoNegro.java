@@ -19,6 +19,7 @@ public class BlancoNegro {
 	
 	void convertir(Imagen imagenActual){
 		BufferedImage imagen = imagenActual.getImagen();
+		this.setDialog(new JDialog());
 		
 		Graphics g = imagen.getGraphics();
 		g.drawImage(imagenActual.imageActual(), 0, 0, null);
@@ -46,13 +47,13 @@ public class BlancoNegro {
 		this.getDialog().setTitle(imagenActual.getContenedor().getTitle() + " blanco y negro");
 		this.getDialog().setLocation((int)imagenActual.getContenedor().getLocation().getX(), (int)imagenActual.getContenedor().getLocation().getY() + imagenActual.getContenedor().getHeight() + 50);
 		this.getDialog().setSize(imagen.getWidth(), imagen.getHeight() + JDIALOG_BORDE);
-		this.getDialog().setLocationByPlatform(true);
 		this.getDialog().setVisible(true);
 		this.getDialog().setResizable(false);
 	}
 	
 	Imagen get(Imagen imagenActual) {
 		BufferedImage imagen = imagenActual.getImagen();
+		JDialog dialog = new JDialog();
 		
 		Graphics g = imagen.getGraphics();
 		g.drawImage(imagenActual.imageActual(), 0, 0, null);
@@ -66,7 +67,26 @@ public class BlancoNegro {
 				imagen.setRGB(i, j,colorSRGB);
          }
 		
-		return new Imagen(imagen);
+		@SuppressWarnings("serial")
+		JPanel panel = new JPanel() {
+    			@Override
+    			public void paintComponent(Graphics g) {
+    				super.paintComponent(g); 
+    				g.drawImage(imagen, 0, 0, null);
+    				imagenActual.getRecortar().pintarRectangulo(g);
+    			}
+		};
+		
+		dialog.add(panel);
+		dialog.setIconImage(imagen);
+		dialog.setTitle(imagenActual.getContenedor().getTitle() + " blanco y negro");
+		dialog.setLocation((int)imagenActual.getContenedor().getLocation().getX(), (int)imagenActual.getContenedor().getLocation().getY() + imagenActual.getContenedor().getHeight() + 50);
+		dialog.setSize(imagen.getWidth(), imagen.getHeight() + JDIALOG_BORDE);
+		dialog.setLocationByPlatform(true);
+		dialog.setVisible(true);
+		dialog.setResizable(false);
+		
+		return new Imagen(dialog);
 	}
 
 	public JDialog getDialog() {

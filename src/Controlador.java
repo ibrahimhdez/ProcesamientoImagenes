@@ -8,7 +8,6 @@ import java.io.IOException;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
@@ -27,6 +26,7 @@ import java.awt.image.BufferedImage;
 public class Controlador {
 	private static final int BORDE_JDIALOG = 22;
 	private Vista miVista;
+	private Imagen imagen;
 	private Informacion informacion;
 	private BlancoNegro blancoNegro;
 	private BrilloContraste brilloContraste;
@@ -44,6 +44,7 @@ public class Controlador {
 	
 	public Controlador(){
 		this.setMiVista(new Vista());
+		this.setImagen(new Imagen());
 		this.setInformacion(new Informacion());
 		this.setBlancoNegro(new BlancoNegro());
 		this.setBrilloContraste(new BrilloContraste());
@@ -62,6 +63,7 @@ public class Controlador {
 		this.getMiVista().getItemImage().addActionListener(new Oyente());
 		this.getMiVista().getItemHistograma().addActionListener(new Oyente());
 		this.getMiVista().getItemHistogramaAcumulativo().addActionListener(new Oyente());
+		this.getMiVista().getItemEspecificacionHistograma().addActionListener(new Oyente());
 		this.getMiVista().getBotonBlancoNegro().addActionListener(new Oyente());
 		this.getMiVista().getBotonTijera().addActionListener(new Oyente());
 		this.getMiVista().getItemShowInfo().addActionListener(new Oyente());
@@ -97,6 +99,7 @@ public class Controlador {
 	
 	void iniciarComponentes() throws IOException{
 		this.getMiVista().iniciarBotones();
+		this.getBlancoNegro().init();
 		this.getBrilloContraste().init();
 		this.getGamma().init();
 		this.getSampling().init();
@@ -165,8 +168,6 @@ public class Controlador {
 			
 			else if(getMiVista().getImagenes().size() > 0) {
 				if(e.getSource() == getMiVista().getBotonBlancoNegro()) {
-					getBlancoNegro().init();
-					
 					getBlancoNegro().convertir(getMiVista().getFocoImagenActual());
 					getMiVista().addImagen(getBlancoNegro().getDialog()); 
 					addEventosRaton();
@@ -195,7 +196,7 @@ public class Controlador {
 					getBrilloContraste().setBrilloInicial(getMiVista().getFocoImagenActual().getBrillo());
 					getBrilloContraste().setContrasteInicial(getMiVista().getFocoImagenActual().getContraste());
 					
-					//Comentar el siguiente condicional para trabajar con la imagen actual, no la inicial.
+					//!!! Comentar el siguiente condicional para trabajar con la imagen actual, no la inicial.
 					//if(!imagenActual.getModificada())
 					getBrilloContraste().actualizarPanel(imagenActual);
 					getBrilloContraste().mostrar(imagenActual.getContenedor());
@@ -283,6 +284,22 @@ public class Controlador {
 				else if(e.getSource() == getMiVista().getItemHistogramaAcumulativo())
 					getHistograma().mostrarHistogramaAcumulativo(getMiVista().getFocoImagenActual());
 				
+				else if(e.getSource() == getMiVista().getItemEspecificacionHistograma()) {
+					Imagen imagenActual = getMiVista().getFocoImagenActual();
+					int[] pixels;
+					try {
+						getBlancoNegro().convertir(new Imagen(getMiVista().openImage()));
+						getMiVista().addImagen(getBlancoNegro().getDialog()); 
+						pixels = getHistograma().especificacion(imagenActual, getMiVista().getFocoImagenActual());
+						getImagen().construirImagen(getMiVista().getFocoImagenActual(), pixels);
+					
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}	
+					addEventosRaton();
+				}
+				
 				else if(e.getSource() == getSampling().getButton()){
 					getSampling().buildImage(getMiVista().getFocoImagenActual());
 					getMiVista().addImagen(getSampling().getDialog());
@@ -308,7 +325,6 @@ public class Controlador {
 				}
 				
 				else if(e.getSource() == getRotate().getBoton()) {
-					//getRotate().flipAngle(getMiVista().getFocoImagenActual());
 					getRotate().turnDirect(getMiVista().getFocoImagenActual(), false);
 					getMiVista().addImagen(getRotate().getDialog()); 
 					addEventosRaton();
@@ -487,6 +503,14 @@ public class Controlador {
 
 	public Vista getMiVista() {
 		return miVista;
+	}
+
+	public Imagen getImagen() {
+		return imagen;
+	}
+
+	public void setImagen(Imagen imagen) {
+		this.imagen = imagen;
 	}
 
 	public Informacion getInformacion() {
