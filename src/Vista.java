@@ -37,6 +37,7 @@ public class Vista extends JFrame {
     private JMenu menuImage, itemAdjust, itemDigitalize, itemMenuRotate;
     private JMenu menuShow;
     private JMenu menuProcess;
+    private JMenu menuFilter;
     private JMenuItem itemImage;
     private JMenuItem itemShowInfo;
     private JMenuItem itemBrightnessContrast;
@@ -51,6 +52,7 @@ public class Vista extends JFrame {
     private JMenuItem itemFlipV;
     private JMenuItem itemFlipZ;
     private JMenuItem itemRotate;
+    private JMenuItem itemConvolve;
     private JButton botonBlancoNegro;
     private JButton botonTijera;
     private String rutaImagen;
@@ -89,6 +91,9 @@ public class Vista extends JFrame {
         this.setItemFlipV(new JMenuItem("FLip Vertically"));
         this.setItemFlipZ(new JMenuItem("FLip Z"));
         this.setItemRotate(new JMenuItem("Rotate degrees"));
+        
+        this.setMenuFilter(new JMenu("Filter"));
+        this.setItemConvolve(new JMenuItem("Convolve"));
         
         this.setBotonBlancoNegro(new JButton());
         this.setBotonTijera(new JButton());
@@ -164,6 +169,7 @@ public class Vista extends JFrame {
 		this.getBarraMenu().add(this.getMenuShow());
 		this.getBarraMenu().add(this.getMenuImage());
 		this.getBarraMenu().add(this.getMenuProcess());
+		this.getBarraMenu().add(this.getMenuFilter());
      
 		this.getMenuFile().add(this.getItemNew());
 		this.getItemNew().add(this.getItemImage());
@@ -190,6 +196,8 @@ public class Vista extends JFrame {
 		
 		this.getMenuProcess().add(this.getItemGamma());
 		this.getMenuProcess().add(this.getItemSection());
+		
+		this.getMenuFilter().add(this.getItemConvolve());
      
 		this.setJMenuBar(this.getBarraMenu());
 		this.setSize(500, 74);
@@ -688,5 +696,21 @@ public class Vista extends JFrame {
 
 	public void setItemRotate(JMenuItem itemRotate) {
 		this.itemRotate = itemRotate;
+	}
+
+	public JMenu getMenuFilter() {
+		return menuFilter;
+	}
+
+	public void setMenuFilter(JMenu menuFilter) {
+		this.menuFilter = menuFilter;
+	}
+
+	public JMenuItem getItemConvolve() {
+		return itemConvolve;
+	}
+
+	public void setItemConvolve(JMenuItem itemConvolve) {
+		this.itemConvolve = itemConvolve;
 	}
 }
