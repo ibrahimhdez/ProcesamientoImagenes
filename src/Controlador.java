@@ -291,8 +291,8 @@ public class Controlador {
 						getBlancoNegro().convertir(new Imagen(getMiVista().openImage()));
 						getMiVista().addImagen(getBlancoNegro().getDialog()); 
 						pixels = getHistograma().especificacion(imagenActual, getMiVista().getFocoImagenActual());
-						getImagen().construirImagen(getMiVista().getFocoImagenActual(), pixels);
-					
+						JDialog dialog = getImagen().construirImagen(getMiVista().getFocoImagenActual(), pixels);
+						dialog.setVisible(true);
 					} catch (IOException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();

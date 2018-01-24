@@ -47,7 +47,7 @@ public class BlancoNegro {
 		this.getDialog().setTitle(imagenActual.getContenedor().getTitle() + " blanco y negro");
 		this.getDialog().setLocation((int)imagenActual.getContenedor().getLocation().getX(), (int)imagenActual.getContenedor().getLocation().getY() + imagenActual.getContenedor().getHeight() + 50);
 		this.getDialog().setSize(imagen.getWidth(), imagen.getHeight() + JDIALOG_BORDE);
-		this.getDialog().setVisible(true);
+		//this.getDialog().setVisible(true);
 		this.getDialog().setResizable(false);
 	}
 	

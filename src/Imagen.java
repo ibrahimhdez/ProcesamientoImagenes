@@ -175,10 +175,9 @@ public class Imagen {
 		dialog.setTitle(imagenActual.getContenedor().getTitle() + " nuevo");
 		dialog.setLocation((int)imagenActual.getContenedor().getLocation().getX(), (int)imagenActual.getContenedor().getLocation().getY() + imagenActual.getContenedor().getHeight() + 50);
 		dialog.setSize(imagen.getWidth(), imagen.getHeight() + 23);
-	//	dialog.setVisible(true);
+		dialog.setVisible(true);
 		JPanel aux = (JPanel)dialog.getContentPane();
 		aux.repaint();
-		dialog.setVisible(true);
 		dialog.setResizable(false);
 		
 		return dialog;
