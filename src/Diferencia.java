@@ -10,6 +10,7 @@ import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSlider;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.filechooser.FileSystemView;
 
@@ -17,19 +18,45 @@ public class Diferencia {
 	final int UMBRAL = 7;
 	private Imagen imagen1;
 	private Imagen imagen2;
+	private Imagen imagenResultado;
+	private BufferedImage diferencias;
 	private JDialog dialog;
+	private JDialog ventanaUmbral;
+	private JLabel etiquetaUmbral;
+	private JSlider sliderUmbral;
 	private Boolean ejecutar;
 	
 	public Diferencia() {
 		this.setImagen1(new Imagen());
 		this.setImagen2(new Imagen());
+		this.setImagenResultado(new Imagen());
 		this.setDialog(new JDialog());
+		this.setVentanaUmbral(new JDialog());
+		this.setEtiquetaUmbral(new JLabel("Choose the threshold:"));
+		this.setSliderUmbral(new JSlider(JSlider.HORIZONTAL, 0, 255, 128));
 		this.setEjecutar(false);
 	}
 	
 	public Diferencia(Imagen imagen1) {
 		this.setImagen1(imagen1);
 		this.setDialog(new JDialog());
+	}
+	
+	void init() {
+		JPanel panel = new JPanel();
+
+		panel.add(this.getEtiquetaUmbral());
+		panel.add(this.getSliderUmbral());
+		
+		this.getVentanaUmbral().add(panel);
+		this.getVentanaUmbral().setTitle("Threshold");
+		this.getVentanaUmbral().setResizable(false);
+		this.getVentanaUmbral().setSize(200, 100);
+	}
+	
+	void mostrarVentanaUmbral() {
+		this.getVentanaUmbral().setLocation(this.getImagenResultado().getContenedor().getX() + this.getImagenResultado().getContenedor().getWidth() + 20, 10);
+		this.getVentanaUmbral().setVisible(true);
 	}
 	
 	 void addImagenDiferencia() throws IOException {
@@ -67,7 +94,6 @@ public class Diferencia {
 	}
 	 
 	Imagen generar() {
-		Imagen resultadoImagen;
 		BufferedImage resultado;
 		BufferedImage imagen1 = this.getImagen1().getImagen();
 		BufferedImage imagen2 = this.getImagen2().getImagen();
@@ -86,12 +112,13 @@ public class Diferencia {
 					else 
 						resultado.setRGB(i, j, imagen1.getRGB(i, j));
 		
-		resultadoImagen = new Imagen(marcarDiferencias(resultado));
-		resultadoImagen.getContenedor().setTitle("Imagen resultado");
-		resultadoImagen.getContenedor().setLocation(this.getImagen1().getContenedor().getLocation());
+		this.setImagenResultado(new Imagen(marcarDiferencias(resultado)));
+		this.setDiferencias(resultado);
+		this.getImagenResultado().getContenedor().setTitle("Imagen resultado");
+		this.getImagenResultado().getContenedor().setLocation(this.getImagen1().getContenedor().getLocation());
 		mostrarImagenDiferencia();
 		
-		return resultadoImagen;
+		return this.getImagenResultado();
 	}
 	
 	private void mostrarImagenDiferencia() {
@@ -103,18 +130,20 @@ public class Diferencia {
 		this.getImagen2().getContenedor().setVisible(true);
 	}
 	
-	private BufferedImage marcarDiferencias(BufferedImage imagen) {
+	BufferedImage marcarDiferencias(BufferedImage imagenActual) {		
+		BufferedImage imagen = this.getImagen1().copyBufferedImage(imagenActual);
 		Color red = new Color(255, 0, 0);
 		
 		for(int i = 0; i < imagen.getWidth(); i++)
 			for(int j = 0; j < imagen.getHeight(); j++) {
 				Color color = new Color(imagen.getRGB(i, j));
 				int mediaPixel = (int)((color.getRed() + color.getGreen() + color.getBlue()) / 3);
-				if(mediaPixel > UMBRAL)
+				if(mediaPixel > this.getSliderUmbral().getValue())
 					imagen.setRGB(i, j, red.getRGB());
 				else
 					imagen.setRGB(i, j, this.getImagen1().getImagen().getRGB(i, j));
 			}
+		
 		return imagen;
 	}
 
@@ -134,12 +163,52 @@ public class Diferencia {
 		this.imagen2 = imagen2;
 	}
 
+	public Imagen getImagenResultado() {
+		return imagenResultado;
+	}
+
+	public void setImagenResultado(Imagen imagenResultado) {
+		this.imagenResultado = imagenResultado;
+	}
+
+	public BufferedImage getDiferencias() {
+		return diferencias;
+	}
+
+	public void setDiferencias(BufferedImage diferencias) {
+		this.diferencias = diferencias;
+	}
+
 	public JDialog getDialog() {
 		return dialog;
 	}
 
 	public void setDialog(JDialog dialog) {
 		this.dialog = dialog;
+	}
+
+	public JDialog getVentanaUmbral() {
+		return ventanaUmbral;
+	}
+
+	public void setVentanaUmbral(JDialog ventanaUmbral) {
+		this.ventanaUmbral = ventanaUmbral;
+	}
+
+	public JLabel getEtiquetaUmbral() {
+		return etiquetaUmbral;
+	}
+
+	public void setEtiquetaUmbral(JLabel etiquetaUmbral) {
+		this.etiquetaUmbral = etiquetaUmbral;
+	}
+
+	public JSlider getSliderUmbral() {
+		return sliderUmbral;
+	}
+
+	public void setSliderUmbral(JSlider sliderUmbral) {
+		this.sliderUmbral = sliderUmbral;
 	}
 
 	public Boolean getEjecutar() {

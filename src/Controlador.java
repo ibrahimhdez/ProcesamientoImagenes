@@ -39,6 +39,7 @@ public class Controlador {
 	private Scale scale;
 	private Rotate rotate;
 	private Filter filter;
+	private BufferedImage diferenciasOriginal;
 	private Timer timer;
 	private Timer timerCoordenadas;
 	private Boolean mostrarCoordenadas;
@@ -95,6 +96,7 @@ public class Controlador {
 		
 		this.getBrilloContraste().getBrilloSlider().addChangeListener(new SliderListener());
 		this.getBrilloContraste().getContrasteSlider().addChangeListener(new SliderListener());	
+		this.getDiferencia().getSliderUmbral().addChangeListener(new SliderListener());
 		this.getGamma().getSlider().addChangeListener(new SliderListener());
 		
 		getBrilloContraste().getVentana().addWindowListener(new OyenteVentana());
@@ -106,6 +108,7 @@ public class Controlador {
 		this.getBlancoNegro().init();
 		this.getBrilloContraste().init();
 		this.getGamma().init();
+		this.getDiferencia().init();
 		this.getSampling().init();
 		this.getCuantizacion().init();
 		this.getMiVista().init();
@@ -219,7 +222,9 @@ public class Controlador {
 					if(getDiferencia().getEjecutar()) {
 						getDiferencia().setImagen2(getBlancoNegro().get(getDiferencia().getImagen2()));
 						getMiVista().addImagen(getDiferencia().generar().getContenedor());
+						getDiferencia().mostrarVentanaUmbral();
 						addEventosRaton();
+						setDiferenciasOriginal(getDiferencia().getDiferencias());
 						getDiferencia().setEjecutar(false);
 					}
 				}
@@ -420,6 +425,9 @@ public class Controlador {
 	    			double indiceGamma = getGamma().getSlider().getValue() / 100.0;
 	    			getMiVista().getFocoImagenActual().setIndiceGamma(indiceGamma);
 	    		}
+	    		
+	    		else if(e.getSource() == getDiferencia().getSliderUmbral()) 
+	    			getMiVista().modificarImagen(new Imagen(getDiferencia().marcarDiferencias(getDiferenciasOriginal())));
 	    }
 	}
 	
@@ -636,5 +644,13 @@ public class Controlador {
 
 	public void setFilter(Filter filter) {
 		this.filter = filter;
+	}
+
+	public BufferedImage getDiferenciasOriginal() {
+		return diferenciasOriginal;
+	}
+
+	public void setDiferenciasOriginal(BufferedImage diferenciasOriginal) {
+		this.diferenciasOriginal = diferenciasOriginal;
 	}
 }

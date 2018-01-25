@@ -234,7 +234,7 @@ public class Filter {
 	
 	public void mostrarMensaje() {
 		JOptionPane.showMessageDialog(null, "Error en la definición del filtro.\n"
-				+ "EL número de filas y columnas debe ser impar.\n"
+				+ "El número de filas y columnas debe ser impar.\n"
 				+ "Todas las filas deben tener el mismo número de columnas.");
 	}
 	

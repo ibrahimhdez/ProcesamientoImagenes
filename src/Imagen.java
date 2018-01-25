@@ -183,6 +183,14 @@ public class Imagen {
 		return dialog;
 	}
 	
+	public BufferedImage copyBufferedImage(BufferedImage source){
+	    BufferedImage b = new BufferedImage(source.getWidth(), source.getHeight(), source.getType());
+	    Graphics g = b.getGraphics();
+	    g.drawImage(source, 0, 0, null);
+	    g.dispose();
+	    return b;
+	}
+	
 	int getValorPixel(int x, int y) {
 		Color color = new Color(this.getImagen().getRGB(arreglarCoordenadasX(x), arreglarCoordenadasY(y)));
 		
