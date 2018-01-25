@@ -73,7 +73,7 @@ public class Filter {
 	}
 	
 	public void save() {
-		JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+		JFileChooser jfc = new JFileChooser(System.getProperty("user.dir"));
 		jfc.setDialogTitle("Save the filter:");
 		jfc.setAcceptAllFileFilterUsed(false);
 		jfc.setFileFilter(new FileNameExtensionFilter("fil", "fil"));
@@ -95,7 +95,7 @@ public class Filter {
 	public void open() {
 		String fileRoute = "";
 		
-		JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+		JFileChooser jfc = new JFileChooser(System.getProperty("user.dir"));
 		jfc.setDialogTitle("Choose a filter:");
 		jfc.setAcceptAllFileFilterUsed(false);
 		jfc.setFileFilter(new FileNameExtensionFilter("fil", "fil"));
