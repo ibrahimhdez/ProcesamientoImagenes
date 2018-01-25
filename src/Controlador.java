@@ -69,6 +69,7 @@ public class Controlador {
 		this.getMiVista().getItemEspecificacionHistograma().addActionListener(new Oyente());
 		this.getMiVista().getBotonBlancoNegro().addActionListener(new Oyente());
 		this.getMiVista().getBotonTijera().addActionListener(new Oyente());
+		this.getMiVista().getBotonDuplicar().addActionListener(new Oyente());
 		this.getMiVista().getItemShowInfo().addActionListener(new Oyente());
 		this.getMiVista().getItemBrightnessContrast().addActionListener(new Oyente());
 		this.getMiVista().getItemDiference().addActionListener(new Oyente());
@@ -189,6 +190,13 @@ public class Controlador {
 					imagenActual.getRecortar().recortarImagen(imagenActual);
 					getMiVista().addImagen(imagenActual.getRecortar().getDialog());
 					addEventosRaton();
+				}
+				
+				else if(e.getSource() == getMiVista().getBotonDuplicar()) {
+					Imagen imagenActual = new Imagen(getMiVista().getFocoImagenActual().copyBufferedImage(getMiVista().getFocoImagenActual().getImagen()));
+					JDialog dialog = imagenActual.getContenedor();
+					dialog.setTitle(getMiVista().getFocoImagenActual().getContenedor().getTitle() + " duplicada");
+					getMiVista().addImagen(dialog);
 				}
 				
 				else if(e.getSource() == getMiVista().getItemShowInfo()) {

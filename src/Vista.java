@@ -55,6 +55,7 @@ public class Vista extends JFrame {
     private JMenuItem itemConvolve;
     private JButton botonBlancoNegro;
     private JButton botonTijera;
+    private JButton botonDuplicar;
     private String rutaImagen;
     private Integer numeroImagen;
     private ArrayList<Imagen> imagenes;
@@ -97,6 +98,7 @@ public class Vista extends JFrame {
         
         this.setBotonBlancoNegro(new JButton());
         this.setBotonTijera(new JButton());
+        this.setBotonDuplicar(new JButton());
         
         this.setMenuProcess(new JMenu("Process"));
         this.setItemGamma(new JMenuItem("Gamma"));
@@ -118,51 +120,12 @@ public class Vista extends JFrame {
        	this.setEtiquetaColorCoordenadas(new JLabel());
     }
     
-    private void clearEtiquetaPanel() {
-    		this.getPanel().remove(this.getEtiquetaCoordenadas());
-    		this.getPanel().remove(this.getEtiquetaColorCoordenadas());
-    }
-    
-    private void addLabel(Graphics g) {
-		this.getPanel().add(this.getEtiquetaCoordenadas());
-		this.getPanel().add(this.getEtiquetaCoordenadas());
-    }
-    
-    private void addColorRect(Graphics g) {
-    		String cadena = this.getEtiquetaCoordenadas().getText();
-    		
-    		if(cadena.length() > 0) {
-    			Graphics2D g2d = (Graphics2D) g;
-    			String x = cadena.substring(3, 6);
-    			String y = "";
-
-    			x = x.replace("Y", "");
-    			x = x.replace(" ", "");
-    			
-    			if(x.length() < 3)
-    				y = cadena.substring(8, 12);
-    			else
-    				y = cadena.substring(10, 13);
-    			
-    			y = y.replace("V", "");
-    			y = y.replace(" ", "");
-    			 
-    			g2d.setColor(new Color(this.getFocoImagenActual().getValorPixelRGB(new Integer(x), new Integer(y))));
-    			g2d.fill(new Rectangle2D.Double(this.getEtiquetaCoordenadas().getWidth() + 42, 5, 30, 19));
-    		}		
-    }
-    
-    void actualizarEtiqueta(String cadena, int valor) {
-		clearEtiquetaPanel();
-		this.getEtiquetaCoordenadas().setText(cadena);
-		this.getEtiquetaCoordenadas().setBounds(75, -85, 200, 200);		
-    }
-    
     void init() {
 		this.setResizable(false);
 		this.getPanel().setLayout(null);
 		this.getPanel().add(this.getBotonBlancoNegro());
 		this.getPanel().add(this.getBotonTijera());
+		this.getPanel().add(this.getBotonDuplicar());
 		this.add(this.getPanel());
     
 		this.getBarraMenu().add(this.getMenuFile());
@@ -209,15 +172,60 @@ public class Vista extends JFrame {
     void iniciarBotones() throws IOException{
 		Image imagenBlancoNegro = ImageIO.read(new File("imagenesBotones/bw.jpg"));
 		Image imagenTijera = ImageIO.read(new File("imagenesBotones/tijera.jpg"));
+		Image imagenDuplicar = ImageIO.read(new File("imagenesBotones/duplicar.png"));
 		
 		imagenBlancoNegro = imagenBlancoNegro.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
 		imagenTijera = imagenTijera.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+		imagenDuplicar = imagenDuplicar.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
 		
 		this.getBotonBlancoNegro().setIcon(new ImageIcon(imagenBlancoNegro));
 		this.getBotonBlancoNegro().setBounds(new Rectangle(0, 0, 30, 30));
 		
 		this.getBotonTijera().setIcon(new ImageIcon(imagenTijera));
 		this.getBotonTijera().setBounds(new Rectangle(31, 0, 30, 30));
+		
+		this.getBotonDuplicar().setIcon(new ImageIcon(imagenDuplicar));
+		this.getBotonDuplicar().setBounds(new Rectangle(62, 0, 30, 30));
+    }
+    
+    private void clearEtiquetaPanel() {
+    		this.getPanel().remove(this.getEtiquetaCoordenadas());
+    		this.getPanel().remove(this.getEtiquetaColorCoordenadas());
+    }
+    
+    private void addLabel(Graphics g) {
+		this.getPanel().add(this.getEtiquetaCoordenadas());
+		this.getPanel().add(this.getEtiquetaCoordenadas());
+    }
+    
+    private void addColorRect(Graphics g) {
+    		String cadena = this.getEtiquetaCoordenadas().getText();
+    		
+    		if(cadena.length() > 0) {
+    			Graphics2D g2d = (Graphics2D) g;
+    			String x = cadena.substring(3, 6);
+    			String y = "";
+
+    			x = x.replace("Y", "");
+    			x = x.replace(" ", "");
+    			
+    			if(x.length() < 3)
+    				y = cadena.substring(8, 12);
+    			else
+    				y = cadena.substring(10, 13);
+    			
+    			y = y.replace("V", "");
+    			y = y.replace(" ", "");
+    			 
+    			g2d.setColor(new Color(this.getFocoImagenActual().getValorPixelRGB(new Integer(x), new Integer(y))));
+    			g2d.fill(new Rectangle2D.Double(this.getEtiquetaCoordenadas().getWidth() + 42, 5, 30, 19));
+    		}		
+    }
+    
+    void actualizarEtiqueta(String cadena, int valor) {
+		clearEtiquetaPanel();
+		this.getEtiquetaCoordenadas().setText(cadena);
+		this.getEtiquetaCoordenadas().setBounds(75, -85, 200, 200);		
     }
     
     void openJDialog() throws IOException{
@@ -454,6 +462,14 @@ public class Vista extends JFrame {
 
 	public void setBotonTijera(JButton botonTijera) {
 		this.botonTijera = botonTijera;
+	}
+
+	public JButton getBotonDuplicar() {
+		return botonDuplicar;
+	}
+
+	public void setBotonDuplicar(JButton botonDuplicar) {
+		this.botonDuplicar = botonDuplicar;
 	}
 
 	public Integer getNumeroImagen() {
