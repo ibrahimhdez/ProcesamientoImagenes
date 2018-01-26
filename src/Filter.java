@@ -247,7 +247,7 @@ public class Filter {
 		
 		switch(index) {
 			case 0: {
-				factor = 1/9;
+				factor = (float) 1/9;
 				for(int i=0; i<3;i++) {
 					filtro.add(new ArrayList<Integer>());
 					for(int j=0; j<3;j++)
@@ -255,7 +255,7 @@ public class Filter {
 				}
 			}break;
 			case 1: {
-				factor = 1/25;
+				factor = (float) 1/25;
 				for(int i=0; i<5;i++) {
 					filtro.add(new ArrayList<Integer>());
 					for(int j=0; j<5;j++)
@@ -263,7 +263,7 @@ public class Filter {
 				}
 			}break;
 			case 2: {
-				factor = 1/49;
+				factor = (float) 1/49;
 				for(int i=0; i<7;i++) {
 					filtro.add(new ArrayList<Integer>());
 					for(int j=0; j<7;j++)
@@ -271,14 +271,14 @@ public class Filter {
 				}
 			}break;
 			case 3:{ 
-				factor = 1/2;
+				factor = (float) 1/2;
 				filtro.add(new ArrayList<Integer>());
 				filtro.get(0).add(-1);
 				filtro.get(0).add(0);
 				filtro.get(0).add(1);
 			}break;
 			case 4: {
-				factor = 1/2;
+				factor = (float) 1/2;
 				int aux = -1;
 				for(int i=0; i<3;i++) {
 					filtro.add(new ArrayList<Integer>());
@@ -287,7 +287,7 @@ public class Filter {
 				}
 			}break;
 			case 5:{ 
-				factor = 1/4;
+				factor = (float) 1/4;
 				for(int i=0; i<3;i++) 
 					filtro.add(new ArrayList<Integer>());
 				filtro.get(0).add(-1);
@@ -301,7 +301,7 @@ public class Filter {
 				filtro.get(2).add(1);
 			}break;
 			case 6: {
-				factor = 1/4;
+				factor = (float) 1/4;
 				for(int i=0; i<3;i++) 
 					filtro.add(new ArrayList<Integer>());
 				filtro.get(0).add(-1);
@@ -355,17 +355,12 @@ public class Filter {
 							for(int x= i-filasIgnoradas; x<=i+filasIgnoradas; x++) {
 								colFiltro=0;
 								for(int y=j-columnasIgnoradas; y<=j+columnasIgnoradas; y++) {
-									try {
-									valorPixel += filtro.get(filaFiltro).get(colFiltro) * imagenActual.getValorPixel(x, y);}
-									catch(Exception e) {
-										System.out.println(x + " " + y + " " + filaFiltro+ " " +colFiltro+ " ");
-										System.out.println(imagen.getWidth() + " " + imagen.getHeight() + " " + filasIgnoradas+ " " +columnasIgnoradas+ " ");
-										throw(e);
-									}
+									valorPixel += filtro.get(filaFiltro).get(colFiltro) * imagenActual.getValorPixel(x, y);
 									colFiltro++;
 								}
 								filaFiltro++;
 							}
+							System.out.println(factor);
 							nuevoColor = Math.round(valorPixel * factor);
 						}
 					
@@ -402,7 +397,7 @@ public class Filter {
 		
 		switch(index) {
 			case 1:{ 
-				factor = 1/2506;
+				factor =  (float)1/2506;
 				filtro.get(0).add(11);
 				filtro.get(0).add(135);
 				filtro.get(0).add(607);
@@ -410,9 +405,9 @@ public class Filter {
 				filtro.get(0).add(607);
 				filtro.get(0).add(135);
 				filtro.get(0).add(11);
-			}
+			}break;
 			case 2:{ 
-				factor = 1/5012;
+				factor = (float)1/5012;
 				filtro.get(0).add(2);
 				filtro.get(0).add(11);
 				filtro.get(0).add(44);
@@ -428,9 +423,9 @@ public class Filter {
 				filtro.get(0).add(44);
 				filtro.get(0).add(11);
 				filtro.get(0).add(2);
-			}
+			}break;
 			case 3:{ 
-				factor = 1/7520;
+				factor = (float) 1/7520;
 				filtro.get(0).add(1);
 				filtro.get(0).add(4);
 				filtro.get(0).add(11);
@@ -454,7 +449,7 @@ public class Filter {
 				filtro.get(0).add(11);
 				filtro.get(0).add(4);
 				filtro.get(0).add(1);
-			}
+			}break;
 		}
 		
 		convolveGaussian(factor, filtro, imagenActual);
@@ -504,15 +499,16 @@ public class Filter {
 				auxImg.setRGB(i, j, nuevoColor); 
 			}
 		
-		ArrayList<ArrayList<Integer>> filtroT = new ArrayList<ArrayList<Integer>>();
-		
-	    for (int x=0; x < filtro.size(); x++) {
-	    	filtroT.add(new ArrayList<Integer>());
-	    	filtroT.get(x).set(0, filtro.get(0).get(x));
+		Imagen auxImagen = new Imagen(auxImg);
+		ArrayList<ArrayList<Integer>> filtroT = new ArrayList<ArrayList<Integer>>(1000);
+		System.out.println(filtro);
+	    for (int x=0; x < filtro.get(0).size(); x++) {
+	    	filtroT.add(new ArrayList<Integer>(1000));
+	    	filtroT.get(x).add(filtro.get(0).get(x));
 	    }
 	    
-		nFilas = filtro.size();
-		nColumnas = filtro.get(0).size();
+		nFilas = filtroT.size();
+		nColumnas = filtroT.get(0).size();
 		
 		filasIgnoradas = (int) Math.floor(nFilas/2);
 		columnasIgnoradas = (int) Math.floor(nColumnas/2);
@@ -524,17 +520,17 @@ public class Filter {
 				int nuevoColor = 0;
 				
 				if(i<filasIgnoradas || i>imagen.getWidth()-1-filasIgnoradas)
-					nuevoColor = imagenActual.getValorPixel(i, j);
+					nuevoColor = auxImagen.getValorPixel(i, j);
 				else 
 					if(j<columnasIgnoradas || j>imagen.getHeight()-1-columnasIgnoradas)
-						nuevoColor = imagenActual.getValorPixel(i, j);
+						nuevoColor = auxImagen.getValorPixel(i, j);
 					else {
 						
 						int valorPixel = 0, filaFiltro=0, colFiltro;
 						for(int x= i-filasIgnoradas; x<=i+filasIgnoradas; x++) {
 							colFiltro=0;
 							for(int y=j-columnasIgnoradas; y<=j+columnasIgnoradas; y++) {
-								valorPixel += filtro.get(filaFiltro).get(colFiltro) * imagenActual.getValorPixel(x, y);
+								valorPixel += filtroT.get(filaFiltro).get(colFiltro) * auxImagen.getValorPixel(x, y);
 								colFiltro++;
 							}
 							filaFiltro++;
