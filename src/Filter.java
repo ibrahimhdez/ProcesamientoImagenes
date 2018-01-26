@@ -18,7 +18,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.filechooser.FileSystemView;
 
 public class Filter {
 	private final int JDIALOG_BORDE = 22;
@@ -150,7 +149,7 @@ public class Filter {
 		this.getVentana().setVisible(true);	
 	}
 	
-	public boolean convolve(Imagen imagenActual) {
+	public boolean convolveCustom(Imagen imagenActual) {
 		if(checkFilter()) {
 			this.getVentana().setVisible(false);	
 			this.setDialog(new JDialog());
@@ -169,8 +168,18 @@ public class Filter {
 				}
 				filtro.add(aux);
 			}
+			
+			
 			nFilas = filtro.size();
 			nColumnas = filtro.get(0).size();
+			
+			int aux = 0;
+			
+			for(int i=0; i<filtro.size(); i++)
+				for(int j=0; j<filtro.get(i).size();j++)
+					aux += filtro.get(i).get(j);
+			
+			float factor = 1 / aux;
 			
 			int filasIgnoradas = (int) Math.floor(nFilas/2);
 			int columnasIgnoradas = (int) Math.floor(nColumnas/2);
@@ -189,15 +198,15 @@ public class Filter {
 						else {
 							
 							int valorPixel = 0, filaFiltro=0, colFiltro;
-							for(int x= i-filasIgnoradas; x<i+filasIgnoradas; x++) {
+							for(int x= i-filasIgnoradas; x<=i+filasIgnoradas; x++) {
 								colFiltro=0;
-								for(int y=j-columnasIgnoradas; y<j+columnasIgnoradas; y++) {
+								for(int y=j-columnasIgnoradas; y<=j+columnasIgnoradas; y++) {
 									valorPixel += filtro.get(filaFiltro).get(colFiltro) * imagenActual.getValorPixel(x, y);
 									colFiltro++;
 								}
 								filaFiltro++;
 							}
-							nuevoColor = Math.round(valorPixel / (nFilas*nColumnas));
+							nuevoColor = Math.round(valorPixel * factor);
 						}
 					
 					nuevoColor = (nuevoColor << 16) | (nuevoColor << 8) | nuevoColor;
@@ -231,6 +240,333 @@ public class Filter {
 			return false;
 		}
 	}
+	
+	public void selectFilter(int index, Imagen imagenActual) {
+		ArrayList<ArrayList<Integer>> filtro = new ArrayList<ArrayList<Integer>>();
+		float factor = 0;
+		
+		switch(index) {
+			case 0: {
+				factor = 1/9;
+				for(int i=0; i<3;i++) {
+					filtro.add(new ArrayList<Integer>());
+					for(int j=0; j<3;j++)
+						filtro.get(i).add(1);
+				}
+			}break;
+			case 1: {
+				factor = 1/25;
+				for(int i=0; i<5;i++) {
+					filtro.add(new ArrayList<Integer>());
+					for(int j=0; j<5;j++)
+						filtro.get(i).add(1);
+				}
+			}break;
+			case 2: {
+				factor = 1/49;
+				for(int i=0; i<7;i++) {
+					filtro.add(new ArrayList<Integer>());
+					for(int j=0; j<7;j++)
+						filtro.get(i).add(1);
+				}
+			}break;
+			case 3:{ 
+				factor = 1/2;
+				filtro.add(new ArrayList<Integer>());
+				filtro.get(0).add(-1);
+				filtro.get(0).add(0);
+				filtro.get(0).add(1);
+			}break;
+			case 4: {
+				factor = 1/2;
+				int aux = -1;
+				for(int i=0; i<3;i++) {
+					filtro.add(new ArrayList<Integer>());
+					filtro.get(i).add(aux);
+					aux++;
+				}
+			}break;
+			case 5:{ 
+				factor = 1/4;
+				for(int i=0; i<3;i++) 
+					filtro.add(new ArrayList<Integer>());
+				filtro.get(0).add(-1);
+				filtro.get(0).add(0);
+				filtro.get(0).add(1);
+				filtro.get(1).add(-2);
+				filtro.get(1).add(0);
+				filtro.get(1).add(2);
+				filtro.get(2).add(-1);
+				filtro.get(2).add(0);
+				filtro.get(2).add(1);
+			}break;
+			case 6: {
+				factor = 1/4;
+				for(int i=0; i<3;i++) 
+					filtro.add(new ArrayList<Integer>());
+				filtro.get(0).add(-1);
+				filtro.get(0).add(-2);
+				filtro.get(0).add(-1);
+				filtro.get(1).add(0);
+				filtro.get(1).add(0);
+				filtro.get(1).add(0);
+				filtro.get(2).add(1);
+				filtro.get(2).add(2);
+				filtro.get(2).add(1);
+			}break;
+		}
+		
+		convolve(factor, filtro, imagenActual);
+		
+	}
+	
+	public void convolve(float factor, ArrayList<ArrayList<Integer>> filtro, Imagen imagenActual) {
+			this.getVentana().setVisible(false);	
+			this.setDialog(new JDialog());
+			BufferedImage imagen = imagenActual.getImagen();
+			BufferedImage newImg = new BufferedImage(imagen.getWidth(), imagen.getHeight(), imagen.getType());
+
+			int nColumnas = 0, nFilas = 0;		
+			
+			nFilas = filtro.size();
+			nColumnas = filtro.get(0).size();
+			
+			
+			int filasIgnoradas = (int) Math.floor(nFilas/2);
+			int columnasIgnoradas = (int) Math.floor(nColumnas/2);
+			
+			System.out.println(filtro);
+			System.out.println(nFilas + " " + nColumnas + " " + filasIgnoradas+ " " +columnasIgnoradas+ " ");
+			
+			//Aplicando el filtro
+			
+			for(int i = 0; i < imagen.getWidth(); i++) 
+				for(int j = 0; j < imagen.getHeight(); j++) {
+					int nuevoColor = 0;
+					
+					if(i<filasIgnoradas || i>imagen.getWidth()-1-filasIgnoradas)
+						nuevoColor = imagenActual.getValorPixel(i, j);
+					else 
+						if(j<columnasIgnoradas || j>imagen.getHeight()-1-columnasIgnoradas)
+							nuevoColor = imagenActual.getValorPixel(i, j);
+						else {
+							
+							int valorPixel = 0, filaFiltro=0, colFiltro;
+							for(int x= i-filasIgnoradas; x<=i+filasIgnoradas; x++) {
+								colFiltro=0;
+								for(int y=j-columnasIgnoradas; y<=j+columnasIgnoradas; y++) {
+									try {
+									valorPixel += filtro.get(filaFiltro).get(colFiltro) * imagenActual.getValorPixel(x, y);}
+									catch(Exception e) {
+										System.out.println(x + " " + y + " " + filaFiltro+ " " +colFiltro+ " ");
+										System.out.println(imagen.getWidth() + " " + imagen.getHeight() + " " + filasIgnoradas+ " " +columnasIgnoradas+ " ");
+										throw(e);
+									}
+									colFiltro++;
+								}
+								filaFiltro++;
+							}
+							nuevoColor = Math.round(valorPixel * factor);
+						}
+					
+					nuevoColor = (nuevoColor << 16) | (nuevoColor << 8) | nuevoColor;
+					
+					newImg.setRGB(i, j, nuevoColor); 
+				}
+			
+			@SuppressWarnings("serial")
+			JPanel panel = new JPanel() {
+	    			@Override
+	    			public void paintComponent(Graphics g) {
+	    				super.paintComponent(g); 
+	    				g.drawImage(newImg, 0, 0, null);
+	    				imagenActual.getRecortar().pintarRectangulo(g);
+	    			}
+			};
+			
+			this.getDialog().add(panel);
+			this.getDialog().setIconImage(newImg);
+			this.getDialog().setTitle("Imagen con filtro");
+			this.getDialog().setLocation((int)imagenActual.getContenedor().getLocation().getX(), (int)imagenActual.getContenedor().getLocation().getY() + imagenActual.getContenedor().getHeight() + 50);
+			this.getDialog().setSize(newImg.getWidth(), newImg.getHeight() + JDIALOG_BORDE);
+			this.getDialog().setLocationByPlatform(true);
+			this.getDialog().setVisible(true);
+			this.getDialog().setResizable(false);
+
+	}
+	
+	public void selectFilterGaussian(int index, Imagen imagenActual) {
+		ArrayList<ArrayList<Integer>> filtro = new ArrayList<ArrayList<Integer>>();
+		filtro.add(new ArrayList<Integer>());
+		float factor = 0;
+		
+		switch(index) {
+			case 1:{ 
+				factor = 1/2506;
+				filtro.get(0).add(11);
+				filtro.get(0).add(135);
+				filtro.get(0).add(607);
+				filtro.get(0).add(1000);
+				filtro.get(0).add(607);
+				filtro.get(0).add(135);
+				filtro.get(0).add(11);
+			}
+			case 2:{ 
+				factor = 1/5012;
+				filtro.get(0).add(2);
+				filtro.get(0).add(11);
+				filtro.get(0).add(44);
+				filtro.get(0).add(135);
+				filtro.get(0).add(325);
+				filtro.get(0).add(607);
+				filtro.get(0).add(882);
+				filtro.get(0).add(1000);
+				filtro.get(0).add(882);
+				filtro.get(0).add(607);
+				filtro.get(0).add(325);
+				filtro.get(0).add(135);
+				filtro.get(0).add(44);
+				filtro.get(0).add(11);
+				filtro.get(0).add(2);
+			}
+			case 3:{ 
+				factor = 1/7520;
+				filtro.get(0).add(1);
+				filtro.get(0).add(4);
+				filtro.get(0).add(11);
+				filtro.get(0).add(29);
+				filtro.get(0).add(66);
+				filtro.get(0).add(135);
+				filtro.get(0).add(249);
+				filtro.get(0).add(411);
+				filtro.get(0).add(607);
+				filtro.get(0).add(801);
+				filtro.get(0).add(946);
+				filtro.get(0).add(1000);
+				filtro.get(0).add(946);
+				filtro.get(0).add(801);
+				filtro.get(0).add(607);
+				filtro.get(0).add(411);
+				filtro.get(0).add(249);
+				filtro.get(0).add(135);
+				filtro.get(0).add(66);
+				filtro.get(0).add(29);
+				filtro.get(0).add(11);
+				filtro.get(0).add(4);
+				filtro.get(0).add(1);
+			}
+		}
+		
+		convolveGaussian(factor, filtro, imagenActual);
+	}
+	
+	public void convolveGaussian(float factor, ArrayList<ArrayList<Integer>> filtro, Imagen imagenActual) {
+		this.getVentana().setVisible(false);	
+		this.setDialog(new JDialog());
+		BufferedImage imagen = imagenActual.getImagen();
+		BufferedImage auxImg = new BufferedImage(imagen.getWidth(), imagen.getHeight(), imagen.getType());
+		BufferedImage newImg = new BufferedImage(imagen.getWidth(), imagen.getHeight(), imagen.getType());
+
+		int nColumnas = 0, nFilas = 0;						
+		nFilas = filtro.size();
+		nColumnas = filtro.get(0).size();
+		
+		int filasIgnoradas = (int) Math.floor(nFilas/2);
+		int columnasIgnoradas = (int) Math.floor(nColumnas/2);
+		
+		//Aplicando el filtro
+		
+		for(int i = 0; i < imagen.getWidth(); i++) 
+			for(int j = 0; j < imagen.getHeight(); j++) {
+				int nuevoColor = 0;
+				
+				if(i<filasIgnoradas || i>imagen.getWidth()-1-filasIgnoradas)
+					nuevoColor = imagenActual.getValorPixel(i, j);
+				else 
+					if(j<columnasIgnoradas || j>imagen.getHeight()-1-columnasIgnoradas)
+						nuevoColor = imagenActual.getValorPixel(i, j);
+					else {
+						
+						int valorPixel = 0, filaFiltro=0, colFiltro;
+						for(int x= i-filasIgnoradas; x<=i+filasIgnoradas; x++) {
+							colFiltro=0;
+							for(int y=j-columnasIgnoradas; y<=j+columnasIgnoradas; y++) {
+								valorPixel += filtro.get(filaFiltro).get(colFiltro) * imagenActual.getValorPixel(x, y);
+								colFiltro++;
+							}
+							filaFiltro++;
+						}
+						nuevoColor = Math.round(valorPixel * factor);
+					}
+				
+				nuevoColor = (nuevoColor << 16) | (nuevoColor << 8) | nuevoColor;
+				
+				auxImg.setRGB(i, j, nuevoColor); 
+			}
+		
+		ArrayList<ArrayList<Integer>> filtroT = new ArrayList<ArrayList<Integer>>();
+		
+	    for (int x=0; x < filtro.size(); x++) {
+	    	filtroT.add(new ArrayList<Integer>());
+	    	filtroT.get(x).set(0, filtro.get(0).get(x));
+	    }
+	    
+		nFilas = filtro.size();
+		nColumnas = filtro.get(0).size();
+		
+		filasIgnoradas = (int) Math.floor(nFilas/2);
+		columnasIgnoradas = (int) Math.floor(nColumnas/2);
+		
+		//Aplicando el filtro
+		
+		for(int i = 0; i < imagen.getWidth(); i++) 
+			for(int j = 0; j < imagen.getHeight(); j++) {
+				int nuevoColor = 0;
+				
+				if(i<filasIgnoradas || i>imagen.getWidth()-1-filasIgnoradas)
+					nuevoColor = imagenActual.getValorPixel(i, j);
+				else 
+					if(j<columnasIgnoradas || j>imagen.getHeight()-1-columnasIgnoradas)
+						nuevoColor = imagenActual.getValorPixel(i, j);
+					else {
+						
+						int valorPixel = 0, filaFiltro=0, colFiltro;
+						for(int x= i-filasIgnoradas; x<=i+filasIgnoradas; x++) {
+							colFiltro=0;
+							for(int y=j-columnasIgnoradas; y<=j+columnasIgnoradas; y++) {
+								valorPixel += filtro.get(filaFiltro).get(colFiltro) * imagenActual.getValorPixel(x, y);
+								colFiltro++;
+							}
+							filaFiltro++;
+						}
+						nuevoColor = Math.round(valorPixel * factor);
+					}
+				
+				nuevoColor = (nuevoColor << 16) | (nuevoColor << 8) | nuevoColor;
+				
+				newImg.setRGB(i, j, nuevoColor); 
+			}
+		
+		@SuppressWarnings("serial")
+		JPanel panel = new JPanel() {
+    			@Override
+    			public void paintComponent(Graphics g) {
+    				super.paintComponent(g); 
+    				g.drawImage(newImg, 0, 0, null);
+    				imagenActual.getRecortar().pintarRectangulo(g);
+    			}
+		};
+		
+		this.getDialog().add(panel);
+		this.getDialog().setIconImage(newImg);
+		this.getDialog().setTitle("Imagen con filtro");
+		this.getDialog().setLocation((int)imagenActual.getContenedor().getLocation().getX(), (int)imagenActual.getContenedor().getLocation().getY() + imagenActual.getContenedor().getHeight() + 50);
+		this.getDialog().setSize(newImg.getWidth(), newImg.getHeight() + JDIALOG_BORDE);
+		this.getDialog().setLocationByPlatform(true);
+		this.getDialog().setVisible(true);
+		this.getDialog().setResizable(false);
+
+}
 	
 	public void mostrarMensaje() {
 		JOptionPane.showMessageDialog(null, "Error en la definición del filtro.\n"

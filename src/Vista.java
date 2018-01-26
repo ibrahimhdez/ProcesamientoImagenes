@@ -52,6 +52,16 @@ public class Vista extends JFrame {
     private JMenuItem itemFlipV;
     private JMenuItem itemFlipZ;
     private JMenuItem itemRotate;
+    private JMenuItem itemAverage3x3;
+    private JMenuItem itemAverage5x5;
+    private JMenuItem itemAverage7x7;
+    private JMenuItem itemGradientH;
+    private JMenuItem itemGradientV;
+    private JMenuItem itemSobelH;
+    private JMenuItem itemSobelV;
+    private JMenuItem itemGaussian1;
+    private JMenuItem itemGaussian2;
+    private JMenuItem itemGaussian3;
     private JMenuItem itemConvolve;
     private JButton botonBlancoNegro;
     private JButton botonTijera;
@@ -95,6 +105,16 @@ public class Vista extends JFrame {
         
         this.setMenuFilter(new JMenu("Filter"));
         this.setItemConvolve(new JMenuItem("Convolve"));
+        this.setItemAverage3x3(new JMenuItem("Average 3x3"));
+        this.setItemAverage5x5(new JMenuItem("Average 5x5"));
+        this.setItemAverage7x7(new JMenuItem("Average 7x7"));
+        this.setItemGradientH(new JMenuItem("Gradient Horz"));
+        this.setItemGradientV(new JMenuItem("Gradient Vert"));
+        this.setItemSobelH(new JMenuItem("Sobel Horz"));
+        this.setItemSobelV(new JMenuItem("Sobel Vert"));
+        this.setItemGaussian1(new JMenuItem("Gaussian σ=1"));
+        this.setItemGaussian2(new JMenuItem("Gaussian σ=2"));
+        this.setItemGaussian3(new JMenuItem("Gaussian σ=3"));
         
         this.setBotonBlancoNegro(new JButton());
         this.setBotonTijera(new JButton());
@@ -160,6 +180,18 @@ public class Vista extends JFrame {
 		this.getMenuProcess().add(this.getItemGamma());
 		this.getMenuProcess().add(this.getItemSection());
 		
+		this.getMenuFilter().add(this.getItemAverage3x3());
+		this.getMenuFilter().add(this.getItemAverage5x5());
+		this.getMenuFilter().add(this.getItemAverage7x7());
+		this.getMenuFilter().add(this.getItemGradientH());
+		this.getMenuFilter().add(this.getItemGradientV());
+		this.getMenuFilter().add(this.getItemSobelH());
+		this.getMenuFilter().add(this.getItemSobelV());
+		this.getMenuFilter().addSeparator();
+		this.getMenuFilter().add(this.getItemGaussian1());
+		this.getMenuFilter().add(this.getItemGaussian2());
+		this.getMenuFilter().add(this.getItemGaussian3());
+		this.getMenuFilter().addSeparator();
 		this.getMenuFilter().add(this.getItemConvolve());
      
 		this.setJMenuBar(this.getBarraMenu());
@@ -728,5 +760,85 @@ public class Vista extends JFrame {
 
 	public void setItemConvolve(JMenuItem itemConvolve) {
 		this.itemConvolve = itemConvolve;
+	}
+
+	public JMenuItem getItemAverage3x3() {
+		return itemAverage3x3;
+	}
+
+	public void setItemAverage3x3(JMenuItem itemAverage3x3) {
+		this.itemAverage3x3 = itemAverage3x3;
+	}
+
+	public JMenuItem getItemAverage5x5() {
+		return itemAverage5x5;
+	}
+
+	public void setItemAverage5x5(JMenuItem itemAverage5x5) {
+		this.itemAverage5x5 = itemAverage5x5;
+	}
+
+	public JMenuItem getItemAverage7x7() {
+		return itemAverage7x7;
+	}
+
+	public void setItemAverage7x7(JMenuItem itemAverage7x7) {
+		this.itemAverage7x7 = itemAverage7x7;
+	}
+
+	public JMenuItem getItemGradientH() {
+		return itemGradientH;
+	}
+
+	public void setItemGradientH(JMenuItem itemGradientH) {
+		this.itemGradientH = itemGradientH;
+	}
+
+	public JMenuItem getItemGradientV() {
+		return itemGradientV;
+	}
+
+	public void setItemGradientV(JMenuItem itemGradientV) {
+		this.itemGradientV = itemGradientV;
+	}
+
+	public JMenuItem getItemSobelH() {
+		return itemSobelH;
+	}
+
+	public void setItemSobelH(JMenuItem itemSobelH) {
+		this.itemSobelH = itemSobelH;
+	}
+
+	public JMenuItem getItemSobelV() {
+		return itemSobelV;
+	}
+
+	public void setItemSobelV(JMenuItem itemSobelV) {
+		this.itemSobelV = itemSobelV;
+	}
+
+	public JMenuItem getItemGaussian1() {
+		return itemGaussian1;
+	}
+
+	public void setItemGaussian1(JMenuItem itemGaussian1) {
+		this.itemGaussian1 = itemGaussian1;
+	}
+
+	public JMenuItem getItemGaussian2() {
+		return itemGaussian2;
+	}
+
+	public void setItemGaussian2(JMenuItem itemGaussian2) {
+		this.itemGaussian2 = itemGaussian2;
+	}
+
+	public JMenuItem getItemGaussian3() {
+		return itemGaussian3;
+	}
+
+	public void setItemGaussian3(JMenuItem itemGaussian3) {
+		this.itemGaussian3 = itemGaussian3;
 	}
 }

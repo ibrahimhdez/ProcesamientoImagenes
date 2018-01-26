@@ -83,6 +83,16 @@ public class Controlador {
 		this.getMiVista().getItemFlipZ().addActionListener(new Oyente());
 		this.getMiVista().getItemRotate().addActionListener(new Oyente());
 		this.getMiVista().getItemConvolve().addActionListener(new Oyente());
+		this.getMiVista().getItemAverage3x3().addActionListener(new Oyente());
+		this.getMiVista().getItemAverage5x5().addActionListener(new Oyente());
+		this.getMiVista().getItemAverage7x7().addActionListener(new Oyente());
+		this.getMiVista().getItemSobelH().addActionListener(new Oyente());
+		this.getMiVista().getItemSobelV().addActionListener(new Oyente());
+		this.getMiVista().getItemGradientH().addActionListener(new Oyente());
+		this.getMiVista().getItemGradientV().addActionListener(new Oyente());
+		this.getMiVista().getItemGaussian1().addActionListener(new Oyente());
+		this.getMiVista().getItemGaussian2().addActionListener(new Oyente());
+		this.getMiVista().getItemGaussian3().addActionListener(new Oyente());
 		this.getBrilloContraste().getBrilloTextField().addActionListener(new Oyente());
 		this.getBrilloContraste().getDefaultBrillo().addActionListener(new Oyente());
 		this.getBrilloContraste().getDefaultContraste().addActionListener(new Oyente());
@@ -290,8 +300,69 @@ public class Controlador {
 					getRotate().mostrar(getMiVista().getFocoImagenActual().getContenedor());
 				}
 				
+				//Filtros
 				else if(e.getSource() == getMiVista().getItemConvolve()) {
 					getFilter().mostrar(getMiVista().getFocoImagenActual().getContenedor());
+				}
+				
+				else if(e.getSource() == getMiVista().getItemAverage3x3()) {
+					getFilter().selectFilter(0, getMiVista().getFocoImagenActual());
+					getMiVista().addImagen(getFilter().getDialog()); 
+					addEventosRaton();
+				}
+				
+				else if(e.getSource() == getMiVista().getItemAverage5x5()) {
+					getFilter().selectFilter(1, getMiVista().getFocoImagenActual());
+					getMiVista().addImagen(getFilter().getDialog()); 
+					addEventosRaton();
+				}
+				
+				else if(e.getSource() == getMiVista().getItemAverage7x7()) {
+					getFilter().selectFilter(2, getMiVista().getFocoImagenActual());
+					getMiVista().addImagen(getFilter().getDialog()); 
+					addEventosRaton();
+				}
+				
+				else if(e.getSource() == getMiVista().getItemSobelH()) {
+					getFilter().selectFilter(3, getMiVista().getFocoImagenActual());
+					getMiVista().addImagen(getFilter().getDialog()); 
+					addEventosRaton();
+				}
+				
+				else if(e.getSource() == getMiVista().getItemSobelV()) {
+					getFilter().selectFilter(4, getMiVista().getFocoImagenActual());
+					getMiVista().addImagen(getFilter().getDialog()); 
+					addEventosRaton();
+				}
+				
+				else if(e.getSource() == getMiVista().getItemGradientH()) {
+					getFilter().selectFilter(5, getMiVista().getFocoImagenActual());
+					getMiVista().addImagen(getFilter().getDialog()); 
+					addEventosRaton();
+				}
+				
+				else if(e.getSource() == getMiVista().getItemGradientV()) {
+					getFilter().selectFilter(6, getMiVista().getFocoImagenActual());
+					getMiVista().addImagen(getFilter().getDialog()); 
+					addEventosRaton();
+				}
+				
+				else if(e.getSource() == getMiVista().getItemGaussian1()) {
+					getFilter().selectFilterGaussian(1, getMiVista().getFocoImagenActual());
+					getMiVista().addImagen(getFilter().getDialog()); 
+					addEventosRaton();
+				}
+				
+				else if(e.getSource() == getMiVista().getItemGaussian2()) {
+					getFilter().selectFilterGaussian(2, getMiVista().getFocoImagenActual());
+					getMiVista().addImagen(getFilter().getDialog()); 
+					addEventosRaton();
+				}
+				
+				else if(e.getSource() == getMiVista().getItemGaussian3()) {
+					getFilter().selectFilterGaussian(3, getMiVista().getFocoImagenActual());
+					getMiVista().addImagen(getFilter().getDialog()); 
+					addEventosRaton();
 				}
 				
 				else if(e.getSource() == getBrilloContraste().getDefaultBrillo()) 
@@ -360,7 +431,7 @@ public class Controlador {
 				}
 				
 				else if(e.getSource() == getFilter().getBoton()) {
-					if(getFilter().convolve(getMiVista().getFocoImagenActual())) {
+					if(getFilter().convolveCustom(getMiVista().getFocoImagenActual())) {
 						getMiVista().addImagen(getFilter().getDialog()); 
 						addEventosRaton();
 					}
